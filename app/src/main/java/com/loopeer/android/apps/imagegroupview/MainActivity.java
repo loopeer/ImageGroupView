@@ -11,6 +11,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String s = "3";
+        int i = Integer.parseInt(s);
+        int j = Integer.valueOf(s);
     }
 
     @Override

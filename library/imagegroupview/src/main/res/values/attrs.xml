@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ImageGroupView">
+        <attr name="showAddButton" format="boolean"/>
+        <attr name="alterMarginLeft" format="dimension"/>
+        <attr name="alterMarginRight" format="dimension"/>
+        <attr name="maxImageNum" format="integer"/>
+    </declare-styleable>
+
+</resources>
