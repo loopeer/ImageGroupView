@@ -1,1 +1,1 @@
-include ':app', ':library:imagegroupview'
+include ':app', ':library'
