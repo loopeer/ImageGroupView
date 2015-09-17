@@ -1,4 +1,4 @@
-package com.loopeer.android.apps.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview;
 
 public class NavigatorImage {
 

@@ -1,4 +1,4 @@
-package com.loopeer.android.apps.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +24,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class ImageGroupView extends LinearLayout {
+
+    private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
+    private static final String ATTRIBUTE_PADDING = "padding";
+    private static final String ATTRIBUTE_MARGIN = "padding";
+    private final static int COLUMN = 3;
+    private final static int CHILD_MARGIN = 4;
 
     public interface PhotoGroupViewClickListener {
         void photoClick(int clickingViewId);
@@ -36,9 +43,10 @@ public class ImageGroupView extends LinearLayout {
     private boolean mClickToUpload = true;
     private boolean showAddButton = true;
     private int childMargin;
-    private int parentAlterMarginRight;
-    private int parentAlterMarginLeft;
     private int maxImageNum = -1;
+    private int column;
+
+    private ArrayList<String> preImageUrls;
 
     public ImageGroupView(Context context) {
         this(context, null);
@@ -51,7 +59,7 @@ public class ImageGroupView extends LinearLayout {
     public ImageGroupView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
-        setBackgroundColor(getResources().getColor(android.R.color.widget_edittext_dark));
+        //setBackgroundColor(getResources().getColor(android.R.color.widget_edittext_dark));
         mContext = context;
         mPhotoViewIDs = new ArrayList<>();
 
@@ -60,11 +68,38 @@ public class ImageGroupView extends LinearLayout {
         if (a == null) return;
 
         showAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
-        parentAlterMarginRight = a.getDimensionPixelSize(R.styleable.ImageGroupView_alterMarginRight, 0);
-        parentAlterMarginLeft = a.getDimensionPixelSize(R.styleable.ImageGroupView_alterMarginRight, 0);
+        childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, -1);
+        column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
 
-        init();
+        preImageUrls = new ArrayList<>();
+        setUpTreeObserver();
+    }
+
+    private void setUpTreeObserver() {
+        ViewTreeObserver viewTreeObserver = getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    updateViewWithDatas();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+
+        //updateViewWithDatas();
     }
 
     private void init() {
@@ -80,15 +115,16 @@ public class ImageGroupView extends LinearLayout {
 
         squareImageView.setImageResource(R.drawable.ic_photo_default);
         squareImageView.setClickable(mClickToUpload);
-        squareImageView.setAlterParentMargin(parentAlterMarginLeft, parentAlterMarginRight);
         int imageViewWidth = getImageWidth();
+        int j = getWidth();
+        squareImageView.setWidthByParent(imageViewWidth);
 
         FrameLayout frame = new FrameLayout(getContext());
         LayoutParams frameParams = new LayoutParams(imageViewWidth, imageViewWidth);
         frame.addView(squareImageView, frameParams);
         LayoutParams layoutParams = new LayoutParams(imageViewWidth, imageViewWidth);
-        if (mPhotoViewIDs.size() % 3 != 0) layoutParams.leftMargin = childMargin;
-        if(mPhotoViewIDs.size() > 0 && mPhotoViewIDs.size() % 3 == 0){
+        if (mPhotoViewIDs.size() % column != 0) layoutParams.leftMargin = childMargin;
+        if(mPhotoViewIDs.size() > 0 && mPhotoViewIDs.size() % column == 0){
             mLayoutItem  = new LinearLayout(mContext);
             LayoutParams lParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             lParams.topMargin = childMargin;
@@ -131,9 +167,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private int getImageWidth() {
-        final int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        final int parentDefaultMargin = 12;
-        return (screenWidth - parentDefaultMargin * 2 - parentAlterMarginRight - parentAlterMarginLeft - childMargin * 2) / 3;
+        return (getMeasuredWidth() - childMargin * (column - 1)) / column;
     }
 
     private void doDeletePhoto(View v) {
@@ -243,14 +277,23 @@ public class ImageGroupView extends LinearLayout {
     }
 
     public void setPhotos(ArrayList<String> photosNetUrl) {
+        if (photosNetUrl == null) return;
+        preImageUrls.addAll(photosNetUrl);
+        updateViewWithDatas();
+    }
+
+    private void updateViewWithDatas() {
         if (showAddButton) {
-            setPhotosWithButton(photosNetUrl);
+            setPhotosWithButton(preImageUrls);
         } else {
-            setPhotosWithoutButton(photosNetUrl);
+            setPhotosWithoutButton(preImageUrls);
         }
     }
 
     private void setPhotosWithButton(ArrayList<String> photosNetUrl) {
+        removeAllViews();
+        mPhotoViewIDs.clear();
+        init();
         int size = photosNetUrl != null ? photosNetUrl.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));

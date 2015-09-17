@@ -2,7 +2,7 @@
  * Created by YuGang Yang on April 07, 2015.
  * Copyright 2007-2015 Laputapp.com. All rights reserved.
  */
-package com.loopeer.android.apps.imagegroupview.configs;
+package com.loopeer.android.librarys.imagegroupview.configs;
 
 import android.content.Context;
 

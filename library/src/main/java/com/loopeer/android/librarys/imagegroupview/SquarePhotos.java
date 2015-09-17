@@ -1,4 +1,4 @@
-package com.loopeer.android.apps.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview;
 
 import java.util.HashMap;
 import java.util.Map;

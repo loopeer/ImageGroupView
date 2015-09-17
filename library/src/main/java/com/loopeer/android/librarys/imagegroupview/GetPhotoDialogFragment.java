@@ -2,7 +2,7 @@
  * Created by YuGang Yang on September 05, 2014.
  * Copyright 2007-2015 Loopeer.com. All rights reserved.
  */
-package com.loopeer.android.apps.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.loopeer.android.librarys.imagegroupview.R;
 
 public class GetPhotoDialogFragment extends DialogFragment implements View.OnClickListener {
 

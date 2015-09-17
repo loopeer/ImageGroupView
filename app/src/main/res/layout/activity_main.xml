@@ -1,11 +1,43 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:apps="http://schemas.android.com/apk/res-auto">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".MainActivity">
 
-</RelativeLayout>
+        <com.loopeer.android.librarys.imagegroupview.ImageGroupView
+            android:id="@+id/images_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            apps:showAddButton="false" />
+
+        <com.loopeer.android.librarys.imagegroupview.ImageGroupView
+            android:id="@+id/images_group_addable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            apps:showAddButton="true" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_example"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            />
+
+    </LinearLayout>
+
+</ScrollView>

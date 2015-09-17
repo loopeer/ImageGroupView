@@ -5,7 +5,9 @@
         <attr name="showAddButton" format="boolean"/>
         <attr name="alterMarginLeft" format="dimension"/>
         <attr name="alterMarginRight" format="dimension"/>
+        <attr name="childMargin" format="dimension"/>
         <attr name="maxImageNum" format="integer"/>
+        <attr name="column" format="integer"/>
     </declare-styleable>
 
 </resources>
