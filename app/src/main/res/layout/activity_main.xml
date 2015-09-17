@@ -19,6 +19,8 @@
             android:id="@+id/images_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            apps:childMargin="@dimen/activity_vertical_margin"
+            apps:column="3"
             apps:showAddButton="false" />
 
         <com.loopeer.android.librarys.imagegroupview.ImageGroupView

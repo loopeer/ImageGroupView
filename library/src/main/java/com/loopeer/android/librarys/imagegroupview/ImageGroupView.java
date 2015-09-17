@@ -1,9 +1,11 @@
 package com.loopeer.android.librarys.imagegroupview;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -25,9 +27,6 @@ import java.util.HashMap;
 
 public class ImageGroupView extends LinearLayout {
 
-    private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
-    private static final String ATTRIBUTE_PADDING = "padding";
-    private static final String ATTRIBUTE_MARGIN = "padding";
     private final static int COLUMN = 3;
     private final static int CHILD_MARGIN = 4;
 
@@ -36,7 +35,6 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private LinearLayout mLayoutItem;
-    private Context mContext;
     private ArrayList<Integer> mPhotoViewIDs;
     private PhotoGroupViewClickListener mListener;
     private FragmentManager mManager;
@@ -58,52 +56,49 @@ public class ImageGroupView extends LinearLayout {
 
     public ImageGroupView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setOrientation(VERTICAL);
-        //setBackgroundColor(getResources().getColor(android.R.color.widget_edittext_dark));
-        mContext = context;
-        mPhotoViewIDs = new ArrayList<>();
 
+        initData();
+        getAttrs(context, attrs, defStyleAttr);
+        setUpTreeObserver();
+    }
+
+    private void initData() {
+        setOrientation(VERTICAL);
+        mPhotoViewIDs = new ArrayList<>();
+        preImageUrls = new ArrayList<>();
+    }
+
+    private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
         if (attrs == null) return;
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageGroupView, defStyleAttr, 0);
         if (a == null) return;
 
         showAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
-        childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, -1);
+        childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
-
-        preImageUrls = new ArrayList<>();
-        setUpTreeObserver();
     }
 
     private void setUpTreeObserver() {
         ViewTreeObserver viewTreeObserver = getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onGlobalLayout() {
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    } else {
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
                     updateViewWithDatas();
                 }
             });
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-
-        //updateViewWithDatas();
-    }
-
-    private void init() {
-        mLayoutItem = new LinearLayout(mContext);
+    private void initLayoutItem() {
+        mLayoutItem = new LinearLayout(getContext());
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         mLayoutItem.setLayoutParams(layoutParams);
         addView(mLayoutItem);
@@ -111,12 +106,11 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void addPhotoView() {
-        SquareImageView squareImageView = new SquareImageView(mContext);
+        SquareImageView squareImageView = new SquareImageView(getContext());
 
         squareImageView.setImageResource(R.drawable.ic_photo_default);
         squareImageView.setClickable(mClickToUpload);
         int imageViewWidth = getImageWidth();
-        int j = getWidth();
         squareImageView.setWidthByParent(imageViewWidth);
 
         FrameLayout frame = new FrameLayout(getContext());
@@ -125,7 +119,7 @@ public class ImageGroupView extends LinearLayout {
         LayoutParams layoutParams = new LayoutParams(imageViewWidth, imageViewWidth);
         if (mPhotoViewIDs.size() % column != 0) layoutParams.leftMargin = childMargin;
         if(mPhotoViewIDs.size() > 0 && mPhotoViewIDs.size() % column == 0){
-            mLayoutItem  = new LinearLayout(mContext);
+            mLayoutItem  = new LinearLayout(getContext());
             LayoutParams lParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             lParams.topMargin = childMargin;
             mLayoutItem.setLayoutParams(lParams);
@@ -213,7 +207,7 @@ public class ImageGroupView extends LinearLayout {
     private void refreshLayout(ArrayList<SquarePhotos> photos) {
         mPhotoViewIDs.clear();
         removeAllViews();
-        init();
+        initLayoutItem();
         for (int i = 0; i < photos.size(); i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
             switch (photos.get(i).type){
@@ -236,12 +230,12 @@ public class ImageGroupView extends LinearLayout {
                     public void click() {
                         String SDState = Environment.getExternalStorageState();
                         if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-                            ActivityCompat.startActivityForResult((Activity) mContext,
-                                    new Intent(mContext, UseCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
+                            ActivityCompat.startActivityForResult((Activity) getContext(),
+                                    new Intent(getContext(), UseCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
                                     null);
                             //NavUtils.startUseCameraActivity(getActivity());
                         } else {
-                            Toast.makeText(mContext, "内存卡不存在", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "内存卡不存在", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -250,7 +244,7 @@ public class ImageGroupView extends LinearLayout {
                     public void click() {
                         Intent i = new Intent(
                                 Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        ((Activity) mContext).startActivityForResult(i, NavigatorImage.RESULT_SELECT_PHOTO);
+                        ((Activity) getContext()).startActivityForResult(i, NavigatorImage.RESULT_SELECT_PHOTO);
                     }
                 })
                 .show();
@@ -272,10 +266,6 @@ public class ImageGroupView extends LinearLayout {
         }
     }
 
-    public void deleteLastDefaultPhoto() {
-        findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1)).setVisibility(View.GONE);
-    }
-
     public void setPhotos(ArrayList<String> photosNetUrl) {
         if (photosNetUrl == null) return;
         preImageUrls.addAll(photosNetUrl);
@@ -293,7 +283,7 @@ public class ImageGroupView extends LinearLayout {
     private void setPhotosWithButton(ArrayList<String> photosNetUrl) {
         removeAllViews();
         mPhotoViewIDs.clear();
-        init();
+        initLayoutItem();
         int size = photosNetUrl != null ? photosNetUrl.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
@@ -305,7 +295,7 @@ public class ImageGroupView extends LinearLayout {
     private void setPhotosWithoutButton(ArrayList<String> photosNetUrl) {
         removeAllViews();
         mPhotoViewIDs.clear();
-        init();
+        initLayoutItem();
         int size = photosNetUrl != null ? photosNetUrl.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) findViewById(mPhotoViewIDs.get(i));
