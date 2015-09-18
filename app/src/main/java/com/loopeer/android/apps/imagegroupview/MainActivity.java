@@ -1,19 +1,18 @@
 package com.loopeer.android.apps.imagegroupview;
 
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
+import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
+
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ImageGroupView.PhotoGroupViewClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private ImageGroupView imageGroupAddAble;
     private ImageGroupView imageGroup;
-    private SimpleDraweeView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +26,11 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.Ph
     private void initView() {
         imageGroup = (ImageGroupView) findViewById(R.id.images_group);
         imageGroupAddAble = (ImageGroupView) findViewById(R.id.images_group_addable);
-        image = (SimpleDraweeView) findViewById(R.id.image_example);
     }
 
     private void setData() {
         imageGroupAddAble.setFragmentManager(getSupportFragmentManager());
-        imageGroupAddAble.setGroupItemClick(this);/*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                imageGroup.setPhotos(createTestData());
-            }
-        }, 500);*/
         imageGroup.setPhotos(createTestData());
-        image.setImageURI(Uri.parse("http://img3.imgtn.bdimg.com/it/u=4219766182,574313781&fm=21&gp=0.jpg"));
     }
 
     private ArrayList<String> createTestData() {
@@ -58,7 +48,12 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.Ph
     }
 
     @Override
-    public void photoClick(int clickingViewId) {
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+            Uri imageSelectedUri = data.getData();
+            imageGroupAddAble.onParentResult(requestCode, photoTakeurl, imageSelectedUri);
+        }
     }
 }
