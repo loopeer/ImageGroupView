@@ -15,6 +15,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     private String mLocalUrl;
     private String mUploadKey;
     private String mInternetUrl;
+    private int placeholderDrawable;
     private int width;
     private boolean mClickUpload = true;
 
@@ -32,16 +33,21 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     private void init() {
+        placeholderDrawable = R.drawable.ic_image_default;
         setScaleType(ImageView.ScaleType.CENTER_CROP);
         setClickable(mClickUpload);
         setOnClickListener(this);
         GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
-        builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), R.drawable.ic_image_default), ScalingUtils.ScaleType.CENTER_CROP);
+        builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable), ScalingUtils.ScaleType.CENTER_CROP);
         getControllerBuilder().build().setHierarchy(builder1.build());
     }
 
     public void setWidthByParent(int widthByParent) {
         width = widthByParent;
+    }
+
+    public void setPlaceholderDrawable(int src) {
+        placeholderDrawable = src;
     }
 
     @Override
@@ -86,10 +92,10 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         mInternetUrl = netUrl;
         mLocalUrl = null;
         if (netUrl == null) {
-            setImageResource(R.drawable.ic_image_default);
+            setImageResource(placeholderDrawable);
             return;
         }
-        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, R.drawable.ic_image_default, 200, 200);
+        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, 200, 200);
     }
 
     @SuppressWarnings("unused")

@@ -78,6 +78,9 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginBottom="12dp"
+            apps:addButtonDrawable="@drawable/ic_photo_default"
+            apps:deleteDrawable="@drawable/ic_delete"
+            apps:imagePlaceholderDrawable="@drawable/ic_image_default"
             apps:childMargin="4dp"
             apps:column="3"
             apps:showAddButton="true" />

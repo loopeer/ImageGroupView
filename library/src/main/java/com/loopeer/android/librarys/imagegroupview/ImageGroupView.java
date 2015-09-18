@@ -40,6 +40,9 @@ public class ImageGroupView extends LinearLayout {
     private ArrayList<String> preImageUrls;
     private OnImageClickListener clickListener;
     private int mPhotoIsDoingId;
+    private int addButtonDrawable;
+    private int deleteDrawable;
+    private int placeholderDrawable;
 
     private boolean showAddButton;
     private int childMargin;
@@ -77,6 +80,10 @@ public class ImageGroupView extends LinearLayout {
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
         childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
+        addButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
+        deleteDrawable = a.getResourceId(R.styleable.ImageGroupView_deleteDrawable, R.drawable.ic_delete);
+        placeholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
+
     }
 
     private void setUpTreeObserver() {
@@ -134,9 +141,10 @@ public class ImageGroupView extends LinearLayout {
 
     private void addPhotoView() {
         SquareImageView squareImageView = new SquareImageView(getContext());
-        squareImageView.setImageResource(R.drawable.ic_photo_default);
+        squareImageView.setImageResource(addButtonDrawable);
         int imageViewWidth = getImageWidth();
         squareImageView.setWidthByParent(imageViewWidth);
+        squareImageView.setPlaceholderDrawable(placeholderDrawable);
 
         FrameLayout frame = new FrameLayout(getContext());
         LayoutParams frameParams = new LayoutParams(imageViewWidth, imageViewWidth);
@@ -202,7 +210,7 @@ public class ImageGroupView extends LinearLayout {
                 doPhotoDelete(squarView.getId());
             }
         });
-        image.setImageResource(R.drawable.ic_delete);
+        image.setImageResource(deleteDrawable);
         frame.addView(image, layoutParams);
     }
 

@@ -6,6 +6,9 @@
         <attr name="maxImageNum" format="integer"/>
         <attr name="childMargin" format="dimension"/>
         <attr name="column" format="integer"/>
+        <attr name="addButtonDrawable" format="reference|color"/>
+        <attr name="imagePlaceholderDrawable" format="reference|color"/>
+        <attr name="deleteDrawable" format="reference|color"/>
     </declare-styleable>
 
 </resources>
