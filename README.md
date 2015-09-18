@@ -1,6 +1,6 @@
 # ImageGroupView
 
-This view main solve the view data restore. The activity main killed when open camera. So some data of the group view will not restore by themeself. This view save the state and then restore to recreate the layout.
+This view main solve the view data restore. The activity main killed when open camera. So some data of the group view will not restore by themself. This view save the state and then restore to recreate the layout.
 
 Screeshot
 ====
@@ -36,7 +36,7 @@ Get data by the method
 ```java
         onImageClick(SquareImage clickImage, ArrayList<SquareImage> squareImages, ArrayList<String> allImageInternetUrl)
 ```
-Show Images
+Add Images
 ====
 If you want to add image, you must add this
 ```java
