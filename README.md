@@ -17,11 +17,14 @@ First, add the layout
             apps:column="3"
             apps:showAddButton="false" />
 ```
+* childMargin  the margin between child, be the left and top.
+* column you can set as you need 
+* showAddButton when set this true, you can add image by album or camera
 
 Then, you can add data.
 ```java
         ArrayList<String> testdata = createTestData());
-        imageGroup.setPhotos();
+        imageGroup.setPhotos(testdata);
 ```
 You can add ClickListener
 ```java
