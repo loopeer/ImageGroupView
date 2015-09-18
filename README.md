@@ -2,6 +2,8 @@
 
 This view main solve the view data restore. The activity main killed when open camera. So some data of the group view will not restore by themself. This view save the state and then restore to recreate the layout.
 
+Don't use the padding left and right beacuse I have not get the padding when I calculate the child width.
+
 Screeshot
 ====
 ![](/screenshot/screenshot.gif)
