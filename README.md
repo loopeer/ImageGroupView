@@ -19,7 +19,7 @@ First, add the layout
             apps:showAddButton="false" />
 ```
 * childMargin   The margin between child, as the left and top.
-* column        You can set as you need 
+* column        You can set as you need  
 * showAddButton When set true, you can add image by album or camera
 
 Then, you can add data.
