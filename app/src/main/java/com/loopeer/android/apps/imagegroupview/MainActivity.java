@@ -1,12 +1,10 @@
 package com.loopeer.android.apps.imagegroupview;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
-import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.SquareImage;
 import java.util.ArrayList;
 
@@ -56,9 +54,7 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
-            Uri imageSelectedUri = data.getData();
-            imageGroupAddAble.onParentResult(requestCode, photoTakeurl, imageSelectedUri);
+            imageGroupAddAble.onParentResult(requestCode, data);
         }
     }
 

@@ -408,7 +408,9 @@ public class ImageGroupView extends LinearLayout {
         imageGroupSavedState = ss;
     }
 
-    public void onParentResult(int requestCode, String photoTakeurl, Uri imageSelectedUri) {
+    public void onParentResult(int requestCode, Intent data) {
+        Uri imageSelectedUri = data.getData();
+        String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
         if (requestCode == NavigatorImage.RESULT_SELECT_PHOTO && null != imageSelectedUri) {
             doSelectImage(imageSelectedUri);
         } else if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeurl) {
