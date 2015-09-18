@@ -1,5 +1,6 @@
 # ImageGroupView
 
+This view main solve the view data restore. The activity main killed when open camera. So some data of the group view will not restore by themeself. This view save the state and then restore to recreate the layout.
 
 Screeshot
 ====
@@ -17,9 +18,9 @@ First, add the layout
             apps:column="3"
             apps:showAddButton="false" />
 ```
-* childMargin  the margin between child, be the left and top.
-* column you can set as you need 
-* showAddButton when set this true, you can add image by album or camera
+* childMargin   The margin between child, as the left and top.
+* column        You can set as you need 
+* showAddButton When set true, you can add image by album or camera
 
 Then, you can add data.
 ```java
@@ -37,7 +38,7 @@ Get data by the method
 ```
 Show Images
 ====
-If you want to add image, you must set do 
+If you want to add image, you must add this
 ```java
         imageGroup.setFragmentManager(getSupportFragmentManager());
 ```
@@ -47,9 +48,7 @@ You must get the data from the intent in the result
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
-            Uri imageSelectedUri = data.getData();
-            imageGroupAddAble.onParentResult(requestCode, photoTakeurl, imageSelectedUri);
+            imageGroupAddAble.onParentResult(requestCode, data);
         }
     }
 ```
