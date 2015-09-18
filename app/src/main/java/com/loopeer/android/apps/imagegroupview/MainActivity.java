@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
-
+import com.loopeer.android.librarys.imagegroupview.SquareImage;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ImageGroupView.OnImageClickListener {
 
     private ImageGroupView imageGroupAddAble;
     private ImageGroupView imageGroup;
@@ -30,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setData() {
         imageGroupAddAble.setFragmentManager(getSupportFragmentManager());
+        imageGroupAddAble.setPhotos(createTestData());
         imageGroup.setPhotos(createTestData());
+        imageGroup.setOnImageClickListener(this);
     }
 
     private ArrayList<String> createTestData() {
@@ -55,5 +58,10 @@ public class MainActivity extends AppCompatActivity {
             Uri imageSelectedUri = data.getData();
             imageGroupAddAble.onParentResult(requestCode, photoTakeurl, imageSelectedUri);
         }
+    }
+
+    @Override
+    public void onImageClick(SquareImage clickImage, ArrayList<SquareImage> squareImages, ArrayList<String> allImageInternetUrl) {
+        Toast.makeText(this, "Inter Image size is :  " + allImageInternetUrl, Toast.LENGTH_SHORT).show();
     }
 }

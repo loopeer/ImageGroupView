@@ -6,17 +6,17 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SquarePhotos implements Parcelable {
+public class SquareImage implements Parcelable {
 
   public String url;
   public PhotoType type;
 
-  public SquarePhotos(String url, PhotoType type) {
+  public SquareImage(String url, PhotoType type) {
     this.url = url;
     this.type = type;
   }
 
-  protected SquarePhotos(Parcel in) {
+  protected SquareImage(Parcel in) {
     url = in.readString();
     type = in.readParcelable(PhotoType.class.getClassLoader());
   }
@@ -27,15 +27,15 @@ public class SquarePhotos implements Parcelable {
     dest.writeParcelable(type, flags);
   }
 
-  public static final Creator<SquarePhotos> CREATOR = new Creator<SquarePhotos>() {
+  public static final Creator<SquareImage> CREATOR = new Creator<SquareImage>() {
     @Override
-    public SquarePhotos createFromParcel(Parcel in) {
-      return new SquarePhotos(in);
+    public SquareImage createFromParcel(Parcel in) {
+      return new SquareImage(in);
     }
 
     @Override
-    public SquarePhotos[] newArray(int size) {
-      return new SquarePhotos[size];
+    public SquareImage[] newArray(int size) {
+      return new SquareImage[size];
     }
   };
 

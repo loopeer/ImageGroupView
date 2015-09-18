@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ImageGroupSavedState extends View.BaseSavedState {
 
     private int doingClickViewId;
-    private ArrayList<SquarePhotos> squarePhotos;
+    private ArrayList<SquareImage> squarePhotos;
 
     ImageGroupSavedState(Parcelable superState) {
         super(superState);
@@ -18,14 +18,14 @@ public class ImageGroupSavedState extends View.BaseSavedState {
     public ImageGroupSavedState(Parcel source) {
         super(source);
         doingClickViewId = source.readInt();
-        squarePhotos = source.readArrayList(SquarePhotos.class.getClassLoader());
+        squarePhotos = source.readArrayList(SquareImage.class.getClassLoader());
     }
 
-    public ArrayList<SquarePhotos> getSquarePhotos() {
+    public ArrayList<SquareImage> getSquarePhotos() {
         return squarePhotos;
     }
 
-    public void setSquarePhotos(ArrayList<SquarePhotos> squarePhotos) {
+    public void setSquarePhotos(ArrayList<SquareImage> squarePhotos) {
         this.squarePhotos = squarePhotos;
     }
 

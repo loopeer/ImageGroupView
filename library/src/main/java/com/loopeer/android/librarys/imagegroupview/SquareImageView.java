@@ -105,4 +105,13 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
 
         }
     }
+
+    public SquareImage getSquareImage() {
+        if (TextUtils.isEmpty(getInternetUrl()) && !TextUtils.isEmpty(getLocalUrl())) {
+            return new SquareImage(getLocalUrl(), SquareImage.PhotoType.LOCAL);
+        } else if (!TextUtils.isEmpty(getInternetUrl()) && TextUtils.isEmpty(getLocalUrl())) {
+            return new SquareImage(getInternetUrl(), SquareImage.PhotoType.INTER);
+        }
+        return null;
+    }
 }
