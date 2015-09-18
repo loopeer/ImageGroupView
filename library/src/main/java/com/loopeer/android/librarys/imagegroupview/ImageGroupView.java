@@ -211,7 +211,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void doPhotoDelete(final int photoId) {
-        ((ViewGroup) getChildAt(0)).removeViewAt(mPhotoViewIDs.indexOf(new Integer(photoId)));
+        removeView(findViewById(photoId));
         mPhotoViewIDs.remove(new Integer(photoId));
         requestLayout();
         refresh();
