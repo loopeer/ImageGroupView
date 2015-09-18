@@ -21,6 +21,9 @@ First, add the layout
 * **childMargin** The margin between child, as the left and top.
 * **column** You can set as you need  
 * **showAddButton** When set true, you can add image by album or camera
+* **addButtonDrawable** 
+* **imagePlaceholderDrawable** 
+* **deleteDrawable** 
 
 Then, you can add data.
 ```java
