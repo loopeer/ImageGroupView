@@ -1,6 +1,7 @@
 package com.loopeer.android.librarys.imagegroupview;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,7 +15,6 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     private String mLocalUrl;
     private String mUploadKey;
     private String mInternetUrl;
-    private Context mContext;
     private int width;
     private boolean mClickUpload = true;
 
@@ -28,7 +28,6 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
 
     public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
         init();
     }
 
@@ -37,7 +36,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         setClickable(mClickUpload);
         setOnClickListener(this);
         GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
-        builder1.setPlaceholderImage(getContext().getResources().getDrawable(R.drawable.ic_image_default), ScalingUtils.ScaleType.CENTER_CROP);
+        builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), R.drawable.ic_image_default), ScalingUtils.ScaleType.CENTER_CROP);
         getControllerBuilder().build().setHierarchy(builder1.build());
     }
 
@@ -55,13 +54,15 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         if (!TextUtils.isEmpty(mInternetUrl)) mInternetUrl = null;
         mLocalUrl = localUrl;
 
-        ImageDisplayHelper.displayImageLocal(this, mLocalUrl, 200, 200);
+        ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, 200, 200);
     }
 
+    @SuppressWarnings("unused")
     public void setmInternetUrl(String internetUrl) {
         mInternetUrl = internetUrl;
     }
 
+    @SuppressWarnings("unused")
     public void setUploadKey(String key) {
         mUploadKey = key;
     }
@@ -85,12 +86,13 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         mInternetUrl = netUrl;
         mLocalUrl = null;
         if (netUrl == null) {
-            this.setImageResource(R.drawable.ic_image_default);
+            setImageResource(R.drawable.ic_image_default);
             return;
         }
-        ImageDisplayHelper.displayImage(this, mInternetUrl, R.drawable.ic_image_default , 200, 200);
+        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, R.drawable.ic_image_default, 200, 200);
     }
 
+    @SuppressWarnings("unused")
     public void setClickAble (boolean able) {
         mClickUpload = able;
     }

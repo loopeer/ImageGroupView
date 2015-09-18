@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="16sp"
-        android:textColor="#cccccc"
+        android:textColor="#333333"
         android:text="拍照" />
 
   </FrameLayout>

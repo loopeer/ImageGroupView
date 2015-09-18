@@ -19,7 +19,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.io.File;
 
-public final class ImageDisplayHelper {
+public final class ImageGroupDisplayHelper {
 
     public static Uri createNetWorkImageUri(String path) {
         return Uri.parse(path);

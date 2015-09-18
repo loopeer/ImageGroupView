@@ -9,7 +9,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import java.io.File;
 
-public class UseCameraActivity extends AppCompatActivity {
+public class UserCameraActivity extends AppCompatActivity {
 
     private String photoUrl;
     private final String EXTRA_PHOTO_URL = NavigatorImage.EXTRA_PHOTO_URL;

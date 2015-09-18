@@ -14,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,24 +29,22 @@ import java.util.HashMap;
 
 public class ImageGroupView extends LinearLayout {
 
-    private final static String TAG = "ImageGroupView";
-
     private final static int COLUMN = 3;
     private final static int CHILD_MARGIN = 4;
-    private int mPhotoIsDoingId;
-
+    private final static int MAX_VALUE = -1;
     private LinearLayout mLayoutItem;
     private ArrayList<Integer> mPhotoViewIDs;
     private FragmentManager mManager;
     private ImageGroupSavedState imageGroupSavedState;
+    private Uri preTakePhotoUri;
+    private ArrayList<String> preImageUrls;
+    private int mPhotoIsDoingId;
+
     private boolean mClickToUpload = true;
     private boolean showAddButton = true;
     private int childMargin;
-    private int maxImageNum = -1;
+    private int maxImageNum;
     private int column;
-    private Uri preTakePhotoUri;
-
-    private ArrayList<String> preImageUrls;
 
     public ImageGroupView(Context context) {
         this(context, null);
@@ -77,7 +74,7 @@ public class ImageGroupView extends LinearLayout {
         if (a == null) return;
 
         showAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
-        maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, -1);
+        maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
         childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
     }
@@ -113,11 +110,26 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void initLayoutItem() {
-        mLayoutItem = new LinearLayout(getContext());
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        mLayoutItem.setLayoutParams(layoutParams);
-        addView(mLayoutItem);
+        addNewLayoutItemWithoutTopMargin();
         addPhotoView();
+    }
+
+    private void addNewLayoutItemWithTopMargin() {
+        addNewLayoutItem(true);
+    }
+
+    private void addNewLayoutItemWithoutTopMargin() {
+        addNewLayoutItem(false);
+    }
+
+    private void addNewLayoutItem(boolean withTopMargin) {
+        mLayoutItem = new LinearLayout(getContext());
+        LayoutParams lParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        if (withTopMargin) {
+            lParams.topMargin = childMargin;
+        }
+        mLayoutItem.setLayoutParams(lParams);
+        addView(mLayoutItem);
     }
 
     private void addPhotoView() {
@@ -132,46 +144,48 @@ public class ImageGroupView extends LinearLayout {
         frame.addView(squareImageView, frameParams);
         LayoutParams layoutParams = new LayoutParams(imageViewWidth, imageViewWidth);
         if (mPhotoViewIDs.size() % column != 0) layoutParams.leftMargin = childMargin;
-        if(mPhotoViewIDs.size() > 0 && mPhotoViewIDs.size() % column == 0){
-            mLayoutItem  = new LinearLayout(getContext());
-            LayoutParams lParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            lParams.topMargin = childMargin;
-            mLayoutItem.setLayoutParams(lParams);
-            addView(mLayoutItem);
+        if (mPhotoViewIDs.size() > 0 && mPhotoViewIDs.size() % column == 0) {
+            addNewLayoutItemWithTopMargin();
         }
         mLayoutItem.addView(frame, layoutParams);
-        squareImageView.setId(createIndex());
-        final int squarePhotoViewId = squareImageView.getId();
+
+        final int squarePhotoViewId = createIndex();
+        squareImageView.setId(squarePhotoViewId);
         mPhotoViewIDs.add(squarePhotoViewId);
+
         squareImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mClickToUpload) {
                     if (((SquareImageView) v).getImageLocalUrl() == null
-                        && ((SquareImageView) v).getInternetUrl() == null) {
+                            && ((SquareImageView) v).getInternetUrl() == null) {
                         doPhotoClickSelectable(mPhotoViewIDs.size() - 1);
                     } else if (((SquareImageView) v).getImageLocalUrl() == null) {
-                        //Navigator.startScaleImageSwitcher(getContext(), getInternetUrls(), position);
                         //
                     } else if (((SquareImageView) v).getInternetUrl() == null) {
                         //
                     }
                 } else {
-                    doScaleImage(squarePhotoViewId);
+                    doScaleImage();
                 }
             }
         });
+
         squareImageView.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (((SquareImageView) v).getImageLocalUrl() == null
-                    && ((SquareImageView) v).getInternetUrl() == null) {
+                if (canClickToDelete(v)) {
                     return true;
                 }
                 doDeletePhoto(v);
                 return true;
             }
         });
+    }
+
+    private boolean canClickToDelete(View v) {
+        return mClickToUpload || (((SquareImageView) v).getImageLocalUrl() == null
+                && ((SquareImageView) v).getInternetUrl() == null);
     }
 
     private int getImageWidth() {
@@ -182,7 +196,7 @@ public class ImageGroupView extends LinearLayout {
         final SquareImageView squarView = (SquareImageView) v;
         FrameLayout frame = (FrameLayout) squarView.getParent();
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-            Gravity.RIGHT| Gravity.TOP);
+                Gravity.RIGHT | Gravity.TOP);
         ImageView image = new ImageView(getContext());
         image.setOnClickListener(new OnClickListener() {
             @Override
@@ -199,7 +213,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void doPhotoDelete(final int photoId) {
-        ((ViewGroup)getChildAt(0)).removeViewAt(mPhotoViewIDs.indexOf(new Integer(photoId)));
+        ((ViewGroup) getChildAt(0)).removeViewAt(mPhotoViewIDs.indexOf(new Integer(photoId)));
         mPhotoViewIDs.remove(new Integer(photoId));
         requestLayout();
         refresh();
@@ -228,7 +242,7 @@ public class ImageGroupView extends LinearLayout {
         initLayoutItem();
         for (int i = 0; i < photos.size(); i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
-            switch (photos.get(i).type){
+            switch (photos.get(i).type) {
                 case INTER:
                     squareImageView.setInternetData(photos.get(i).url);
                     break;
@@ -242,14 +256,14 @@ public class ImageGroupView extends LinearLayout {
 
     private void doUpLoadPhotoClick(int viewId) {
         photoClick(viewId);
-        new GetPhotoDialogFragment.Builder(mManager)
-                .setPositiveListener(new GetPhotoDialogFragment.ClickListener() {
+        new GetImageDialogFragment.Builder(mManager)
+                .setPositiveListener(new GetImageDialogFragment.ClickListener() {
                     @Override
                     public void click() {
                         String SDState = Environment.getExternalStorageState();
                         if (SDState.equals(Environment.MEDIA_MOUNTED)) {
                             ActivityCompat.startActivityForResult((Activity) getContext(),
-                                    new Intent(getContext(), UseCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
+                                    new Intent(getContext(), UserCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
                                     null);
                             //NavUtils.startUseCameraActivity(getActivity());
                         } else {
@@ -257,7 +271,7 @@ public class ImageGroupView extends LinearLayout {
                         }
                     }
                 })
-                .setNegativeListener(new GetPhotoDialogFragment.ClickListener() {
+                .setNegativeListener(new GetImageDialogFragment.ClickListener() {
                     @Override
                     public void click() {
                         Intent i = new Intent(
@@ -268,7 +282,7 @@ public class ImageGroupView extends LinearLayout {
                 .show();
     }
 
-    private void doScaleImage(int viewId) {
+    private void doScaleImage() {
         //TODO scale
     }
 
@@ -279,7 +293,7 @@ public class ImageGroupView extends LinearLayout {
                 isEndPhotoView = false;
             }
         }
-        if (isEndPhotoView && (maxImageNum == -1 || mPhotoViewIDs.size() < maxImageNum)) {
+        if (isEndPhotoView && (maxImageNum == MAX_VALUE || mPhotoViewIDs.size() < maxImageNum)) {
             addPhotoView();
         }
     }
@@ -323,7 +337,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void addPhotoWithoutButton(int position, int size) {
-       if (position != size - 1) addPhotoView();
+        if (position != size - 1) addPhotoView();
     }
 
     public HashMap<String, String> getUploadImageMap() {
@@ -337,17 +351,19 @@ public class ImageGroupView extends LinearLayout {
         return map;
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<String> getLocalUrls() {
         ArrayList<String> map = new ArrayList<>();
         for (Integer i : mPhotoViewIDs) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(i);
-            if (TextUtils.isEmpty(squareImageView.getInternetUrl())  && !TextUtils.isEmpty(squareImageView.getLocalUrl())) {
+            if (TextUtils.isEmpty(squareImageView.getInternetUrl()) && !TextUtils.isEmpty(squareImageView.getLocalUrl())) {
                 map.add(squareImageView.getLocalUrl());
             }
         }
         return map;
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<String> getInternetUrls() {
         ArrayList<String> photos = new ArrayList<>();
         for (Integer i : mPhotoViewIDs) {
@@ -359,6 +375,7 @@ public class ImageGroupView extends LinearLayout {
         return photos;
     }
 
+    @SuppressWarnings("unused")
     public boolean isEmpty() {
         boolean empty = true;
         for (Integer i : mPhotoViewIDs) {
@@ -370,6 +387,7 @@ public class ImageGroupView extends LinearLayout {
         return empty;
     }
 
+    @SuppressWarnings("unused")
     public SquareImageView findFirstSquareView() {
         return (SquareImageView) this.findViewById(mPhotoViewIDs.get(0));
     }
@@ -378,6 +396,7 @@ public class ImageGroupView extends LinearLayout {
         mManager = manager;
     }
 
+    @SuppressWarnings("unused")
     public void setClickAble(boolean able) {
         mClickToUpload = able;
     }
@@ -442,11 +461,11 @@ public class ImageGroupView extends LinearLayout {
         }
 
         SquareImageView squarePhotoView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoIsDoingId));
-        ImageDisplayHelper.displayImage(squarePhotoView, uri, 200, 200);
+        ImageGroupDisplayHelper.displayImage(squarePhotoView, uri, 200, 200);
         squarePhotoView.setFocusable(true);
         squarePhotoView.setFocusableInTouchMode(true);
         squarePhotoView.requestFocus();
-        squarePhotoView.setLocalUrl(ImageUtils.getPathOfPhotoByUri(getContext(), uri));
+        squarePhotoView.setLocalUrl(ImageGroupUtils.getPathOfPhotoByUri(getContext(), uri));
         addPhoto(squarePhotoView.getId());
     }
 }

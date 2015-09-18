@@ -14,20 +14,18 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.loopeer.android.librarys.imagegroupview.R;
-
-public class GetPhotoDialogFragment extends DialogFragment implements View.OnClickListener {
+public class GetImageDialogFragment extends DialogFragment implements View.OnClickListener {
 
     public interface ClickListener {
-        public void click();
+        void click();
     }
 
     private ClickListener mPositiveListener;
     private ClickListener mNegativeListener;
 
-    public static GetPhotoDialogFragment newInstance() {
-        GetPhotoDialogFragment getPhotoDialogFragment = new GetPhotoDialogFragment();
-        return getPhotoDialogFragment;
+    public static GetImageDialogFragment newInstance() {
+        GetImageDialogFragment getImageDialogFragment = new GetImageDialogFragment();
+        return getImageDialogFragment;
     }
 
     @NonNull
@@ -63,27 +61,27 @@ public class GetPhotoDialogFragment extends DialogFragment implements View.OnCli
 
 
     public static class Builder {
-        GetPhotoDialogFragment getPhotoDialogFragment;
+        GetImageDialogFragment getImageDialogFragment;
         private FragmentManager mManager;
 
 
         public Builder(FragmentManager manager) {
-            getPhotoDialogFragment = GetPhotoDialogFragment.newInstance();
+            getImageDialogFragment = GetImageDialogFragment.newInstance();
             mManager = manager;
         }
 
         public Builder setPositiveListener(ClickListener clickListener) {
-            getPhotoDialogFragment.mPositiveListener = clickListener;
+            getImageDialogFragment.mPositiveListener = clickListener;
             return this;
         }
 
         public Builder setNegativeListener(ClickListener clickListener) {
-            getPhotoDialogFragment.mNegativeListener = clickListener;
+            getImageDialogFragment.mNegativeListener = clickListener;
             return this;
         }
 
         public void show() {
-            getPhotoDialogFragment.show(mManager, "");
+            getImageDialogFragment.show(mManager, "");
         }
     }
 

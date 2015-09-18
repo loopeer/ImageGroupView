@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-public class ImageUtils {
+public class ImageGroupUtils {
 
     public static String getPathOfPhotoByUri(Context context, Uri uri) {
         String[] filePathColumn = { MediaStore.Images.Media.DATA };

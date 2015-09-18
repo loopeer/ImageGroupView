@@ -11,8 +11,6 @@ public class SquarePhotos implements Parcelable {
   public String url;
   public PhotoType type;
 
-  public SquarePhotos(){}
-
   public SquarePhotos(String url, PhotoType type) {
     this.url = url;
     this.type = type;
@@ -73,6 +71,7 @@ public class SquarePhotos implements Parcelable {
       }
     }
 
+    @SuppressWarnings("unused")
     public static PhotoType fromValue(String value) {
       return STRING_MAPPING.get(value.toUpperCase());
     }
