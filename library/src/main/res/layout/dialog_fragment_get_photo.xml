@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:text="相册" />
+        android:text="@string/select_images" />
 
   </FrameLayout>
 
@@ -44,7 +44,7 @@
         android:layout_gravity="center"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:text="拍照" />
+        android:text="@string/take_photo" />
 
   </FrameLayout>
 
