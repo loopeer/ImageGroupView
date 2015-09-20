@@ -195,7 +195,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private int getImageWidth() {
-        return (getMeasuredWidth() - childMargin * (column - 1)) / column;
+        return (getMeasuredWidth() - childMargin * (column - 1) - getPaddingRight() - getPaddingLeft()) / column;
     }
 
     private void doDeletePhoto(View v) {
