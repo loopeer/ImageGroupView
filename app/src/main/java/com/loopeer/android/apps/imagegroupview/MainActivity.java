@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.loopeer.android.librarys.imagegroupview.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
 import com.loopeer.android.librarys.imagegroupview.SquareImage;
 import java.util.ArrayList;
@@ -13,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
     private ImageGroupView imageGroupAddAble;
     private ImageGroupView imageGroup;
     private ImageGroupView imageGroup2;
+    private SimpleDraweeView oneImage;
+    private SimpleDraweeView oneImage2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
         imageGroup = (ImageGroupView) findViewById(R.id.images_group);
         imageGroup2 = (ImageGroupView) findViewById(R.id.images_group_2);
         imageGroupAddAble = (ImageGroupView) findViewById(R.id.images_group_addable);
+        oneImage = (SimpleDraweeView) findViewById(R.id.image_one_show);
+        oneImage2 = (SimpleDraweeView) findViewById(R.id.image_one_show2);
     }
 
     private void setData() {
@@ -35,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
         imageGroup.setPhotos(createTestData());
         imageGroup2.setPhotos(createTestData());
         imageGroup.setOnImageClickListener(this);
+
+        ImageGroupDisplayHelper.displayImageOneShow(oneImage, "http://img1.3lian.com/img13/c3/82/d/64.jpg", getResources().getDimensionPixelSize(R.dimen.image_dimen));
+        ImageGroupDisplayHelper.displayImageOneShow(oneImage2, "http://pic2.ooopic.com/10/23/79/75bOOOPICa3.jpg", getResources().getDimensionPixelSize(R.dimen.image_dimen));
     }
 
     private ArrayList<String> createTestData() {
