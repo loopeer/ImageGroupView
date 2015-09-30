@@ -83,6 +83,7 @@ public class ImageGroupView extends LinearLayout {
         deleteDrawable = a.getResourceId(R.styleable.ImageGroupView_deleteDrawable, R.drawable.ic_delete);
         placeholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
 
+        a.recycle();
     }
 
     private void setUpTreeObserver() {
