@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">ImageGroupView</string>
-
     <string name="select_images">相册</string>
     <string name="take_photo">相机</string>
 

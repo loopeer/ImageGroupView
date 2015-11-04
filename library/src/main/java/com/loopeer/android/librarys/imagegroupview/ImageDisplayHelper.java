@@ -4,28 +4,26 @@
  */
 package com.loopeer.android.librarys.imagegroupview;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.facebook.imagepipeline.request.Postprocessor;
+import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
 
 import java.io.File;
 
-public final class ImageGroupDisplayHelper {
+public final class ImageDisplayHelper {
 
     public static Uri createNetWorkImageUri(String path) {
         return Uri.parse(path);
@@ -159,47 +157,36 @@ public final class ImageGroupDisplayHelper {
         draweeView.setController(controller);
     }
 
-    public static void displayImageOneShow(final SimpleDraweeView draweeView, String path, final int maxSize) {
+    public static void displayImage(final PhotoDraweeView draweeView, String path) {
         if (draweeView == null || TextUtils.isEmpty(path)) {
             return;
         }
 
-        Postprocessor reSizeProcessor = new BasePostprocessor() {
-            @Override
-            public String getName() {
-                return "redMeshPostprocessor";
-            }
-
-            @Override
-            public void process(Bitmap bitmap) {
-                int width = bitmap.getWidth();
-                int height = bitmap.getHeight();
-                ViewGroup.LayoutParams layoutParams = draweeView.getLayoutParams();
-                int tmp = maxSize;
-                if (width < height) {
-                    width = width * tmp / height;
-                    height = tmp;
-                } else {
-                    height = height * tmp / width;
-                    width = tmp;
-                }
-                layoutParams.width = width;
-                layoutParams.height = height;
-
-                draweeView.setLayoutParams(layoutParams);
-            }
-        };
-
         Uri uri = createNetWorkImageUri(path);
-        ImageRequest
-                request = ImageRequestBuilder.newBuilderWithSource(uri).setResizeOptions(new ResizeOptions(500, 500))
-                .setAutoRotateEnabled(true)
-                .setPostprocessor(reSizeProcessor)
-                .build();
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request)
-                .build();
-        draweeView.setController(controller);
+
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setUri(uri);
+        controller.setOldController(draweeView.getController());
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || draweeView == null) {
+                    return;
+                }
+                draweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        draweeView.setController(controller.build());
+    }
+
+    public static void displayImageLocal(SimpleDraweeView draweeView, String path) {
+        if (draweeView == null || TextUtils.isEmpty(path)) {
+            return;
+        }
+
+        Uri uri = Uri.fromFile(new File(path));
+        draweeView.setImageURI(uri);
     }
 
     public static void displayImageLocal(SimpleDraweeView draweeView, String path, int width, int height) {

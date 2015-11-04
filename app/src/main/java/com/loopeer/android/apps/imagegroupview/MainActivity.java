@@ -1,8 +1,8 @@
 package com.loopeer.android.apps.imagegroupview;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +11,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
 import com.loopeer.android.librarys.imagegroupview.SquareImage;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ImageGroupView.OnImageClickListener {

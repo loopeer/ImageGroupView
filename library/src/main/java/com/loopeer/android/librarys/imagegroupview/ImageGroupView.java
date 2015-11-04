@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ImageGroupView extends LinearLayout {
 
@@ -34,16 +35,17 @@ public class ImageGroupView extends LinearLayout {
     private LinearLayout mLayoutItem;
     private ArrayList<Integer> mPhotoViewIDs;
     private FragmentManager mManager;
+    private String unionKey;
     private ImageGroupSavedState imageGroupSavedState;
     private Uri preTakePhotoUri;
-    private ArrayList<String> preImageUrls;
+    private ArrayList<SquareImage> preImage;
     private OnImageClickListener clickListener;
     private int mPhotoIsDoingId;
     private int addButtonDrawable;
     private int deleteDrawable;
     private int placeholderDrawable;
 
-    private boolean showAddButton;
+    private boolean showAddButton, roundAsCircle;
     private int childMargin;
     private int maxImageNum;
     private int column;
@@ -67,7 +69,7 @@ public class ImageGroupView extends LinearLayout {
     private void initData() {
         setOrientation(VERTICAL);
         mPhotoViewIDs = new ArrayList<>();
-        preImageUrls = new ArrayList<>();
+        preImage = new ArrayList<>();
     }
 
     private void getAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -76,6 +78,7 @@ public class ImageGroupView extends LinearLayout {
         if (a == null) return;
 
         showAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
+        roundAsCircle = false;
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
         childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
         column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
@@ -98,7 +101,7 @@ public class ImageGroupView extends LinearLayout {
                     } else {
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
-                    updateViewWithDatas();
+                    setPhotoBySquareImageByObserver();
                     restoreView();
                 }
             });
@@ -145,6 +148,7 @@ public class ImageGroupView extends LinearLayout {
         int imageViewWidth = getImageWidth();
         squareImageView.setWidthByParent(imageViewWidth);
         squareImageView.setPlaceholderDrawable(placeholderDrawable);
+        squareImageView.setRoundAsCircle(roundAsCircle);
 
         FrameLayout frame = new FrameLayout(getContext());
         LayoutParams frameParams = new LayoutParams(imageViewWidth, imageViewWidth);
@@ -168,6 +172,8 @@ public class ImageGroupView extends LinearLayout {
                     doPhotoClickSelectable(mPhotoViewIDs.size() - 1);
                 } else if (clickListener != null) {
                     clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
+                } else {
+                    NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), mPhotoViewIDs.indexOf(squarePhotoViewId), showAddButton);
                 }
             }
         });
@@ -178,10 +184,14 @@ public class ImageGroupView extends LinearLayout {
                 if (canClickToDelete(v)) {
                     return true;
                 }
-                doDeletePhoto(v);
+                //doDeletePhoto(v);
                 return true;
             }
         });
+    }
+
+    public void doClickLastPhoto() {
+        doPhotoClickSelectable(mPhotoViewIDs.size() - 1);
     }
 
     private boolean isAddButton(SquareImageView view) {
@@ -195,7 +205,11 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private int getImageWidth() {
-        return (getMeasuredWidth() - childMargin * (column - 1) - getPaddingRight() - getPaddingLeft()) / column;
+        int width = getMeasuredWidth();
+        if (width == 0) {
+            width = DisplayUtils.getScreenWidth(getContext()) - getResources().getDimensionPixelSize(R.dimen.list_horizontal_margin) * 2;
+        }
+        return (width - childMargin * (column - 1) - getPaddingRight() - getPaddingLeft()) / column;
     }
 
     private void doDeletePhoto(View v) {
@@ -221,8 +235,40 @@ public class ImageGroupView extends LinearLayout {
     private void doPhotoDelete(final int photoId) {
         removeView(findViewById(photoId));
         mPhotoViewIDs.remove(new Integer(photoId));
+        refreshImages();
+    }
+
+    private void refreshImages() {
         requestLayout();
         refresh();
+    }
+
+    public void showAddButton(Boolean b) {
+        showAddButton = b;
+        refresh();
+    }
+
+    public void showWithCircle(Boolean b) {
+        roundAsCircle = b;
+        refresh();
+    }
+
+    public void setRoundAsCircle(Boolean flag) {
+        roundAsCircle = flag;
+    }
+
+
+    private void doPhotosDelete(final ArrayList<Integer> positions) {
+        if (positions == null) return;
+        ArrayList<Integer> deleteIds = new ArrayList<>();
+        for (int position : positions) {
+            deleteIds.add(mPhotoViewIDs.get(position));
+        }
+        for (int id : deleteIds) {
+            removeView(findViewById(id));
+            mPhotoViewIDs.remove(new Integer(id));
+        }
+        refreshImages();
     }
 
     private void refresh() {
@@ -244,15 +290,14 @@ public class ImageGroupView extends LinearLayout {
         initLayoutItem();
         for (int i = 0; i < photos.size(); i++) {
             SquareImageView squareImageView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
-            switch (photos.get(i).type) {
-                case INTER:
-                    squareImageView.setInternetData(photos.get(i).url);
-                    break;
-                case LOCAL:
-                    squareImageView.setLocalUrl(photos.get(i).url);
-                    break;
+            squareImageView.setImageData(photos.get(i).localUrl,
+                    photos.get(i).interNetUrl,
+                    photos.get(i).urlKey);
+            if (showAddButton) {
+                addPhoto(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
+            } else {
+                addPhotoWithoutButton(i, photos.size());
             }
-            addPhoto(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
         }
     }
 
@@ -297,38 +342,60 @@ public class ImageGroupView extends LinearLayout {
 
     public void setPhotos(ArrayList<String> photosNetUrl) {
         if (photosNetUrl == null) return;
-        preImageUrls.addAll(photosNetUrl);
-        updateViewWithDatas();
+        preImage.clear();
+        for (String url : photosNetUrl) {
+            preImage.add(new SquareImage(null, url, null, SquareImage.PhotoType.INTER));
+        }
+        setPhotoBySquareImage();
     }
 
-    private void updateViewWithDatas() {
-        if (showAddButton) {
-            setPhotosWithButton(preImageUrls);
-        } else {
-            setPhotosWithoutButton(preImageUrls);
+    public void setPhotosWithKey(ArrayList<String> urls) {
+        if (urls == null) return;
+        preImage.clear();
+        for (String url : urls) {
+            String[] headWithKey = url.split("/");
+            preImage.add(new SquareImage(null, url, headWithKey[headWithKey.length - 1], SquareImage.PhotoType.INTER));
+        }
+        setPhotoBySquareImage();
+    }
+
+    private void setPhotoBySquareImageByObserver() {
+        setPhotoBySquareImage();
+        if (mPhotoViewIDs.size() > 0) {
+            SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
+            squareImageView.requestLayout();
+            squareImageView.invalidate();
         }
     }
 
-    private void setPhotosWithButton(ArrayList<String> photosNetUrl) {
+    private void setPhotoBySquareImage() {
+        if (showAddButton) {
+            setSquareImagesWithButton(preImage);
+        } else {
+            setSquareImagesWithoutButton(preImage);
+        }
+    }
+
+    private void setSquareImagesWithButton(ArrayList<SquareImage> photos) {
         removeAllViews();
         mPhotoViewIDs.clear();
         initLayoutItem();
-        int size = photosNetUrl != null ? photosNetUrl.size() : 0;
+        int size = photos != null ? photos.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
-            squareImageView.setInternetData(photosNetUrl.get(i));
+            squareImageView.setImageData(null, photos.get(i).interNetUrl, photos.get(i).urlKey);
             addPhoto(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
         }
     }
 
-    private void setPhotosWithoutButton(ArrayList<String> photosNetUrl) {
+    private void setSquareImagesWithoutButton(ArrayList<SquareImage> photos) {
         removeAllViews();
         mPhotoViewIDs.clear();
         initLayoutItem();
-        int size = photosNetUrl != null ? photosNetUrl.size() : 0;
+        int size = photos != null ? photos.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) findViewById(mPhotoViewIDs.get(i));
-            squareImageView.setInternetData(photosNetUrl.get(i));
+            squareImageView.setImageData(null, photos.get(i).interNetUrl, photos.get(i).urlKey);
             addPhotoWithoutButton(i, size);
         }
     }
@@ -382,6 +449,10 @@ public class ImageGroupView extends LinearLayout {
         mManager = manager;
     }
 
+    public void setUnionKey(String key) {
+        unionKey = key;
+    }
+
     private int createIndex() {
         long time = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("mmss");
@@ -419,10 +490,13 @@ public class ImageGroupView extends LinearLayout {
     public void onParentResult(int requestCode, Intent data) {
         Uri imageSelectedUri = data.getData();
         String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+        ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
         if (requestCode == NavigatorImage.RESULT_SELECT_PHOTO && null != imageSelectedUri) {
             doSelectImage(imageSelectedUri);
         } else if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeurl) {
             doTakePhoto(photoTakeurl);
+        } else if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
+            doPhotosDelete(positions);
         }
     }
 
@@ -449,7 +523,42 @@ public class ImageGroupView extends LinearLayout {
         squarePhotoView.setFocusableInTouchMode(true);
         squarePhotoView.requestFocus();
         squarePhotoView.setLocalUrl(ImageGroupUtils.getPathOfPhotoByUri(getContext(), uri));
+        squarePhotoView.setUploadKey("image_" + unionKey + "_" + System.currentTimeMillis());
         addPhoto(squarePhotoView.getId());
+    }
+
+    public HashMap<String, String> getUploadImageUrlKeys() {
+        HashMap<String, String> map = new HashMap<>();
+        for (Integer i : mPhotoViewIDs) {
+            SquareImageView squareImageView = (SquareImageView) this.findViewById(i);
+            if (TextUtils.isEmpty(squareImageView.getInternetUrl()) && !TextUtils.isEmpty(squareImageView.getLocalUrl())) {
+                map.put(squareImageView.getUploadImageKey(), squareImageView.getLocalUrl());
+            }
+        }
+        return map;
+    }
+
+    public ArrayList<String> getImageKeys() {
+        ArrayList<String> map = new ArrayList<>();
+        for (Integer i : mPhotoViewIDs) {
+            SquareImageView squareImageView = (SquareImageView) this.findViewById(i);
+            if (!TextUtils.isEmpty(squareImageView.getInternetUrl()) || !TextUtils.isEmpty(squareImageView.getLocalUrl())) {
+                map.add(squareImageView.getUploadImageKey());
+            }
+        }
+        return map;
+    }
+
+    public String getImageKeyString() {
+        ArrayList<String> keys = getImageKeys();
+        if (keys.isEmpty()) return null;
+        StringBuffer sb = new StringBuffer();
+        for (String key : keys) {
+            sb.append(key);
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
     @SuppressWarnings("unused")

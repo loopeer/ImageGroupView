@@ -11,7 +11,7 @@ public class ImageGroupSavedState extends View.BaseSavedState {
     private int doingClickViewId;
     private ArrayList<SquareImage> squarePhotos;
 
-    ImageGroupSavedState(Parcelable superState) {
+    public ImageGroupSavedState(Parcelable superState) {
         super(superState);
     }
 

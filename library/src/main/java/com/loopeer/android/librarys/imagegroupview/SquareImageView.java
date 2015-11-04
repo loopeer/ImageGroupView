@@ -5,9 +5,10 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
+
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class SquareImageView extends SimpleDraweeView implements View.OnClickListener{
@@ -34,7 +35,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
 
     private void init() {
         placeholderDrawable = R.drawable.ic_image_default;
-        setScaleType(ImageView.ScaleType.CENTER_CROP);
+        setScaleType(ScaleType.CENTER_CROP);
         setClickable(mClickUpload);
         setOnClickListener(this);
         GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
@@ -59,8 +60,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     public void setLocalUrl(String localUrl) {
         if (!TextUtils.isEmpty(mInternetUrl)) mInternetUrl = null;
         mLocalUrl = localUrl;
-
-        ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, 200, 200);
+        ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, 100, 100);
     }
 
     @SuppressWarnings("unused")
@@ -95,7 +95,13 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
             setImageResource(placeholderDrawable);
             return;
         }
-        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, 200, 200);
+        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, 100, 100);
+    }
+
+    public void setImageData(String localUrl, String netUrl, String uploadKey) {
+        if (localUrl != null) setLocalUrl(localUrl);
+        if (netUrl != null) setInternetData(netUrl);
+        if (uploadKey != null) setUploadKey(uploadKey);
     }
 
     @SuppressWarnings("unused")
@@ -113,11 +119,18 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public SquareImage getSquareImage() {
-        if (TextUtils.isEmpty(getInternetUrl()) && !TextUtils.isEmpty(getLocalUrl())) {
-            return new SquareImage(getLocalUrl(), SquareImage.PhotoType.LOCAL);
-        } else if (!TextUtils.isEmpty(getInternetUrl()) && TextUtils.isEmpty(getLocalUrl())) {
-            return new SquareImage(getInternetUrl(), SquareImage.PhotoType.INTER);
-        }
-        return null;
+        return mLocalUrl == null && mInternetUrl == null
+                ? null
+                : new SquareImage(getLocalUrl(), getInternetUrl(), getUploadImageKey()
+                , mLocalUrl == null ? SquareImage.PhotoType.INTER :SquareImage.PhotoType.LOCAL);
+    }
+
+
+    public void setRoundAsCircle(boolean flag) {
+        if (flag == false) return;
+        RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+        roundingParams.setRoundAsCircle(flag);
+        getHierarchy().setRoundingParams(roundingParams);
+
     }
 }

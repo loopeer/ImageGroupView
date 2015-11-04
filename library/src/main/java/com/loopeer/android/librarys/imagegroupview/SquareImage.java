@@ -8,22 +8,30 @@ import java.util.Map;
 
 public class SquareImage implements Parcelable {
 
-  public String url;
+  public String localUrl;
+  public String interNetUrl;
+  public String urlKey;
   public PhotoType type;
 
-  public SquareImage(String url, PhotoType type) {
-    this.url = url;
+  public SquareImage(String localUrl, String interNetUrl, String urlKey, PhotoType type) {
+    this.localUrl = localUrl;
+    this.interNetUrl = interNetUrl;
+    this.urlKey = urlKey;
     this.type = type;
   }
 
   protected SquareImage(Parcel in) {
-    url = in.readString();
+    localUrl = in.readString();
+    interNetUrl = in.readString();
+    urlKey = in.readString();
     type = in.readParcelable(PhotoType.class.getClassLoader());
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(url);
+    dest.writeString(localUrl);
+    dest.writeString(interNetUrl);
+    dest.writeString(urlKey);
     dest.writeParcelable(type, flags);
   }
 
@@ -76,7 +84,7 @@ public class SquareImage implements Parcelable {
       return STRING_MAPPING.get(value.toUpperCase());
     }
 
-    public static final Parcelable.Creator<PhotoType> CREATOR = new Parcelable.Creator<PhotoType>() {
+    public static final Creator<PhotoType> CREATOR = new Creator<PhotoType>() {
 
       public PhotoType createFromParcel(Parcel in) {
         PhotoType option = PhotoType.values()[in.readInt()];
