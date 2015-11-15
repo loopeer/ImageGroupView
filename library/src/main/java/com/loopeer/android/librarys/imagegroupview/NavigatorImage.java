@@ -3,6 +3,9 @@ package com.loopeer.android.librarys.imagegroupview;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.MediaStore;
+
+import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 
 import java.util.ArrayList;
 
@@ -17,12 +20,23 @@ public class NavigatorImage {
     public static final int RESULT_TAKE_PHOTO = 2003;
     public static final int RESULT_IMAGE_SWITCHER = 2004;
 
+    public static final String[] IMAGE_PROJECTION = {
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media._ID };
+
     public static void startImageSwitcherActivity(Context context, ArrayList<SquareImage> images, int position, boolean showAddButton) {
         Intent intent = new Intent(context, ImageSwitcherActivity.class);
         intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, images);
         intent.putExtra(EXTRA_IMAGE_DELETE, showAddButton);
         intent.putExtra(EXTRA_IMAGE_URL_POSITION, position);
         ((Activity)context).startActivityForResult(intent, RESULT_IMAGE_SWITCHER);
+    }
+
+    public static void startCustomAlbumActivity(Context context) {
+        Intent intent = new Intent(context, AlbumActivity.class);
+        ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTO);
     }
 
 }

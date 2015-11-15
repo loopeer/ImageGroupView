@@ -13,6 +13,10 @@
             android:name=".ImageSwitcherActivity"
             android:launchMode="singleTop"
             android:theme="@style/FrameworkRoot.Theme.NoActionBar"/>
+
+        <activity android:name=".activity.AlbumActivity"
+            android:launchMode="singleTop"
+            />
     </application>
 
 </manifest>

@@ -320,12 +320,17 @@ public class ImageGroupView extends LinearLayout {
                 .setNegativeListener(new GetImageDialogFragment.ClickListener() {
                     @Override
                     public void click() {
-                        Intent i = new Intent(
-                                Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        ((Activity) getContext()).startActivityForResult(i, NavigatorImage.RESULT_SELECT_PHOTO);
+                        NavigatorImage.startCustomAlbumActivity(getContext());
+//                        selectImageFromSystemAlbum();
                     }
                 })
                 .show();
+    }
+
+    private void selectImageFromSystemAlbum() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        ((Activity) getContext()).startActivityForResult(i, NavigatorImage.RESULT_SELECT_PHOTO);
     }
 
     public void addPhoto(int viewId) {

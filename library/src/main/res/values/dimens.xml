@@ -4,4 +4,5 @@
     <dimen name="list_horizontal_margin">12dp</dimen>
     <dimen name="list_vertical_margin">12dp</dimen>
 
+    <dimen name="image_group_default_padding">8dp</dimen>
 </resources>

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
@@ -21,7 +20,6 @@ import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.OnViewTapListener;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
