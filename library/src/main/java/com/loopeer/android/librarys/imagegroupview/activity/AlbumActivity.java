@@ -9,8 +9,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ViewAnimator;
 
 import com.loopeer.android.librarys.imagegroupview.DividerItemImagesDecoration;
@@ -26,7 +24,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, CustomPopupView.FolderItemSelectListener {
+public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener {
 
     private static final int LOADER_ID_FOLDER = 10001;
 
@@ -34,12 +32,14 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private CustomPopupView mCustomPopupWindowView;
     private ViewAnimator mViewAnimator;
     private ImageAdapter mImageAdapter;
+    private List<Image> mSelectedImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        mSelectedImages = new ArrayList<>();
         setUpView();
     }
 
@@ -98,6 +98,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                 0
         );
         mImageAdapter = new ImageAdapter(this);
+        mImageAdapter.setOnImageClickListener(this);
         mReyclerView.setAdapter(mImageAdapter);
     }
 
@@ -178,31 +179,22 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //mFolderAdapter.setSelectIndex(position);
-/*
-        final int index = position;
-        final AdapterView v = parent;
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //mFolderPopupWindow.dismiss();
-                mImageAdapter.updateData(((ImageFolder) v.getAdapter().getItem(index)).images);
-                if (index == 0) {
-                    mTextImagesNum.setText(R.string.album_all);
-                } else {
-                    ImageFolder folder = (ImageFolder) v.getAdapter().getItem(index);
-                    if (null != folder) {
-                        mTextImagesNum.setText(folder.name);
-                    }
-                }
-            }
-        }, 100);*/
+    public void onFolderItemSelected(ImageFolder imageFolder) {
+        updateContentView(imageFolder);
     }
 
     @Override
-    public void onFolderItemSelected(ImageFolder imageFolder) {
-        updateContentView(imageFolder);
+    public void onImageSelected(Image image) {
+        if (mSelectedImages.contains(image)) {
+            mSelectedImages.remove(image);
+        } else {
+            mSelectedImages.add(image);
+        }
+        mImageAdapter.updateSelectImages(mSelectedImages);
+    }
+
+    @Override
+    public void onCameraSelected() {
+
     }
 }

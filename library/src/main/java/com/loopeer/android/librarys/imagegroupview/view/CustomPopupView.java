@@ -144,6 +144,7 @@ public class CustomPopupView extends LinearLayout implements View.OnClickListene
     }
 
     private void onItemSelect(ImageFolder item) {
+        mTextImagesNum.setText(item.name);
         dismiss();
         mFolderItemSelectListener.onFolderItemSelected(item);
     }

@@ -16,4 +16,12 @@
         fresco:placeholderImageScaleType="centerCrop"
         />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_margin="@dimen/image_group_default_padding"
+        android:src="@drawable/selected_image_check_box"
+        />
+
 </FrameLayout>

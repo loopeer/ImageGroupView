@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.ImageDisplayHelper;
@@ -14,6 +15,7 @@ import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerViewAdapter<Image> {
@@ -21,8 +23,16 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
     private static final int ITEM_CAMERA = 10000;
     private static final int ITEM_IMAMGE = 10001;
 
+    private OnImageClickListener mOnImageClickListener;
+    private List<Image> mSelectImages;
+
     public ImageAdapter(Context context) {
         super(context);
+        mSelectImages = new ArrayList<>();
+    }
+
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        mOnImageClickListener = listener;
     }
 
     @Override
@@ -33,25 +43,29 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
             productViewHolder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    mOnImageClickListener.onImageSelected(product);
                 }
             });
-
+            productViewHolder.itemView.setSelected(isImageSelected(product));
         }
         if (viewHolder instanceof CameraViewHolder) {
             CameraViewHolder productViewHolder = (CameraViewHolder) viewHolder;
             productViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    mOnImageClickListener.onCameraSelected();
                 }
             });
-
         }
     }
 
+    private boolean isImageSelected(Image product) {
+        return mSelectImages.contains(product);
+    }
+
     public void updateFolderImageData(ImageFolder imageFolder) {
-        List<Image> images = imageFolder.images;
+        List<Image> images = new ArrayList();
+        images.addAll(imageFolder.images);
         if (TextUtils.isEmpty(imageFolder.dir)) {
             images.add(0, null);
         }
@@ -78,6 +92,12 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
             return ITEM_CAMERA;
         }
         return ITEM_IMAMGE;
+    }
+
+    public void updateSelectImages(List<Image> selectedImages) {
+        mSelectImages.clear();
+        mSelectImages.addAll(selectedImages);
+        notifyDataSetChanged();
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -119,5 +139,10 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
             itemView.setLayoutParams(layoutParams);
 
         }
+    }
+
+    public interface OnImageClickListener{
+        void onImageSelected(Image image);
+        void onCameraSelected();
     }
 }
