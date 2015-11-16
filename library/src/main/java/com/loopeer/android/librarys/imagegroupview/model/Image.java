@@ -14,6 +14,10 @@ public class Image implements Serializable {
         this.time = time;
     }
 
+    public Image(String photoTakeurl) {
+        url = photoTakeurl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

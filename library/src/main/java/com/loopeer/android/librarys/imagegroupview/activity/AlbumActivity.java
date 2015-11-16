@@ -1,19 +1,26 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.loopeer.android.librarys.imagegroupview.DividerItemImagesDecoration;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.UserCameraActivity;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
@@ -41,6 +48,43 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
         mSelectedImages = new ArrayList<>();
         setUpView();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_submit, menu);
+        /*editMenu = menu.findItem(R.id.action_save);
+        editMenu.setEnabled(false);*/
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_submit) {
+            finishWithResult();
+            return true;
+        } else if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void finishWithResult() {
+        Intent intent = getIntent();
+        intent.putStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages));
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    private ArrayList<String> createUrls(List<Image> selectedImages) {
+        ArrayList<String> results = new ArrayList<>();
+        for (Image image : selectedImages) {
+            results.add(image.url);
+        }
+        return results;
     }
 
     private void setUpView() {
@@ -195,6 +239,28 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onCameraSelected() {
+        startCamera();
+    }
 
+    private void startCamera() {
+        String SDState = Environment.getExternalStorageState();
+        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
+            ActivityCompat.startActivityForResult(AlbumActivity.this,
+                    new Intent(AlbumActivity.this, UserCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
+                    null);
+        } else {
+            Toast.makeText(AlbumActivity.this, "内存卡不存在", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null || resultCode != RESULT_OK) return;
+        String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+        if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeurl) {
+            mSelectedImages.add(new Image(photoTakeurl));
+        }
+        finishWithResult();
     }
 }

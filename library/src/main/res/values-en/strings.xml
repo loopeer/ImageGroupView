@@ -2,5 +2,6 @@
     <string name="select_images">Album</string>
     <string name="take_photo">Camera</string>
     <string name="album_all">All</string>
+    <string name="action_submit">Submit</string>
 
 </resources>

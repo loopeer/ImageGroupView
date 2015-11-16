@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class NavigatorImage {
 
     public static final String EXTRA_PHOTO_URL = "extra_photo_url";
+    public static final String EXTRA_PHOTOS_URL = "extra_photos_url";
     public static final String EXTRA_IMAGE_URL = "image_url";
     public static final String EXTRA_IMAGE_URL_POSITION = "image_position";
     public static final String EXTRA_IMAGE_DELETE = "extra_image_delete";
@@ -20,6 +21,7 @@ public class NavigatorImage {
     public static final int RESULT_SELECT_PHOTO = 2001;
     public static final int RESULT_TAKE_PHOTO = 2003;
     public static final int RESULT_IMAGE_SWITCHER = 2004;
+    public static final int RESULT_SELECT_PHOTOS = 2005;
 
     public static final String[] IMAGE_PROJECTION = {
             MediaStore.Images.Media.DATA,
@@ -37,7 +39,7 @@ public class NavigatorImage {
 
     public static void startCustomAlbumActivity(Context context) {
         Intent intent = new Intent(context, AlbumActivity.class);
-        ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTO);
+        ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
     }
 
 }

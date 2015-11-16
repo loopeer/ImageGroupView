@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,11 +19,12 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class ImageGroupView extends LinearLayout {
 
@@ -40,7 +39,6 @@ public class ImageGroupView extends LinearLayout {
     private Uri preTakePhotoUri;
     private ArrayList<SquareImage> preImage;
     private OnImageClickListener clickListener;
-    private int mPhotoIsDoingId;
     private int addButtonDrawable;
     private int deleteDrawable;
     private int placeholderDrawable;
@@ -302,8 +300,8 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void doUpLoadPhotoClick(int viewId) {
-        photoClick(viewId);
-        new GetImageDialogFragment.Builder(mManager)
+        NavigatorImage.startCustomAlbumActivity(getContext());
+        /*new GetImageDialogFragment.Builder(mManager)
                 .setPositiveListener(new GetImageDialogFragment.ClickListener() {
                     @Override
                     public void click() {
@@ -324,7 +322,7 @@ public class ImageGroupView extends LinearLayout {
 //                        selectImageFromSystemAlbum();
                     }
                 })
-                .show();
+                .show();*/
     }
 
     private void selectImageFromSystemAlbum() {
@@ -467,15 +465,10 @@ public class ImageGroupView extends LinearLayout {
         return i;
     }
 
-    public void photoClick(int clickingViewId) {
-        mPhotoIsDoingId = clickingViewId;
-    }
-
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable parcelable = super.onSaveInstanceState();
         final ImageGroupSavedState imageSaveState = new ImageGroupSavedState(parcelable);
-        imageSaveState.setDoingClickViewId(mPhotoIsDoingId);
         imageSaveState.setSquarePhotos(getSquarePhotos());
         return imageSaveState;
     }
@@ -488,13 +481,13 @@ public class ImageGroupView extends LinearLayout {
         }
         final ImageGroupSavedState ss = (ImageGroupSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-        mPhotoIsDoingId = ss.getDoingClickViewId();
         imageGroupSavedState = ss;
     }
 
     public void onParentResult(int requestCode, Intent data) {
         Uri imageSelectedUri = data.getData();
         String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+        List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
         if (requestCode == NavigatorImage.RESULT_SELECT_PHOTO && null != imageSelectedUri) {
             doSelectImage(imageSelectedUri);
@@ -502,7 +495,19 @@ public class ImageGroupView extends LinearLayout {
             doTakePhoto(photoTakeurl);
         } else if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
             doPhotosDelete(positions);
+        } else if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
+            doSelectPhotos(images);
         }
+    }
+
+    private void doSelectPhotos(List<String> images) {
+        for (String url : images) {
+            doSelectPhotosByUrl(url);
+        }
+    }
+
+    private void doSelectPhotosByUrl(String url) {
+        refreshPhotoView(url);
     }
 
     private void doTakePhoto(String url) {
@@ -514,6 +519,24 @@ public class ImageGroupView extends LinearLayout {
         refreshPhotoView(data);
     }
 
+    private void refreshPhotoView(String url) {
+        if (imageGroupSavedState != null) {
+            //preTakePhotoUri = url;
+            return;
+        } else {
+            //preTakePhotoUri = null;
+        }
+
+        SquareImageView squarePhotoView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
+        ImageGroupDisplayHelper.displayImageLocal(squarePhotoView, url, 200, 200);
+        squarePhotoView.setFocusable(true);
+        squarePhotoView.setFocusableInTouchMode(true);
+        squarePhotoView.requestFocus();
+        squarePhotoView.setLocalUrl(url);
+        squarePhotoView.setUploadKey("image_" + unionKey + "_" + System.currentTimeMillis());
+        addPhoto(squarePhotoView.getId());
+    }
+
     private void refreshPhotoView(Uri uri) {
         if (imageGroupSavedState != null) {
             preTakePhotoUri = uri;
@@ -522,7 +545,7 @@ public class ImageGroupView extends LinearLayout {
             preTakePhotoUri = null;
         }
 
-        SquareImageView squarePhotoView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoIsDoingId));
+        SquareImageView squarePhotoView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
         ImageGroupDisplayHelper.displayImage(squarePhotoView, uri, 200, 200);
         squarePhotoView.setFocusable(true);
         squarePhotoView.setFocusableInTouchMode(true);

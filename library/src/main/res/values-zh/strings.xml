@@ -2,5 +2,6 @@
     <string name="select_images">相册</string>
     <string name="take_photo">相机</string>
     <string name="album_all">所有照片</string>
+    <string name="action_submit">提交</string>
 
 </resources>
