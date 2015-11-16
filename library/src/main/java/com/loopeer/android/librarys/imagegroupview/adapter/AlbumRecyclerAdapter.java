@@ -13,15 +13,31 @@ import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 
 public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
+    public interface OnItemClickListener{
+        void onItemClick(ImageFolder imageFolder);
+    }
+
+    private OnItemClickListener mOnItemClickListener;
+
     public AlbumRecyclerAdapter(Context context) {
         super(context);
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
     @Override
-    public void bindView(ImageFolder var1, int var2, RecyclerView.ViewHolder var3) {
+    public void bindView(final ImageFolder var1, int var2, RecyclerView.ViewHolder var3) {
         if (var3 instanceof AlbumViewHolder) {
             AlbumViewHolder albumViewHolder = (AlbumViewHolder) var3;
             albumViewHolder.bind(var1);
+            albumViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(var1);
+                }
+            });
         }
     }
 

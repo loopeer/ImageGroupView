@@ -1,48 +1,38 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 
-import com.loopeer.android.librarys.imagegroupview.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.DividerItemImagesDecoration;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.adapter.FolderAdapter;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, CustomPopupView.FolderItemSelectListener {
 
     private static final int LOADER_ID_FOLDER = 10001;
 
     private RecyclerView mReyclerView;
+    private CustomPopupView mCustomPopupWindowView;
     private ViewAnimator mViewAnimator;
-    private View mFooterView;
-    private TextView mTextImagesNum;
-    private ListPopupWindow mFolderPopupWindow;
-
-    private FolderAdapter mFolderAdapter;
     private ImageAdapter mImageAdapter;
 
     @Override
@@ -56,47 +46,18 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private void setUpView() {
         mReyclerView = (RecyclerView) findViewById(R.id.recycler_album);
         mViewAnimator = (ViewAnimator) findViewById(R.id.view_album_animator);
-        mTextImagesNum = (TextView) findViewById(R.id.text_images_num);
-        mFooterView = findViewById(R.id.view_footer);
+        mCustomPopupWindowView = (CustomPopupView) findViewById(R.id.view_popup_folder_window);
 
         setUpTextView();
+        mCustomPopupWindowView.setFolderItemSelectListener(this);
         showProgressView();
         setUpRecyclerView();
     }
 
     private void setUpTextView() {
-        mTextImagesNum.setText(R.string.album_all);
-        mTextImagesNum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (mFolderPopupWindow == null) {
-                    createPopupFolderList();
-                    return;
-                }
-                trigglePopupWindow();
-
-            }
-        });
+        mCustomPopupWindowView.setNumText(getString(R.string.album_all));
     }
 
-    private void trigglePopupWindow() {
-        if (mFolderPopupWindow.isShowing()) {
-            mFolderPopupWindow.dismiss();
-        } else {
-            mFolderPopupWindow.setHeight(calculateWindowHeight());
-            mFolderPopupWindow.show();
-            int index = mFolderAdapter.getSelectIndex();
-            mFolderPopupWindow.getListView().setSelection(index);
-        }
-    }
-
-    private int calculateWindowHeight() {
-        int itemHeight = getResources().getDimensionPixelSize(R.dimen.image_select_folder_height);
-        int actualHeight = mFolderAdapter.getCount() * itemHeight;
-        int maxPopupHeight = DisplayUtils.getScreenHeight(this) * 5 / 8;
-        return Math.min(maxPopupHeight, actualHeight);
-    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -138,8 +99,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         );
         mImageAdapter = new ImageAdapter(this);
         mReyclerView.setAdapter(mImageAdapter);
-
-        mFolderAdapter = new FolderAdapter(this);
     }
 
     @Override
@@ -191,18 +150,9 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                     }
                 } while (data.moveToNext());
 
-                mFolderAdapter.updateData(createFoldersWithAllImageFolder(folders));
-                updateDefaultImages();
+                mCustomPopupWindowView.updateFolderData(createFoldersWithAllImageFolder(folders));
             }
         }
-    }
-
-    private void updateDefaultImages() {
-        updateImages(mFolderAdapter.getItem(0));
-    }
-
-    private void updateImages(ImageFolder item) {
-        updateContentView(item);
     }
 
     private List createFoldersWithAllImageFolder(List<ImageFolder> folders) {
@@ -227,33 +177,17 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     }
 
-    private void createPopupFolderList() {
-        mFolderPopupWindow = new ListPopupWindow(this);
-        int width = DisplayUtils.getScreenWidth(this);
-        int height = DisplayUtils.getScreenHeight(this);
-        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(AlbumActivity.this, R.color.image_group_popup_bg)));
-        mFolderPopupWindow.setAdapter(mFolderAdapter);
-        mFolderPopupWindow.setContentWidth(width);
-        mFolderPopupWindow.setWidth(width);
-        mFolderPopupWindow.setHeight(height * 5 / 8);
-        mFolderPopupWindow.setAnimationStyle(R.style.popup_window_anim_style);
-        mFolderPopupWindow.setAnchorView(mFooterView);
-        mFolderPopupWindow.setModal(true);
-        mFolderPopupWindow.setOnItemClickListener(this);
-        trigglePopupWindow();
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mFolderAdapter.setSelectIndex(position);
-
+        //mFolderAdapter.setSelectIndex(position);
+/*
         final int index = position;
         final AdapterView v = parent;
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mFolderPopupWindow.dismiss();
+                //mFolderPopupWindow.dismiss();
                 mImageAdapter.updateData(((ImageFolder) v.getAdapter().getItem(index)).images);
                 if (index == 0) {
                     mTextImagesNum.setText(R.string.album_all);
@@ -264,6 +198,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                     }
                 }
             }
-        }, 100);
+        }, 100);*/
+    }
+
+    @Override
+    public void onFolderItemSelected(ImageFolder imageFolder) {
+        updateContentView(imageFolder);
     }
 }
