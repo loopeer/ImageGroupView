@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="@dimen/list_horizontal_margin"
+    android:background="@android:color/white"
     >
 
     <com.facebook.drawee.view.SimpleDraweeView

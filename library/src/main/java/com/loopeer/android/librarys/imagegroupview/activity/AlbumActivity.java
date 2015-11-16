@@ -85,11 +85,19 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         if (mFolderPopupWindow.isShowing()) {
             mFolderPopupWindow.dismiss();
         } else {
+            mFolderPopupWindow.setHeight(calculateWindowHeight());
             mFolderPopupWindow.show();
             int index = mFolderAdapter.getSelectIndex();
             index = index == 0 ? index : index - 1;
             mFolderPopupWindow.getListView().setSelection(index);
         }
+    }
+
+    private int calculateWindowHeight() {
+        int itemHeight = getResources().getDimensionPixelSize(R.dimen.image_select_folder_height);
+        int actualHeight = mFolderAdapter.getCount() * itemHeight;
+        int maxPopupHeight = DisplayUtils.getScreenHeight(this) * 5 / 8;
+        return Math.min(maxPopupHeight, actualHeight);
     }
 
     @Override
@@ -227,7 +235,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         mFolderPopupWindow = new ListPopupWindow(this);
         int width = DisplayUtils.getScreenWidth(this);
         int height = DisplayUtils.getScreenHeight(this);
-        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mFolderPopupWindow.setAdapter(mFolderAdapter);
         mFolderPopupWindow.setContentWidth(width);
         mFolderPopupWindow.setWidth(width);
