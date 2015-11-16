@@ -8,21 +8,20 @@
 
     <include layout="@layout/view_recycler"/>
 
-
     <RelativeLayout
         android:id="@+id/view_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal">
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="#77000000">
 
         <TextView
             android:id="@+id/text_images_num"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/list_horizontal_margin"
-            android:background="@android:color/white"
             android:textSize="16sp"
-            android:textColor="?android:textColorPrimary"
+            android:textColor="@color/image_group_text_color_hint"
             tools:text="总共多少张"
             android:gravity="center_horizontal"
             />

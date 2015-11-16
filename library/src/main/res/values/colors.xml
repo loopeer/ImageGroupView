@@ -3,4 +3,6 @@
 
     <color name="image_group_background_color">#DDDDDD</color>
 
+    <color name="image_group_text_color_hint">#CCCCCC</color>
+    <color name="image_group_popup_bg">#44000000</color>
 </resources>
