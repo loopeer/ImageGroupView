@@ -1,24 +1,24 @@
 package com.loopeer.android.librarys.imagegroupview.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.model.ImageFloder;
-import java.io.File;
 
-public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFloder> {
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.loopeer.android.librarys.imagegroupview.ImageDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+
+public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
     public AlbumRecyclerAdapter(Context context) {
         super(context);
     }
 
     @Override
-    public void bindView(ImageFloder var1, int var2, RecyclerView.ViewHolder var3) {
+    public void bindView(ImageFolder var1, int var2, RecyclerView.ViewHolder var3) {
         if (var3 instanceof AlbumViewHolder) {
             AlbumViewHolder albumViewHolder = (AlbumViewHolder) var3;
             albumViewHolder.bind(var1);
@@ -44,8 +44,8 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFloder> {
             mTextSize = (TextView) itemView.findViewById(R.id.text_album_size);
         }
 
-        public void bind(ImageFloder imageFloder) {
-            mImage.setImageURI(Uri.fromFile(new File(imageFloder.firstImagePath)));
+        public void bind(ImageFolder imageFloder) {
+            ImageDisplayHelper.displayImageLocal(mImage, imageFloder.firstImagePath, 200, 200);
             mTextAlbumName.setText(imageFloder.name);
             mTextSize.setText(Integer.toString(imageFloder.count));
         }

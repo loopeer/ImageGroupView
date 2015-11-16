@@ -1,20 +1,31 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
-
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.ViewAnimator;
+
+import com.loopeer.android.librarys.imagegroupview.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.adapter.AlbumRecyclerAdapter;
-import com.loopeer.android.librarys.imagegroupview.model.ImageFloder;
+import com.loopeer.android.librarys.imagegroupview.adapter.FolderAdapter;
+import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
+import com.loopeer.android.librarys.imagegroupview.model.Image;
+import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -26,18 +37,58 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private RecyclerView mReyclerView;
     private ViewAnimator mViewAnimator;
-    private AlbumRecyclerAdapter mAlbumAdapter;
+    private View mFooterView;
+    private TextView mTextImagesNum;
+    private ListPopupWindow mFolderPopupWindow;
+
+    private FolderAdapter mFolderAdapter;
+    private ImageAdapter mImageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        setUpView();
+    }
+
+    private void setUpView() {
         mReyclerView = (RecyclerView) findViewById(R.id.recycler_album);
         mViewAnimator = (ViewAnimator) findViewById(R.id.view_album_animator);
+        mTextImagesNum = (TextView) findViewById(R.id.text_images_num);
+        mFooterView = findViewById(R.id.view_footer);
 
+        setUpTextView();
         showProgressView();
         setUpRecyclerView();
+    }
+
+    private void setUpTextView() {
+        mTextImagesNum.setText(R.string.album_all);
+        mTextImagesNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mFolderPopupWindow == null) {
+                    createPopupFolderList();
+                    return;
+                }
+                trigglePopueWindow();
+
+            }
+        });
+    }
+
+
+    private void trigglePopueWindow() {
+        if (mFolderPopupWindow.isShowing()) {
+            mFolderPopupWindow.dismiss();
+        } else {
+            mFolderPopupWindow.show();
+            int index = mFolderAdapter.getSelectIndex();
+            index = index == 0 ? index : index - 1;
+            mFolderPopupWindow.getListView().setSelection(index);
+        }
     }
 
     @Override
@@ -68,8 +119,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void setUpRecyclerView() {
         mReyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAlbumAdapter = new AlbumRecyclerAdapter(this);
-        mReyclerView.setAdapter(mAlbumAdapter);
+        mFolderAdapter = new FolderAdapter(this);
+        //mReyclerView.setAdapter(mAlbumAdapter);
     }
 
     @Override
@@ -83,16 +134,19 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null) {
-            List<ImageFloder> floders = new ArrayList();
+            List<ImageFolder> folders = new ArrayList();
             int count = data.getCount();
             if (count > 0) {
                 data.moveToFirst();
                 do {
                     String path = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[0]));
+                    String name = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[1]));
+                    long dateTime = data.getLong(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[2]));
+                    Image image = new Image(path, name, dateTime);
 
                     File imageFile = new File(path);
                     File folderFile = imageFile.getParentFile();
-                    ImageFloder folder = new ImageFloder();
+                    ImageFolder folder = new ImageFolder();
                     folder.name = folderFile.getName();
                     folder.dir = folderFile.getAbsolutePath();
                     folder.firstImagePath = path;
@@ -109,19 +163,89 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                         }
                     }).length;
                     folder.count = picSize;
-                    if (!floders.contains(folder)) {
-                        floders.add(folder);
+                    if (!folders.contains(folder)) {
+                        List<Image> imageList = new ArrayList<>();
+                        imageList.add(image);
+                        folder.images = imageList;
+                        folders.add(folder);
+                    } else {
+                        ImageFolder f = folders.get(folders.indexOf(folder));
+                        f.images.add(image);
                     }
                 } while (data.moveToNext());
-                updateContentView(floders);
-                mAlbumAdapter.setData(floders);
+
+                mFolderAdapter.updateData(createFoldersWithAllImageFolder(folders));
             }
         }
+    }
+
+    private List createFoldersWithAllImageFolder(List<ImageFolder> floders) {
+        if (floders.size() > 0) {
+            ImageFolder folder = new ImageFolder();
+            folder.name = getResources().getString(R.string.album_all);
+            folder.dir = null;
+            folder.firstImagePath = floders.get(0).firstImagePath;
+            floders.add(0, folder);
+        }
+        return floders;
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+
+    private void createPopupFolderList() {
+        mFolderPopupWindow = new ListPopupWindow(this);
+        int width = DisplayUtils.getScreenWidth(this);
+        int height = DisplayUtils.getScreenHeight(this);
+        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mFolderPopupWindow.setAdapter(mFolderAdapter);
+        mFolderPopupWindow.setContentWidth(width);
+        mFolderPopupWindow.setWidth(width);
+        mFolderPopupWindow.setHeight(height * 5 / 8);
+        mFolderPopupWindow.setAnchorView(mFooterView);
+        mFolderPopupWindow.setModal(true);
+        mFolderPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                mFolderAdapter.setSelectIndex(i);
+
+                final int index = i;
+                final AdapterView v = adapterView;
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mFolderPopupWindow.dismiss();
+
+                        if (index == 0) {
+                            //getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
+                            mTextImagesNum.setText(R.string.album_all);
+                        } else {
+                            ImageFolder folder = (ImageFolder) v.getAdapter().getItem(index);
+                            if (null != folder) {
+                                mImageAdapter.setData(folder.images);
+                                mTextImagesNum.setText(folder.name);
+
+                                /*if (resultList != null && resultList.size() > 0) {
+                                    mImageAdapter.setDefaultSelected(resultList);
+                                }*/
+                            }
+                            //mImageAdapter.setShowCamera(false);
+                        }
+
+                        // 滑动到最初始位置
+                        //mGridView.smoothScrollToPosition(0);
+                    }
+                }, 100);
+
+            }
+        });
+
+        trigglePopueWindow();
     }
 
 }
