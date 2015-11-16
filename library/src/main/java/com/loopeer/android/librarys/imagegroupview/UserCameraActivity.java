@@ -48,7 +48,7 @@ public class UserCameraActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (RSULT_IMAGE_CAPTURE == requestCode && resultCode == Activity.RESULT_OK) {
             Intent rsl = new Intent();
-            rsl.putExtra(EXTRA_PHOTO_URL, photoUrl);
+            rsl.putExtra(EXTRA_PHOTO_URL, ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(photoUrl)));
             setResult(Activity.RESULT_OK, rsl);
             finish();
         } else {
