@@ -10,7 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.ViewAnimator;
 
 import com.loopeer.android.librarys.imagegroupview.DisplayUtils;
+import com.loopeer.android.librarys.imagegroupview.DividerItemImagesDecoration;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.FolderAdapter;
@@ -103,6 +104,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         } else {
             showContentView();
         }
+        mImageAdapter.updateData(floders);
     }
 
     private void showContentView() {
@@ -118,9 +120,20 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void setUpRecyclerView() {
-        mReyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mReyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mReyclerView.addItemDecoration(
+                new DividerItemImagesDecoration(
+                        getResources().getDimensionPixelSize(R.dimen.inline_padding)));
+        mReyclerView.setPadding(
+                getResources().getDimensionPixelSize(R.dimen.inline_padding) / 2,
+                0,
+                getResources().getDimensionPixelSize(R.dimen.inline_padding) / 2,
+                0
+        );
+        mImageAdapter = new ImageAdapter(this);
+        mReyclerView.setAdapter(mImageAdapter);
+
         mFolderAdapter = new FolderAdapter(this);
-        //mReyclerView.setAdapter(mAlbumAdapter);
     }
 
     @Override
@@ -175,19 +188,34 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                 } while (data.moveToNext());
 
                 mFolderAdapter.updateData(createFoldersWithAllImageFolder(folders));
+                updateDefaultImages();
             }
         }
     }
 
-    private List createFoldersWithAllImageFolder(List<ImageFolder> floders) {
-        if (floders.size() > 0) {
+    private void updateDefaultImages() {
+        updateImages(mFolderAdapter.getItem(0));
+    }
+
+    private void updateImages(ImageFolder item) {
+        updateContentView(item.images);
+    }
+
+    private List createFoldersWithAllImageFolder(List<ImageFolder> folders) {
+        if (folders.size() > 0) {
             ImageFolder folder = new ImageFolder();
             folder.name = getResources().getString(R.string.album_all);
             folder.dir = null;
-            folder.firstImagePath = floders.get(0).firstImagePath;
-            floders.add(0, folder);
+            folder.firstImagePath = folders.get(0).firstImagePath;
+            int imageCount = 0;
+            for (ImageFolder imageFolder : folders) {
+                imageCount += imageFolder.count;
+                folder.images.addAll(imageFolder.images);
+            }
+            folder.count = imageCount;
+            folders.add(0, folder);
         }
-        return floders;
+        return folders;
     }
 
     @Override
@@ -195,12 +223,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     }
 
-
     private void createPopupFolderList() {
         mFolderPopupWindow = new ListPopupWindow(this);
         int width = DisplayUtils.getScreenWidth(this);
         int height = DisplayUtils.getScreenHeight(this);
-        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         mFolderPopupWindow.setAdapter(mFolderAdapter);
         mFolderPopupWindow.setContentWidth(width);
         mFolderPopupWindow.setWidth(width);

@@ -1,6 +1,7 @@
 package com.loopeer.android.librarys.imagegroupview.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageFolder implements Serializable {
@@ -10,6 +11,10 @@ public class ImageFolder implements Serializable {
     public String name;
     public int count;
     public List<Image> images;
+
+    public ImageFolder() {
+        images = new ArrayList();
+    }
 
     @Override
     public boolean equals(Object o) {

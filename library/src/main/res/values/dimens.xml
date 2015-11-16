@@ -6,4 +6,5 @@
 
     <dimen name="image_group_default_padding">8dp</dimen>
     <dimen name="inline_padding">4dp</dimen>
+    <dimen name="image_select_folder_height">94dp</dimen>
 </resources>
