@@ -27,7 +27,6 @@ import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,25 +172,16 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                     folder.name = folderFile.getName();
                     folder.dir = folderFile.getAbsolutePath();
                     folder.firstImagePath = path;
-                    int picSize = folderFile.list(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File dir, String filename) {
-                            if (filename.endsWith(".jpg")
-                                    || filename.endsWith(".png")
-                                    || filename.endsWith(".jpeg"))
-                                return true;
-                            return false;
-                        }
-                    }).length;
-                    folder.count = picSize;
                     if (!folders.contains(folder)) {
                         List<Image> imageList = new ArrayList<>();
                         imageList.add(image);
+                        folder.count++;
                         folder.images = imageList;
                         folders.add(folder);
                     } else {
                         ImageFolder f = folders.get(folders.indexOf(folder));
                         f.images.add(image);
+                        folder.count++;
                     }
                 } while (data.moveToNext());
 
@@ -257,9 +247,9 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null || resultCode != RESULT_OK) return;
-        String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
-        if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeurl) {
-            mSelectedImages.add(new Image(photoTakeurl));
+        String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+        if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeUrl) {
+            mSelectedImages.add(new Image(photoTakeUrl));
         }
         finishWithResult();
     }
