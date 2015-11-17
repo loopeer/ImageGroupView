@@ -300,7 +300,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void doUpLoadPhotoClick(int viewId) {
-        NavigatorImage.startCustomAlbumActivity(getContext());
+        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum());
         /*new GetImageDialogFragment.Builder(mManager)
                 .setPositiveListener(new GetImageDialogFragment.ClickListener() {
                     @Override
@@ -323,6 +323,11 @@ public class ImageGroupView extends LinearLayout {
                     }
                 })
                 .show();*/
+    }
+
+    private int getCanSelectMaxNum() {
+        if (maxImageNum == MAX_VALUE) return 0;
+        return maxImageNum - mPhotoViewIDs.size() + 1;
     }
 
     private void selectImageFromSystemAlbum() {

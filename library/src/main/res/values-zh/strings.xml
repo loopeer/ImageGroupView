@@ -3,5 +3,7 @@
     <string name="take_photo">相机</string>
     <string name="album_all">所有照片</string>
     <string name="action_submit">提交</string>
+    <string name="action_submit_string">提交(%1$d/%2$d)</string>
+    <string name="action_submit_string_no_max">提交(%1$d)</string>
 
 </resources>

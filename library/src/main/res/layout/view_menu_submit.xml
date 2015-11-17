@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:foreground="?selectableItemBackground"
     >
 
     <TextView
+        android:id="@+id/text_image_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/image_group_button_background_primary_corner_selector"
+        android:textColor="@android:color/white"
         android:text="@string/action_submit"
         android:padding="@dimen/image_group_default_padding"
         android:layout_marginRight="@dimen/image_group_default_padding"
         android:gravity="center"
         />
 
-</LinearLayout>
+</FrameLayout>

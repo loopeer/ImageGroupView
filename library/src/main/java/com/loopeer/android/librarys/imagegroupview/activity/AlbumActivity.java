@@ -15,6 +15,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
@@ -40,22 +42,53 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private ViewAnimator mViewAnimator;
     private ImageAdapter mImageAdapter;
     private List<Image> mSelectedImages;
+    private int mMaxSelectedNum;
+    private MenuItem mSubmitMenu;
+    private TextView mTextSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        parseIntent();
         mSelectedImages = new ArrayList<>();
         setUpView();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void parseIntent() {
+        Intent intent = getIntent();
+        mMaxSelectedNum = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_SELECT_MAX_NUM, 0);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_submit, menu);
-
+        updateSubmitMenu(menu);
         return true;
+    }
+
+    private void updateSubmitMenu(Menu menuItem) {
+        mSubmitMenu = menuItem.findItem(R.id.action_submit);
+        mSubmitMenu.setEnabled(false);
+        View view = mSubmitMenu.getActionView();
+        mTextSubmit = (TextView) view.findViewById(R.id.text_image_submit);
+        updateSubmitText();
+    }
+
+    private void updateSubmitText() {
+        if (mSelectedImages.size() > 0) mSubmitMenu.setEnabled(true);
+        mTextSubmit.setText(getSubmitText());
+    }
+
+    private String getSubmitText() {
+        return mSelectedImages.size() == 0
+                ? getResources().getString(R.string.action_submit)
+                :
+                mMaxSelectedNum == 0
+                        ? getResources().getString(R.string.action_submit_string_no_max, mSelectedImages.size())
+                        : getResources().getString(R.string.action_submit_string, mSelectedImages.size(), mMaxSelectedNum);
     }
 
     @Override
@@ -160,7 +193,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void doParseData(Cursor cursor) {
-        new AsyncTask<Cursor, Void, List> (){
+        new AsyncTask<Cursor, Void, List>() {
 
             @Override
             protected List doInBackground(Cursor... params) {
@@ -245,6 +278,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             mSelectedImages.add(image);
         }
         mImageAdapter.updateSelectImages(mSelectedImages);
+        updateSubmitText();
     }
 
     @Override

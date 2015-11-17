@@ -3,5 +3,7 @@
     <string name="take_photo">Camera</string>
     <string name="album_all">All</string>
     <string name="action_submit">Submit</string>
+    <string name="action_submit_string">Submit(%1$d/%2$d)</string>
+    <string name="action_submit_string_no_max">Submit(%1$d)</string>
 
 </resources>

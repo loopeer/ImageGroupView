@@ -14,6 +14,7 @@ public class NavigatorImage {
     public static final String EXTRA_PHOTO_URL = "extra_photo_url";
     public static final String EXTRA_PHOTOS_URL = "extra_photos_url";
     public static final String EXTRA_IMAGE_URL = "image_url";
+    public static final String EXTRA_IMAGE_SELECT_MAX_NUM = "extra_image_select_max_num";
     public static final String EXTRA_IMAGE_URL_POSITION = "image_position";
     public static final String EXTRA_IMAGE_DELETE = "extra_image_delete";
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
@@ -37,8 +38,9 @@ public class NavigatorImage {
         ((Activity)context).startActivityForResult(intent, RESULT_IMAGE_SWITCHER);
     }
 
-    public static void startCustomAlbumActivity(Context context) {
+    public static void startCustomAlbumActivity(Context context, int canSelectMaxNum) {
         Intent intent = new Intent(context, AlbumActivity.class);
+        intent.putExtra(EXTRA_IMAGE_SELECT_MAX_NUM, canSelectMaxNum);
         ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
     }
 

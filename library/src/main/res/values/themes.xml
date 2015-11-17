@@ -13,6 +13,5 @@
     <style name="ImageGroupBaseTheme" parent="FrameworkRoot.Theme">
         <item name="colorPrimary">@color/image_group_theme_primary</item>
         <item name="colorPrimaryDark">@color/image_group_theme_primary_dark</item>
-        <item name="colorAccent">@color/image_group_theme_accent</item>
     </style>
 </resources>
