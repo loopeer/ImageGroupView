@@ -2,6 +2,7 @@ package com.loopeer.android.librarys.imagegroupview.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,7 +35,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private static final int LOADER_ID_FOLDER = 10001;
 
-    private RecyclerView mReyclerView;
+    private RecyclerView mRecyclerView;
     private CustomPopupView mCustomPopupWindowView;
     private ViewAnimator mViewAnimator;
     private ImageAdapter mImageAdapter;
@@ -53,8 +54,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_submit, menu);
-        /*editMenu = menu.findItem(R.id.action_save);
-        editMenu.setEnabled(false);*/
         return true;
     }
 
@@ -87,7 +86,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void setUpView() {
-        mReyclerView = (RecyclerView) findViewById(R.id.recycler_album);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_album);
         mViewAnimator = (ViewAnimator) findViewById(R.id.view_album_animator);
         mCustomPopupWindowView = (CustomPopupView) findViewById(R.id.view_popup_folder_window);
 
@@ -130,11 +129,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void setUpRecyclerView() {
-        mReyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mReyclerView.addItemDecoration(
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerView.addItemDecoration(
                 new DividerItemImagesDecoration(
                         getResources().getDimensionPixelSize(R.dimen.inline_padding)));
-        mReyclerView.setPadding(
+        mRecyclerView.setPadding(
                 getResources().getDimensionPixelSize(R.dimen.inline_padding) / 2,
                 0,
                 getResources().getDimensionPixelSize(R.dimen.inline_padding) / 2,
@@ -142,7 +141,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         );
         mImageAdapter = new ImageAdapter(this);
         mImageAdapter.setOnImageClickListener(this);
-        mReyclerView.setAdapter(mImageAdapter);
+        mRecyclerView.setAdapter(mImageAdapter);
     }
 
     @Override
@@ -155,39 +154,58 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data != null) {
-            List<ImageFolder> folders = new ArrayList();
-            int count = data.getCount();
-            if (count > 0) {
-                data.moveToFirst();
-                do {
-                    String path = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[0]));
-                    String name = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[1]));
-                    long dateTime = data.getLong(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[2]));
-                    Image image = new Image(path, name, dateTime);
+        doParseData(data);
+    }
 
-                    File imageFile = new File(path);
-                    File folderFile = imageFile.getParentFile();
-                    ImageFolder folder = new ImageFolder();
-                    folder.name = folderFile.getName();
-                    folder.dir = folderFile.getAbsolutePath();
-                    folder.firstImagePath = path;
-                    if (!folders.contains(folder)) {
-                        List<Image> imageList = new ArrayList<>();
-                        imageList.add(image);
-                        folder.count++;
-                        folder.images = imageList;
-                        folders.add(folder);
-                    } else {
-                        ImageFolder f = folders.get(folders.indexOf(folder));
-                        f.images.add(image);
-                        folder.count++;
+    private void doParseData(Cursor cursor) {
+        new AsyncTask<Cursor, Void, List> (){
+
+            @Override
+            protected List doInBackground(Cursor... params) {
+                Cursor data = params[0];
+                if (data != null) {
+                    List<ImageFolder> folders = new ArrayList();
+                    int count = data.getCount();
+                    if (count > 0) {
+                        data.moveToFirst();
+                        do {
+                            String path = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[0]));
+                            String name = data.getString(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[1]));
+                            long dateTime = data.getLong(data.getColumnIndexOrThrow(NavigatorImage.IMAGE_PROJECTION[2]));
+                            Image image = new Image(path, name, dateTime);
+
+                            File imageFile = new File(path);
+                            File folderFile = imageFile.getParentFile();
+                            ImageFolder folder = new ImageFolder();
+                            folder.name = folderFile.getName();
+                            folder.dir = folderFile.getAbsolutePath();
+                            folder.firstImagePath = path;
+                            if (!folders.contains(folder)) {
+                                List<Image> imageList = new ArrayList<>();
+                                imageList.add(image);
+                                folder.count++;
+                                folder.images = imageList;
+                                folders.add(folder);
+                            } else {
+                                ImageFolder f = folders.get(folders.indexOf(folder));
+                                f.images.add(image);
+                                f.count++;
+                            }
+                        } while (data.moveToNext());
+
+                        return folders;
                     }
-                } while (data.moveToNext());
+                }
 
-                mCustomPopupWindowView.updateFolderData(createFoldersWithAllImageFolder(folders));
+                return new ArrayList();
             }
-        }
+
+            @Override
+            protected void onPostExecute(List list) {
+                super.onPostExecute(list);
+                mCustomPopupWindowView.updateFolderData(createFoldersWithAllImageFolder(list));
+            }
+        }.execute(cursor);
     }
 
     private List createFoldersWithAllImageFolder(List<ImageFolder> folders) {
