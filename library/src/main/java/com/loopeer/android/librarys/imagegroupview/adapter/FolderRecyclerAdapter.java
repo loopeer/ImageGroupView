@@ -1,6 +1,7 @@
 package com.loopeer.android.librarys.imagegroupview.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class FolderRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
         public AlbumViewHolder(View view) {
             super(view);
             mImage = (SimpleDraweeView) view.findViewById(R.id.image_album);
+            mImage.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.image_group_theme_primary));
             mTextAlbumName = (TextView) view.findViewById(R.id.text_album_name);
             mTextSize = (TextView) view.findViewById(R.id.text_album_size);
 

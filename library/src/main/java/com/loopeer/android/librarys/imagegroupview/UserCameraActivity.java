@@ -73,8 +73,7 @@ public class UserCameraActivity extends AppCompatActivity {
     }
 
     private void showCamera() {
-        Intent intent1 =
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         ContentValues values = new ContentValues();
         Uri photoUri = getContentResolver()
                 .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);

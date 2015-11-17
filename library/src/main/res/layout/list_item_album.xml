@@ -45,9 +45,10 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/image_album_selected_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_right"
+        android:src="@drawable/ic_image_group_folder_check"
         android:layout_gravity="center"
         />
 
