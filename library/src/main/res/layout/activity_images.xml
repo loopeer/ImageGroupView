@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-   <include layout="@layout/view_recycler"/>
+   <include layout="@layout/view_recycler_image_group"/>
 
     <TextView
         android:id="@+id/text_images_num"

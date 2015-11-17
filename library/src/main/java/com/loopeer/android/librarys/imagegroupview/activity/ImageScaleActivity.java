@@ -1,10 +1,16 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
+import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
+import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.ScaleImageFragment;
+import com.loopeer.android.librarys.imagegroupview.SquareImage;
 
 public class ImageScaleActivity extends AppCompatActivity implements OnTabOneClickListener {
 

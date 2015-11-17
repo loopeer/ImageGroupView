@@ -64,7 +64,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_submit, menu);
+        getMenuInflater().inflate(R.menu.menu_image_group_submit, menu);
         updateSubmitMenu(menu);
         return true;
     }

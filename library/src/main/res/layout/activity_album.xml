@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/view_recycler"/>
+    <include layout="@layout/view_recycler_image_group"/>
 
     <com.loopeer.android.librarys.imagegroupview.view.CustomPopupView
         android:id="@+id/view_popup_folder_window"

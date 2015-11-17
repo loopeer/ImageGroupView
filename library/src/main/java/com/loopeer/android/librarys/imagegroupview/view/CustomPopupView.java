@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopeer.android.librarys.imagegroupview.DisplayUtils;
+import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.AlbumRecyclerAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;

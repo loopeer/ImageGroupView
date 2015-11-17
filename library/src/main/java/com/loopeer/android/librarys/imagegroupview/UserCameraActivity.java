@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupUtils;
 
 import java.io.File;
 

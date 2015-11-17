@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.utils;
 
 import android.app.Activity;
 import android.content.Context;

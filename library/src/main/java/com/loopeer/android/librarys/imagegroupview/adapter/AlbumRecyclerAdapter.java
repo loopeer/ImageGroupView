@@ -67,11 +67,11 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
         public AlbumViewHolder(View itemView) {
             super(itemView);
+
             mImage = (SimpleDraweeView) itemView.findViewById(R.id.image_album);
             mTextAlbumName = (TextView) itemView.findViewById(R.id.text_album_name);
             mTextSize = (TextView) itemView.findViewById(R.id.text_album_size);
             mSelectedIndicator = (ImageView) itemView.findViewById(R.id.image_album_selected_indicator);
-
             mSelectedIndicator.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.image_group_theme_primary));
         }
 
