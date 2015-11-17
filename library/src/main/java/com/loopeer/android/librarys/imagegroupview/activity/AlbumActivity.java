@@ -309,8 +309,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.text_images_num) {
-            finishWithResult();
-        }
+        finishWithResult();
     }
 }

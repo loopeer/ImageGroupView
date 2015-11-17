@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
+import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
+
 import java.io.File;
 
 public class UserCameraActivity extends AppCompatActivity {
@@ -23,19 +25,24 @@ public class UserCameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             photoUrl = savedInstanceState.getString(EXTRA_PHOTO_URL);
-
-            File mFile = new File(photoUrl);
-            if (mFile.exists()) {
-                Intent rsl = new Intent();
-                rsl.putExtra(EXTRA_PHOTO_URL, photoUrl);
-                setResult(Activity.RESULT_OK, rsl);
-                finish();
-            } else {
-            }
+            recoverFile(photoUrl);
         }
 
         if (savedInstanceState == null) {
             showCamera();
+        }
+    }
+
+    private void recoverFile(String url) {
+        File mFile = new File(ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url)));
+        try {
+            if (FileUtils.fileIsAvaliableImage(mFile)) {
+                finishWithResult(url);
+            } else {
+                finishAfterDelete(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -47,13 +54,22 @@ public class UserCameraActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (RSULT_IMAGE_CAPTURE == requestCode && resultCode == Activity.RESULT_OK) {
-            Intent rsl = new Intent();
-            rsl.putExtra(EXTRA_PHOTO_URL, ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(photoUrl)));
-            setResult(Activity.RESULT_OK, rsl);
-            finish();
+            finishWithResult(photoUrl);
         } else {
-            finish();
+            finishAfterDelete(photoUrl);
         }
+    }
+
+    private void finishAfterDelete(String url) {
+        FileUtils.deleteFile(new File(ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url))));
+        finish();
+    }
+
+    private void finishWithResult(String url) {
+        Intent rsl = new Intent();
+        rsl.putExtra(EXTRA_PHOTO_URL, ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url)));
+        setResult(Activity.RESULT_OK, rsl);
+        finish();
     }
 
     private void showCamera() {
