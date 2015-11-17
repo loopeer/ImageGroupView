@@ -73,6 +73,7 @@
             apps:deleteDrawable="@drawable/ic_delete"
             apps:imagePlaceholderDrawable="@drawable/ic_image_default"
             apps:childMargin="4dp"
+            apps:maxImageNum="14"
             apps:column="3"
             apps:showAddButton="true" />
 

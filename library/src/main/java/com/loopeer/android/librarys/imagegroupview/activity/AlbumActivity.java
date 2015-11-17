@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener {
+public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
     private static final int LOADER_ID_FOLDER = 10001;
 
@@ -71,14 +71,14 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void updateSubmitMenu(Menu menuItem) {
         mSubmitMenu = menuItem.findItem(R.id.action_submit);
-        mSubmitMenu.setEnabled(false);
         View view = mSubmitMenu.getActionView();
         mTextSubmit = (TextView) view.findViewById(R.id.text_image_submit);
+        mTextSubmit.setOnClickListener(this);
         updateSubmitText();
     }
 
     private void updateSubmitText() {
-        if (mSelectedImages.size() > 0) mSubmitMenu.setEnabled(true);
+        mTextSubmit.setEnabled(mSelectedImages.size() > 0);
         mTextSubmit.setText(getSubmitText());
     }
 
@@ -94,10 +94,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_submit) {
-            finishWithResult();
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             finish();
             return true;
         }
@@ -274,6 +271,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     public void onImageSelected(Image image) {
         if (mSelectedImages.contains(image)) {
             mSelectedImages.remove(image);
+        } else if (mSelectedImages.size() == mMaxSelectedNum && mMaxSelectedNum != 0) {
+            return;
         } else {
             mSelectedImages.add(image);
         }
@@ -306,5 +305,12 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             mSelectedImages.add(new Image(photoTakeUrl));
         }
         finishWithResult();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.text_images_num) {
+            finishWithResult();
+        }
     }
 }
