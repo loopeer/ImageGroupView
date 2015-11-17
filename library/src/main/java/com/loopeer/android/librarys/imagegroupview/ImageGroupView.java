@@ -520,13 +520,6 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void refreshPhotoView(String url) {
-        if (imageGroupSavedState != null) {
-            //preTakePhotoUri = url;
-            return;
-        } else {
-            //preTakePhotoUri = null;
-        }
-
         SquareImageView squarePhotoView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
         ImageGroupDisplayHelper.displayImageLocal(squarePhotoView, url, 200, 200);
         squarePhotoView.setFocusable(true);

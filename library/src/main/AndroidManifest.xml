@@ -1,11 +1,13 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.loopeer.android.librarys.imagegroupview">
+<manifest package="com.loopeer.android.librarys.imagegroupview"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <application android:allowBackup="true">
+    <application
+        android:allowBackup="true">
         <activity
             android:name=".UserCameraActivity"/>
 
@@ -14,7 +16,8 @@
             android:launchMode="singleTop"
             android:theme="@style/FrameworkRoot.Theme.NoActionBar"/>
 
-        <activity android:name=".activity.AlbumActivity"
+        <activity
+            android:name=".activity.AlbumActivity"
             android:launchMode="singleTop"
             />
     </application>

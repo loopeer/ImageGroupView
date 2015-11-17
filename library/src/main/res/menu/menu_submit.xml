@@ -5,6 +5,7 @@
         android:id="@+id/action_submit"
         android:orderInCategory="100"
         android:title="@string/action_submit"
+        app:actionLayout="@layout/view_menu_submit"
         app:showAsAction="always" />
 
 </menu>

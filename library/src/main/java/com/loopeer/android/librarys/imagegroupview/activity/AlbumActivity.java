@@ -54,6 +54,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_submit, menu);
+
         return true;
     }
 
@@ -114,6 +115,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             showContentView();
         }
         mImageAdapter.updateFolderImageData(floder);
+        mRecyclerView.scrollToPosition(0);
     }
 
     private void showContentView() {

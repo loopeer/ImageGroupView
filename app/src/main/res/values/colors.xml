@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="theme_primary">@color/color_D80C18</color>
+    <color name="theme_primary_dark">@color/color_D80C18</color>
+    <color name="theme_accent">@color/color_D80C18</color>
+
+    <color name="color_D80C18">#D80C18</color><!--主色-->
+
+</resources>
