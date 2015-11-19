@@ -4,7 +4,11 @@ This view main solve the view data restore. The activity main killed when open c
 
 Screeshot
 ====
-![](/screenshot/screenshot.gif)
+![](/screenshot/screenshot.gif)  
+
+![](/screenshot/screenshot_witcher.gif)  
+
+![](/screenshot/screenshot_select_photo.gif)  
 
 Show Images
 ====
@@ -28,7 +32,11 @@ First, add the layout
 Then, you can add data.
 ```java
         ArrayList<String> testdata = createTestData());
-        imageGroup.setPhotos(testdata);
+        imageGroup.setNetworkPhotos(testdata);
+        ...
+        imageGroup.setLocalPhotos(testdata);
+        ...
+        imageGroup.setPhotosBySquareImage(testdata);
 ```
 You can add ClickListener
 ```java
