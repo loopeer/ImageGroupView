@@ -132,6 +132,7 @@ public class CustomPopupView extends LinearLayout implements View.OnClickListene
 
     public void updateFolderData(List list) {
         mFolderRecyclerAdaper.updateData(list);
+
         updateDefaultImages();
     }
 

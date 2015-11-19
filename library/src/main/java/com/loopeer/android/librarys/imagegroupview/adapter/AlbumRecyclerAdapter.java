@@ -13,6 +13,8 @@ import com.loopeer.android.librarys.imagegroupview.ImageDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 
+import java.util.List;
+
 public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
     private ImageFolder mSelectFolder;
@@ -29,6 +31,12 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    @Override
+    public void updateData(List<ImageFolder> data) {
+        mSelectFolder = data.get(0);
+        super.updateData(data);
     }
 
     @Override
