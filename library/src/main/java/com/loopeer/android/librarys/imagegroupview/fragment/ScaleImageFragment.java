@@ -119,7 +119,7 @@ public class ScaleImageFragment extends Fragment {
                 ImageDisplayHelper.displayImageLocal(viewPlaceholder, squareImage.localUrl, 200, 200);
                 ImageDisplayHelper.displayImageLocal(viewScale, squareImage.localUrl);
                 break;
-            case INTER:
+            case NETWORK:
                 ImageDisplayHelper.displayImage(viewPlaceholder, squareImage.interNetUrl, 200, 200);
                 ImageDisplayHelper.displayImage(viewScale, squareImage.interNetUrl);
                 break;

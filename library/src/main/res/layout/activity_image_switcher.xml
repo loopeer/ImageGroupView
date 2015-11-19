@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.loopeer.android.librarys.imagegroupview.MutipleTouchViewPager
+    <com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

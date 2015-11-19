@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.loopeer.android.librarys.imagegroupview.model.ImageSwitcherWrapper;
-import com.loopeer.android.librarys.imagegroupview.adapter.ImagesSwitcherAdapter;
-import com.loopeer.android.librarys.imagegroupview.MutipleTouchViewPager;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.adapter.ImagesSwitcherAdapter;
+import com.loopeer.android.librarys.imagegroupview.model.ImageSwitcherWrapper;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
+import com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager;
 
 import java.util.ArrayList;
 

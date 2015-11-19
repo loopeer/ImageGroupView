@@ -33,7 +33,7 @@ public class ImageScaleActivity extends AppCompatActivity implements OnTabOneCli
     private void setFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(new SquareImage(null, url, null, SquareImage.PhotoType.INTER));
+        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(new SquareImage(null, url, null, SquareImage.PhotoType.NETWORK));
         scaleImageFragment.setOneTabListener(this);
         fragmentTransaction.add(R.id.container, scaleImageFragment).commit();
     }

@@ -13,6 +13,7 @@ import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements ImageGroupView.OnImageClickListener {
 
@@ -43,9 +44,10 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
 
     private void setData() {
         imageGroupAddAble.setFragmentManager(getSupportFragmentManager());
-        imageGroupAddAble.setPhotos(createTestData());
-        imageGroup.setPhotos(createTestData());
-        imageGroup2.setPhotos(createTestData());
+        imageGroupAddAble.setNetworkPhotos(createTestData());
+        imageGroup.setNetworkPhotos(createTestData());
+        imageGroup2.setNetworkPhotos(createTestData());
+        imageGroup2.setLocalPhotos(Arrays.asList(new String[]{"/storage/emulated/0/Pictures/1447745372984.jpg"}));
         imageGroup.setOnImageClickListener(this);
 
         ImageGroupDisplayHelper.displayImageOneShow(oneImage, "http://img1.3lian.com/img13/c3/82/d/64.jpg", getResources().getDimensionPixelSize(R.dimen.image_dimen));

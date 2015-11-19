@@ -54,7 +54,7 @@ public class SquareImage implements Parcelable {
 
   public enum PhotoType implements Parcelable {
 
-    INTER("0"),
+    NETWORK("0"),
 
     LOCAL("1");
 

@@ -101,10 +101,10 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, 100, 100);
     }
 
-    public void setImageData(String localUrl, String netUrl, String uploadKey) {
-        if (localUrl != null) setLocalUrl(localUrl);
-        if (netUrl != null) setInternetData(netUrl);
-        if (uploadKey != null) setUploadKey(uploadKey);
+    public void setImageData(SquareImage squareImage) {
+        if (squareImage.localUrl != null) setLocalUrl(squareImage.localUrl);
+        if (squareImage.interNetUrl != null) setInternetData(squareImage.interNetUrl);
+        if (squareImage.urlKey != null) setUploadKey(squareImage.urlKey);
     }
 
     @SuppressWarnings("unused")
@@ -125,7 +125,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         return mLocalUrl == null && mInternetUrl == null
                 ? null
                 : new SquareImage(getLocalUrl(), getInternetUrl(), getUploadImageKey()
-                , mLocalUrl == null ? SquareImage.PhotoType.INTER :SquareImage.PhotoType.LOCAL);
+                , mLocalUrl == null ? SquareImage.PhotoType.NETWORK :SquareImage.PhotoType.LOCAL);
     }
 
 

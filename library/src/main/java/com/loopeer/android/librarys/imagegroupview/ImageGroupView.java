@@ -174,7 +174,7 @@ public class ImageGroupView extends LinearLayout {
             public void onClick(View v) {
                 SquareImageView view = (SquareImageView) v;
                 if (isAddButton(view)) {
-                    doPhotoClickSelectable(mPhotoViewIDs.size() - 1);
+                    doPhotoClickSelectable();
                 } else if (clickListener != null) {
                     clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
                 } else {
@@ -193,10 +193,6 @@ public class ImageGroupView extends LinearLayout {
                 return true;
             }
         });
-    }
-
-    public void doClickLastPhoto() {
-        doPhotoClickSelectable(mPhotoViewIDs.size() - 1);
     }
 
     private boolean isAddButton(SquareImageView view) {
@@ -233,8 +229,8 @@ public class ImageGroupView extends LinearLayout {
         frame.addView(image, layoutParams);
     }
 
-    private void doPhotoClickSelectable(final int photoId) {
-        doUpLoadPhotoClick(photoId);
+    private void doPhotoClickSelectable() {
+        doUpLoadPhotoClick();
     }
 
     private void doPhotoDelete(final int photoId) {
@@ -295,9 +291,7 @@ public class ImageGroupView extends LinearLayout {
         initLayoutItem();
         for (int i = 0; i < photos.size(); i++) {
             SquareImageView squareImageView = (SquareImageView) findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
-            squareImageView.setImageData(photos.get(i).localUrl,
-                    photos.get(i).interNetUrl,
-                    photos.get(i).urlKey);
+            squareImageView.setImageData(photos.get(i));
             if (showAddButton) {
                 addPhoto(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
             } else {
@@ -306,30 +300,8 @@ public class ImageGroupView extends LinearLayout {
         }
     }
 
-    private void doUpLoadPhotoClick(int viewId) {
+    private void doUpLoadPhotoClick() {
         NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum());
-        /*new GetImageDialogFragment.Builder(mManager)
-                .setPositiveListener(new GetImageDialogFragment.ClickListener() {
-                    @Override
-                    public void click() {
-                        String SDState = Environment.getExternalStorageState();
-                        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-                            ActivityCompat.startActivityForResult((Activity) getContext(),
-                                    new Intent(getContext(), UserCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
-                                    null);
-                        } else {
-                            Toast.makeText(getContext(), "内存卡不存在", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeListener(new GetImageDialogFragment.ClickListener() {
-                    @Override
-                    public void click() {
-                        NavigatorImage.startCustomAlbumActivity(getContext());
-//                        selectImageFromSystemAlbum();
-                    }
-                })
-                .show();*/
     }
 
     private int getCanSelectMaxNum() {
@@ -343,33 +315,50 @@ public class ImageGroupView extends LinearLayout {
         ((Activity) getContext()).startActivityForResult(i, NavigatorImage.RESULT_SELECT_PHOTO);
     }
 
-    public void addPhoto(int viewId) {
+    private void addPhoto(int viewId) {
         boolean isEndPhotoView = true;
         for (int i = 0; i < mPhotoViewIDs.size() - 1; i++) {
             if (mPhotoViewIDs.get(i) == viewId) {
                 isEndPhotoView = false;
             }
         }
+
         if (isEndPhotoView && (maxImageNum == MAX_VALUE || mPhotoViewIDs.size() < maxImageNum)) {
             addPhotoView();
         }
     }
 
-    public void setPhotos(ArrayList<String> photosNetUrl) {
-        if (photosNetUrl == null) return;
+    public void setNetworkPhotos(List<String> photos) {
+        if (photos == null) return;
         preImage.clear();
-        for (String url : photosNetUrl) {
-            preImage.add(new SquareImage(null, url, null, SquareImage.PhotoType.INTER));
+        for (String url : photos) {
+            preImage.add(new SquareImage(null, url, null, SquareImage.PhotoType.NETWORK));
         }
         setPhotoBySquareImage();
     }
 
-    public void setPhotosWithKey(ArrayList<String> urls) {
+    public void setLocalPhotos(List<String> photos) {
+        if (photos == null) return;
+        preImage.clear();
+        for (String url : photos) {
+            preImage.add(new SquareImage(url, null, null, SquareImage.PhotoType.LOCAL));
+        }
+        setPhotoBySquareImage();
+    }
+
+    public void setPhotosBySquareImage(List<SquareImage> photos) {
+        if (photos == null) return;
+        preImage.clear();
+        preImage.addAll(photos);
+        setPhotoBySquareImage();
+    }
+
+    public void setNetworkPhotosWithKey(ArrayList<String> urls) {
         if (urls == null) return;
         preImage.clear();
         for (String url : urls) {
             String[] headWithKey = url.split("/");
-            preImage.add(new SquareImage(null, url, headWithKey[headWithKey.length - 1], SquareImage.PhotoType.INTER));
+            preImage.add(new SquareImage(null, url, headWithKey[headWithKey.length - 1], SquareImage.PhotoType.NETWORK));
         }
         setPhotoBySquareImage();
     }
@@ -398,7 +387,7 @@ public class ImageGroupView extends LinearLayout {
         int size = photos != null ? photos.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) this.findViewById(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
-            squareImageView.setImageData(null, photos.get(i).interNetUrl, photos.get(i).urlKey);
+            squareImageView.setImageData(photos.get(i));
             addPhoto(mPhotoViewIDs.get(mPhotoViewIDs.size() - 1));
         }
     }
@@ -410,7 +399,7 @@ public class ImageGroupView extends LinearLayout {
         int size = photos != null ? photos.size() : 0;
         for (int i = 0; i < size; i++) {
             SquareImageView squareImageView = (SquareImageView) findViewById(mPhotoViewIDs.get(i));
-            squareImageView.setImageData(null, photos.get(i).interNetUrl, photos.get(i).urlKey);
+            squareImageView.setImageData(photos.get(i));
             addPhotoWithoutButton(i, size);
         }
     }
@@ -497,15 +486,9 @@ public class ImageGroupView extends LinearLayout {
     }
 
     public void onParentResult(int requestCode, Intent data) {
-        Uri imageSelectedUri = data.getData();
-        String photoTakeurl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
         List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
-        if (requestCode == NavigatorImage.RESULT_SELECT_PHOTO && null != imageSelectedUri) {
-            doSelectImage(imageSelectedUri);
-        } else if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeurl) {
-            doTakePhoto(photoTakeurl);
-        } else if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
+        if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
             doPhotosDelete(positions);
         } else if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
             doSelectPhotos(images);
@@ -520,15 +503,6 @@ public class ImageGroupView extends LinearLayout {
 
     private void doSelectPhotosByUrl(String url) {
         refreshPhotoView(url);
-    }
-
-    private void doTakePhoto(String url) {
-        Uri mUri = Uri.parse(url);
-        refreshPhotoView(mUri);
-    }
-
-    private void doSelectImage(Uri data) {
-        refreshPhotoView(data);
     }
 
     private void refreshPhotoView(String url) {
