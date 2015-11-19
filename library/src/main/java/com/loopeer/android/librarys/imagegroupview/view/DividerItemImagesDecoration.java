@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.view;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

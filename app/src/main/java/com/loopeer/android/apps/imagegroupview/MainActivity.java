@@ -8,9 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.ImageGroupDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
-import com.loopeer.android.librarys.imagegroupview.SquareImage;
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
 

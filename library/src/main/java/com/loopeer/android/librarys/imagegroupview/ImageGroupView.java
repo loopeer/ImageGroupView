@@ -20,8 +20,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupUtils;
+import com.loopeer.android.librarys.imagegroupview.view.SquareImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

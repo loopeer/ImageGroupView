@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.model;
 
 public class ImageSwitcherWrapper {
 

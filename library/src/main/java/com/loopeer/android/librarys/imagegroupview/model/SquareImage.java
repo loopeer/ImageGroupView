@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

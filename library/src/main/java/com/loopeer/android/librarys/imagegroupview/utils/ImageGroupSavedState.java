@@ -1,8 +1,10 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
+
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
 

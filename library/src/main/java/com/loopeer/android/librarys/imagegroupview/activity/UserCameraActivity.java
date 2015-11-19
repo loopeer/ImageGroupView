@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.activity;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
+import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupUtils;
 

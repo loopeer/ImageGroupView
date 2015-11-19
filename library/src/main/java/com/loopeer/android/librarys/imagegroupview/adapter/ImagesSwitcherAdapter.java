@@ -1,10 +1,14 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
+
+import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
+import com.loopeer.android.librarys.imagegroupview.fragment.ScaleImageFragment;
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
 

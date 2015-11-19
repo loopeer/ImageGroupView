@@ -9,10 +9,10 @@
     <application
         android:allowBackup="true">
         <activity
-            android:name=".UserCameraActivity"/>
+            android:name=".activity.UserCameraActivity"/>
 
         <activity
-            android:name=".ImageSwitcherActivity"
+            android:name=".activity.ImageSwitcherActivity"
             android:launchMode="singleTop"
             android:theme="@style/FrameworkRoot.Theme.NoActionBar"/>
 

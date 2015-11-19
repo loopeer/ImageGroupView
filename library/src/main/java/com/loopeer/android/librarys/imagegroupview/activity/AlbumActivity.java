@@ -20,10 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import com.loopeer.android.librarys.imagegroupview.DividerItemImagesDecoration;
+import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.UserCameraActivity;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;

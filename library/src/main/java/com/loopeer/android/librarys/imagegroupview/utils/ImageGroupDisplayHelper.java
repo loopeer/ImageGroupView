@@ -2,7 +2,7 @@
  * Created by YuGang Yang on April 20, 2015.
  * Copyright 2007-2015 Laputapp.com. All rights reserved.
  */
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;

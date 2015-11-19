@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.fragment;
 
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -18,6 +18,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
+import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.OnViewTapListener;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
 import java.io.File;

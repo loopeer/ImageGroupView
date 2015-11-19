@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.provider.MediaStore;
 
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
+import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivity;
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
 

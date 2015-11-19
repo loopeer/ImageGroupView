@@ -1,4 +1,4 @@
-package com.loopeer.android.librarys.imagegroupview;
+package com.loopeer.android.librarys.imagegroupview.view;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +10,9 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 public class SquareImageView extends SimpleDraweeView implements View.OnClickListener{
 
