@@ -2,6 +2,11 @@
 
 This view main solve the view data restore. The activity main killed when open camera. So some data of the group view will not restore by themself. This view save the state and then restore to recreate the layout.
 
+**Thanks for**
+* [Fresco](https://github.com/facebook/fresco)
+* [lovetuzitong/MultiImageSelector](https://github.com/lovetuzitong/MultiImageSelector) Learn the way to get photos. And Use custom view to replace the popupwindow.
+* [ongakuer/PhotoDraweeView](https://github.com/ongakuer/PhotoDraweeView)
+
 Screeshot
 ====
 ![](/screenshot/screenshot.gif)  
