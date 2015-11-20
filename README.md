@@ -15,6 +15,14 @@ Screeshot
 
 ![](/screenshot/screenshot_select_photo.gif)  
 
+Installation
+====
+```groovy
+dependencies {
+    compile 'com.loopeer.library:imagegroupview:1.0.0'
+}
+```
+
 Show Images
 ====
 First, add the layout
