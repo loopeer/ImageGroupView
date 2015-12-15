@@ -19,6 +19,7 @@ public class NavigatorImage {
     public static final String EXTRA_IMAGE_SELECT_MAX_NUM = "extra_image_select_max_num";
     public static final String EXTRA_IMAGE_URL_POSITION = "image_position";
     public static final String EXTRA_IMAGE_DELETE = "extra_image_delete";
+    public static final String EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_delete";
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
 
     public static final int RESULT_SELECT_PHOTO = 2001;
@@ -32,11 +33,12 @@ public class NavigatorImage {
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Images.Media._ID };
 
-    public static void startImageSwitcherActivity(Context context, ArrayList<SquareImage> images, int position, boolean showAddButton) {
+    public static void startImageSwitcherActivity(Context context, ArrayList<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable) {
         Intent intent = new Intent(context, ImageSwitcherActivity.class);
         intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, images);
         intent.putExtra(EXTRA_IMAGE_DELETE, showAddButton);
         intent.putExtra(EXTRA_IMAGE_URL_POSITION, position);
+        intent.putExtra(EXTRA_IMAGE_PLACE_DRAWABLE_ID, placeholderDrawable);
         ((Activity)context).startActivityForResult(intent, RESULT_IMAGE_SWITCHER);
     }
 

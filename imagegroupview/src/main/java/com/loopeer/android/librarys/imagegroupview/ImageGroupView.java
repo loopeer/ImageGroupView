@@ -178,7 +178,7 @@ public class ImageGroupView extends LinearLayout {
                 } else if (clickListener != null) {
                     clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
                 } else {
-                    NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), mPhotoViewIDs.indexOf(squarePhotoViewId), showAddButton);
+                    NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), mPhotoViewIDs.indexOf(squarePhotoViewId), showAddButton, placeholderDrawable);
                 }
             }
         });

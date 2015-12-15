@@ -6,24 +6,30 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.OnViewTapListener;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -33,10 +39,13 @@ public class ScaleImageFragment extends Fragment {
     private PhotoDraweeView viewScale;
     private OnTabOneClickListener listener;
     private SquareImage squareImage;
+    private int placeholderDrawable;
+    private View mUpPlaceHolderView;
 
-    public static ScaleImageFragment newInstance(SquareImage image) {
+    public static ScaleImageFragment newInstance(SquareImage image, int placeholderDrawable) {
         ScaleImageFragment scaleImageFragment = new ScaleImageFragment();
         scaleImageFragment.squareImage = image;
+        scaleImageFragment.placeholderDrawable = placeholderDrawable;
         return scaleImageFragment;
     }
 
@@ -63,7 +72,11 @@ public class ScaleImageFragment extends Fragment {
     }
 
     private void updateView(View view) {
-        viewPlaceholder = (SimpleDraweeView) view.findViewById(R.id.image_scale_placeholder);
+        setUpPlaceHolderView(view);
+
+        GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
+        builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable), ScalingUtils.ScaleType.CENTER_CROP);
+
         viewScale = (PhotoDraweeView) view.findViewById(R.id.image_scale_image);
         viewScale.getAttacher().setOnViewTapListener(new OnViewTapListener() {
             @Override
@@ -126,4 +139,14 @@ public class ScaleImageFragment extends Fragment {
         }
     }
 
+    public void setUpPlaceHolderView(View view) {
+        viewPlaceholder = (SimpleDraweeView) view.findViewById(R.id.image_scale_placeholder);
+        GenericDraweeHierarchyBuilder builder =
+                new GenericDraweeHierarchyBuilder(getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                .setFadeDuration(300)
+                .setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable))
+                .build();
+        viewPlaceholder.setHierarchy(hierarchy);
+    }
 }

@@ -26,6 +26,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private ImagesSwitcherAdapter mAdapter;
     private boolean canImageDelete;
     private int currentPagerPosition;
+    private int placeholderDrawable;
     private ArrayList<Integer> deletePositions;
     private ImageView btnDelete;
 
@@ -46,6 +47,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         setUpImageWrappers(images);
         currentPagerPosition = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, 0);
         canImageDelete = intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_DELETE, false);
+        placeholderDrawable = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_PLACE_DRAWABLE_ID, R.drawable.ic_image_default);
     }
 
     private void setUpImageWrappers(ArrayList<SquareImage> images) {
@@ -69,7 +71,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void setUpView() {
-        mAdapter = new ImagesSwitcherAdapter(getSupportFragmentManager());
+        mAdapter = new ImagesSwitcherAdapter(getSupportFragmentManager(), placeholderDrawable);
         mAdapter.setOnTabOneClickListener(this);
         pager.setAdapter(mAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

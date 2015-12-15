@@ -16,9 +16,11 @@ public class ImagesSwitcherAdapter extends FragmentPagerAdapter {
 
     private ArrayList<SquareImage> images;
     private OnTabOneClickListener onTabOneClickListener;
+    private int placeholderDrawable;
 
-    public ImagesSwitcherAdapter(FragmentManager fm) {
+    public ImagesSwitcherAdapter(FragmentManager fm, int placeholderDrawable) {
         super(fm);
+        this.placeholderDrawable = placeholderDrawable;
         images = new ArrayList<>();
     }
 
@@ -34,7 +36,7 @@ public class ImagesSwitcherAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(images.get(position));
+        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(images.get(position), placeholderDrawable);
         scaleImageFragment.setOneTabListener(onTabOneClickListener);
         return scaleImageFragment;
     }

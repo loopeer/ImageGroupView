@@ -15,6 +15,7 @@ import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 public class ImageScaleActivity extends AppCompatActivity implements OnTabOneClickListener {
 
     private String url;
+    private int placeholderDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,13 @@ public class ImageScaleActivity extends AppCompatActivity implements OnTabOneCli
     private void pareIntent() {
         Intent intent = getIntent();
         url = intent.getStringExtra(NavigatorImage.EXTRA_IMAGE_URL);
+        placeholderDrawable = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_PLACE_DRAWABLE_ID, R.drawable.ic_image_default);
     }
 
     private void setFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(new SquareImage(null, url, null, SquareImage.PhotoType.NETWORK));
+        ScaleImageFragment scaleImageFragment = ScaleImageFragment.newInstance(new SquareImage(null, url, null, SquareImage.PhotoType.NETWORK), placeholderDrawable);
         scaleImageFragment.setOneTabListener(this);
         fragmentTransaction.add(R.id.container, scaleImageFragment).commit();
     }

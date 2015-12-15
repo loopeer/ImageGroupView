@@ -71,7 +71,7 @@
             android:padding="12dp"
             apps:addButtonDrawable="@drawable/ic_photo_default"
             apps:deleteDrawable="@drawable/ic_delete"
-            apps:imagePlaceholderDrawable="@drawable/ic_image_default"
+            apps:imagePlaceholderDrawable="@drawable/ic_launcher"
             apps:childMargin="4dp"
             apps:maxImageNum="14"
             apps:column="3"
