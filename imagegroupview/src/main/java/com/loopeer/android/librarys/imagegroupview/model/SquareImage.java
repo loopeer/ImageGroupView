@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class SquareImage implements Parcelable {
 
+  public int id;
   public String localUrl;
   public String interNetUrl;
   public String urlKey;
@@ -20,7 +21,12 @@ public class SquareImage implements Parcelable {
     this.type = type;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
   protected SquareImage(Parcel in) {
+    id = in.readInt();
     localUrl = in.readString();
     interNetUrl = in.readString();
     urlKey = in.readString();
@@ -29,6 +35,7 @@ public class SquareImage implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(id);
     dest.writeString(localUrl);
     dest.writeString(interNetUrl);
     dest.writeString(urlKey);
@@ -108,5 +115,31 @@ public class SquareImage implements Parcelable {
       out.writeInt(ordinal());
       out.writeString(mValue);
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    SquareImage that = (SquareImage) o;
+
+    if (id != that.id) return false;
+    if (localUrl != null ? !localUrl.equals(that.localUrl) : that.localUrl != null) return false;
+    if (interNetUrl != null ? !interNetUrl.equals(that.interNetUrl) : that.interNetUrl != null)
+      return false;
+    if (urlKey != null ? !urlKey.equals(that.urlKey) : that.urlKey != null) return false;
+    return type == that.type;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + (localUrl != null ? localUrl.hashCode() : 0);
+    result = 31 * result + (interNetUrl != null ? interNetUrl.hashCode() : 0);
+    result = 31 * result + (urlKey != null ? urlKey.hashCode() : 0);
+    result = 31 * result + type.hashCode();
+    return result;
   }
 }

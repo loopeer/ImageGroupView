@@ -57,7 +57,17 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(width, width);
+        setMeasuredDimension(getDefaultSize(0, widthMeasureSpec), getDefaultSize(0, heightMeasureSpec));
+
+        // Children are just made to fill our space.
+        int childWidthSize = getMeasuredWidth();
+        int childHeightSize = getMeasuredHeight();
+        //高度和宽度一样
+        heightMeasureSpec = widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+
+//        setMeasuredDimension(width, width);
     }
 
     public void setLocalUrl(String localUrl) {

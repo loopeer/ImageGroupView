@@ -3,6 +3,7 @@ package com.loopeer.android.librarys.imagegroupview;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
@@ -10,6 +11,7 @@ import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivit
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NavigatorImage {
 
@@ -33,9 +35,9 @@ public class NavigatorImage {
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Images.Media._ID };
 
-    public static void startImageSwitcherActivity(Context context, ArrayList<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable) {
+    public static void startImageSwitcherActivity(Context context, List<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable) {
         Intent intent = new Intent(context, ImageSwitcherActivity.class);
-        intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, images);
+        intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, new ArrayList<Parcelable>(images));
         intent.putExtra(EXTRA_IMAGE_DELETE, showAddButton);
         intent.putExtra(EXTRA_IMAGE_URL_POSITION, position);
         intent.putExtra(EXTRA_IMAGE_PLACE_DRAWABLE_ID, placeholderDrawable);

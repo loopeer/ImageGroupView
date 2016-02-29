@@ -573,7 +573,5 @@ public class ImageGroupView extends LinearLayout {
         clickListener = listener;
     }
 
-    public interface OnImageClickListener {
-        void onImageClick(SquareImage clickImage, ArrayList<SquareImage> squareImages, ArrayList<String> allImageInternetUrl);
-    }
+
 }

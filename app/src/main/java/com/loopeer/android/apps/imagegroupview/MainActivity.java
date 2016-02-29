@@ -8,18 +8,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
+import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements ImageGroupView.OnImageClickListener {
+public class MainActivity extends AppCompatActivity implements OnImageClickListener {
 
     private ImageGroupView imageGroupAddAble;
     private ImageGroupView imageGroup;
     private ImageGroupView imageGroup2;
+    private ImageGridView mGridView;
     private SimpleDraweeView oneImage;
     private SimpleDraweeView oneImage2;
     private TextView text;
@@ -31,6 +34,12 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
 
         initView();
         setData();
+        initGridView();
+    }
+
+    private void initGridView() {
+        mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
+        mGridView.updateNetPhotos(createTestData());
     }
 
     private void initView() {
@@ -72,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements ImageGroupView.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            imageGroupAddAble.onParentResult(requestCode, data);
+            mGridView.onParentResult(requestCode, data);
         }
     }
 

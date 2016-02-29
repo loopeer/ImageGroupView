@@ -119,6 +119,21 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
+            android:id="@+id/grid_test_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:padding="12dp"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="4dp"
+            android:numColumns="auto_fit"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical"
+            android:stretchMode="columnWidth"
+            apps:showAddButton="true" />
     </LinearLayout>
 
 </ScrollView>
