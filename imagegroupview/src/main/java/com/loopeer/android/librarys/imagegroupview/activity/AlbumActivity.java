@@ -44,6 +44,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private int mMaxSelectedNum;
     private MenuItem mSubmitMenu;
     private TextView mTextSubmit;
+    private int mImageGroupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void parseIntent() {
         Intent intent = getIntent();
+        mImageGroupId = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0);
         mMaxSelectedNum = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_SELECT_MAX_NUM, 0);
     }
 
@@ -103,6 +105,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private void finishWithResult() {
         Intent intent = getIntent();
         intent.putStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages));
+        intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId);
         setResult(RESULT_OK, intent);
         finish();
     }

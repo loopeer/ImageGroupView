@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     private ImageGroupView imageGroup;
     private ImageGroupView imageGroup2;
     private ImageGridView mGridView;
+    private ImageGridView mGridView2;
     private SimpleDraweeView oneImage;
     private SimpleDraweeView oneImage2;
     private TextView text;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
     private void initGridView() {
         mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
+        mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
         mGridView.updateNetPhotos(createTestData());
     }
 
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             mGridView.onParentResult(requestCode, data);
+            mGridView2.onParentResult(requestCode, data);
         }
     }
 

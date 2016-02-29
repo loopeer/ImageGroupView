@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
-    private final static int COLUMN = 3;
-    private final static int CHILD_MARGIN = 4;
     private final static int MAX_VALUE = -1;
 
     private String unionKey;
@@ -32,11 +30,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private int addButtonDrawable;
     private int deleteDrawable;
     private int placeholderDrawable;
-
     private boolean mShowAddButton, roundAsCircle;
-    private int childMargin;
     private int maxImageNum;
-    private int column;
     private GridImageAdapter mGridImageAdapter;
 
     public ImageGridView(Context context) {
@@ -70,8 +65,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         mShowAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
         roundAsCircle = false;
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
-        childMargin = a.getDimensionPixelSize(R.styleable.ImageGroupView_childMargin, CHILD_MARGIN);
-        column = a.getInteger(R.styleable.ImageGroupView_column, COLUMN);
         addButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
         deleteDrawable = a.getResourceId(R.styleable.ImageGroupView_deleteDrawable, R.drawable.ic_delete);
         placeholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
@@ -83,10 +76,11 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         preImages = new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(getContext(), this);
         setAdapter(mGridImageAdapter);
+        updateImages();
     }
 
     private void updateImages() {
-        mGridImageAdapter.updateData(preImages, mShowAddButton);
+        mGridImageAdapter.updateData(preImages, mShowAddButton && getCanSelectMaxNum() != 0);
     }
 
     public void updateNetPhotos(List<String> photos) {
@@ -143,7 +137,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         } else if (clickListener != null) {
             //clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
         } else {
-            NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position, mShowAddButton, placeholderDrawable);
+            NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
+                    mShowAddButton, placeholderDrawable, getId());
         }
     }
 
@@ -152,15 +147,16 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum());
+        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
     }
 
     private int getCanSelectMaxNum() {
         if (maxImageNum == MAX_VALUE) return 0;
-        return maxImageNum - preImages.size() + 1;
+        return maxImageNum - preImages.size();
     }
 
     public void onParentResult(int requestCode, Intent data) {
+        if (data == null || data.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0) != getId()) return;
         List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
         if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {

@@ -178,7 +178,7 @@ public class ImageGroupView extends LinearLayout {
                 } else if (clickListener != null) {
                     clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
                 } else {
-                    NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), mPhotoViewIDs.indexOf(squarePhotoViewId), showAddButton, placeholderDrawable);
+                    NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), mPhotoViewIDs.indexOf(squarePhotoViewId), showAddButton, placeholderDrawable, getId());
                 }
             }
         });
@@ -280,7 +280,8 @@ public class ImageGroupView extends LinearLayout {
         ArrayList<SquareImage> results = new ArrayList<>();
         for (Integer i : mPhotoViewIDs) {
             SquareImageView squareImageView = (SquareImageView) findViewById(i);
-            if (squareImageView.getSquareImage() != null) results.add(squareImageView.getSquareImage());
+            if (squareImageView.getSquareImage() != null)
+                results.add(squareImageView.getSquareImage());
         }
         return results;
     }
@@ -301,7 +302,7 @@ public class ImageGroupView extends LinearLayout {
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum());
+        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
     }
 
     private int getCanSelectMaxNum() {

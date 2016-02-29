@@ -29,6 +29,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private int placeholderDrawable;
     private ArrayList<Integer> deletePositions;
     private ImageView btnDelete;
+    private int mImageGroupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         Intent intent = getIntent();
         ArrayList<SquareImage> images = intent.getParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL);
         setUpImageWrappers(images);
+        mImageGroupId = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0);
         currentPagerPosition = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, 0);
         canImageDelete = intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_DELETE, false);
         placeholderDrawable = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_PLACE_DRAWABLE_ID, R.drawable.ic_image_default);
@@ -130,6 +132,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private void goBackWithResult() {
         Intent intent = new Intent();
         intent.putExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, deletePositions);
+        intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

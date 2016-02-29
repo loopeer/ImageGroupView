@@ -138,7 +138,6 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
                 , mLocalUrl == null ? SquareImage.PhotoType.NETWORK :SquareImage.PhotoType.LOCAL);
     }
 
-
     public void setRoundAsCircle(boolean flag) {
         if (flag == false) return;
         RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
