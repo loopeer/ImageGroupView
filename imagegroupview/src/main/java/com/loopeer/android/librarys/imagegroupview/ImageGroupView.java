@@ -285,7 +285,7 @@ public class ImageGroupView extends LinearLayout {
         return results;
     }
 
-    private void refreshLayout(ArrayList<SquareImage> photos) {
+    private void refreshLayout(List<SquareImage> photos) {
         mPhotoViewIDs.clear();
         removeAllViews();
         initLayoutItem();

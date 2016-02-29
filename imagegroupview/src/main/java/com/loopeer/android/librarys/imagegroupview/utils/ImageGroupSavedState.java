@@ -6,12 +6,12 @@ import android.view.View;
 
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ImageGroupSavedState extends View.BaseSavedState {
 
     private int doingClickViewId;
-    private ArrayList<SquareImage> squarePhotos;
+    private List<SquareImage> squarePhotos;
 
     public ImageGroupSavedState(Parcelable superState) {
         super(superState);
@@ -23,11 +23,11 @@ public class ImageGroupSavedState extends View.BaseSavedState {
         squarePhotos = source.readArrayList(SquareImage.class.getClassLoader());
     }
 
-    public ArrayList<SquareImage> getSquarePhotos() {
+    public List<SquareImage> getSquarePhotos() {
         return squarePhotos;
     }
 
-    public void setSquarePhotos(ArrayList<SquareImage> squarePhotos) {
+    public void setSquarePhotos(List<SquareImage> squarePhotos) {
         this.squarePhotos = squarePhotos;
     }
 

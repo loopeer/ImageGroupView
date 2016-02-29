@@ -3,22 +3,21 @@ package com.loopeer.android.librarys.imagegroupview.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.net.Uri;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.GridView;
-
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
@@ -26,11 +25,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private final static int CHILD_MARGIN = 4;
     private final static int MAX_VALUE = -1;
 
-    private ArrayList<Integer> mPhotoViewIDs;
-    private FragmentManager mManager;
     private String unionKey;
     private ImageGroupSavedState imageGroupSavedState;
-    private Uri preTakePhotoUri;
     private List<SquareImage> preImages;
     private OnImageClickListener clickListener;
     private int addButtonDrawable;
@@ -84,7 +80,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void init() {
-        mPhotoViewIDs = new ArrayList<>();
         preImages = new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(getContext(), this);
         setAdapter(mGridImageAdapter);
@@ -101,6 +96,16 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
             SquareImage squareImage = new SquareImage(null, url, null, SquareImage.PhotoType.NETWORK);
             squareImage.setId(createIndex());
             preImages.add(squareImage);
+        }
+        updateImages();
+    }
+
+    public void setNetworkPhotosWithKey(ArrayList<String> urls) {
+        if (urls == null) return;
+        preImages.clear();
+        for (String url : urls) {
+            String[] headWithKey = url.split("/");
+            preImages.add(new SquareImage(null, url, headWithKey[headWithKey.length - 1], SquareImage.PhotoType.NETWORK));
         }
         updateImages();
     }
@@ -152,7 +157,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     private int getCanSelectMaxNum() {
         if (maxImageNum == MAX_VALUE) return 0;
-        return maxImageNum - mPhotoViewIDs.size() + 1;
+        return maxImageNum - preImages.size() + 1;
     }
 
     public void onParentResult(int requestCode, Intent data) {
@@ -163,6 +168,62 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         } else if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
             doSelectPhotos(images);
         }
+    }
+
+    public void setUnionKey(String key) {
+        unionKey = key;
+    }
+
+    public ArrayList<String> getImageKeys() {
+        ArrayList<String> result = new ArrayList<>();
+        for (SquareImage squareImage : preImages) {
+            if (!TextUtils.isEmpty(squareImage.interNetUrl) || !TextUtils.isEmpty(squareImage.localUrl)) {
+                result.add(squareImage.urlKey);
+            }
+        }
+        return result;
+    }
+
+    public HashMap<String, String> getUploadKeyUrlMap() {
+        HashMap<String, String> map = new HashMap<>();
+        for (SquareImage squareImage : preImages) {
+            if (TextUtils.isEmpty(squareImage.interNetUrl) && !TextUtils.isEmpty(squareImage.localUrl)) {
+                map.put(squareImage.urlKey, squareImage.localUrl);
+            }
+        }
+        return map;
+    }
+
+    public String getImageKeyString() {
+        ArrayList<String> keys = getImageKeys();
+        if (keys.isEmpty()) return null;
+        StringBuffer sb = new StringBuffer();
+        for (String key : keys) {
+            sb.append(key);
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public ArrayList<String> getLocalUrls() {
+        ArrayList<String> result = new ArrayList<>();
+        for (SquareImage squareImage : preImages) {
+            if (TextUtils.isEmpty(squareImage.interNetUrl) && !TextUtils.isEmpty(squareImage.localUrl)) {
+                result.add(squareImage.localUrl);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<String> getInternetUrls() {
+        ArrayList<String> result = new ArrayList<>();
+        for (SquareImage squareImage : preImages) {
+            if (!TextUtils.isEmpty(squareImage.interNetUrl)) {
+                result.add(squareImage.interNetUrl);
+            }
+        }
+        return result;
     }
 
     private void doPhotosDelete(final ArrayList<Integer> positions) {
@@ -207,4 +268,32 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         return i;
     }
 
+    @Override
+    public Parcelable onSaveInstanceState() {
+        final Parcelable parcelable = super.onSaveInstanceState();
+        final ImageGroupSavedState imageSaveState = new ImageGroupSavedState(parcelable);
+        imageSaveState.setSquarePhotos(getSquarePhotos());
+        return imageSaveState;
+    }
+
+    @Override
+    public void onRestoreInstanceState(final Parcelable state) {
+        if (!(state instanceof ImageGroupSavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+        final ImageGroupSavedState ss = (ImageGroupSavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        imageGroupSavedState = ss;
+        restoreView();
+    }
+
+    private void restoreView() {
+        if (imageGroupSavedState != null) {
+            preImages.clear();
+            preImages.addAll(getSquarePhotos());
+            updateImages();
+            imageGroupSavedState = null;
+        }
+    }
 }
