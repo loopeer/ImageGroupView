@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.ImageGroupView;
@@ -89,7 +89,12 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     }
 
     @Override
+    public void onImageClick(View clickImage, SquareImage squareImage) {
+
+    }
+
+    /*@Override
     public void onImageClick(SquareImage clickImage, ArrayList<SquareImage> squareImages, ArrayList<String> allImageInternetUrl) {
         Toast.makeText(this, "Inter Images is :  " + allImageInternetUrl, Toast.LENGTH_SHORT).show();
-    }
+    }*/
 }

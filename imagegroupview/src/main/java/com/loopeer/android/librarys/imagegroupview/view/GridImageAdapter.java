@@ -3,23 +3,33 @@ package com.loopeer.android.librarys.imagegroupview.view;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
-import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class GridImageAdapter extends BaseAdapter {
+public class GridImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<SquareImage> mData;
     private OnSquareClickListener mClickListener;
+    private int mAddButtonDrawable;
+    private int mPlaceholderDrawable;
+    private boolean mRoundAsCircle;
 
     public GridImageAdapter(Context c, OnSquareClickListener listener) {
         mContext = c;
         mData = new ArrayList<>();
         mClickListener = listener;
+    }
+
+    public void updateParam(int addButtonDrawable, int placeholderDrawable, boolean roundAsCircle) {
+        mAddButtonDrawable = addButtonDrawable;
+        mPlaceholderDrawable = placeholderDrawable;
+        mRoundAsCircle = roundAsCircle;
+        notifyDataSetChanged();
     }
 
     public void updateData(List<SquareImage> datas, boolean showAddButton) {
@@ -51,7 +61,9 @@ class GridImageAdapter extends BaseAdapter {
         SquareImageView squareView;
         if (convertView == null) {
             squareView = new SquareImageView(mContext);
-            squareView.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
+            squareView.setPlaceholderDrawable(mPlaceholderDrawable);
+            squareView.setRoundAsCircle(mRoundAsCircle);
+            squareView.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
         } else {
             squareView = (SquareImageView) convertView;
         }
@@ -62,7 +74,7 @@ class GridImageAdapter extends BaseAdapter {
 
     private void bindData(SquareImageView squareView, final int position) {
         if (getItem(position) == null) {
-            squareView.setImageResource(R.drawable.ic_photo_default);
+            squareView.setImageResource(mAddButtonDrawable);
         } else {
             squareView.setImageData(getItem(position));
         }

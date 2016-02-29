@@ -27,10 +27,9 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private ImageGroupSavedState imageGroupSavedState;
     private List<SquareImage> preImages;
     private OnImageClickListener clickListener;
-    private int addButtonDrawable;
-    private int deleteDrawable;
-    private int placeholderDrawable;
-    private boolean mShowAddButton, roundAsCircle;
+    private int mAddButtonDrawable;
+    private int mPlaceholderDrawable;
+    private boolean mShowAddButton, mRoundAsCircle;
     private int maxImageNum;
     private GridImageAdapter mGridImageAdapter;
 
@@ -63,11 +62,10 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         if (a == null) return;
 
         mShowAddButton = a.getBoolean(R.styleable.ImageGroupView_showAddButton, false);
-        roundAsCircle = false;
+        mRoundAsCircle = false;
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
-        addButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
-        deleteDrawable = a.getResourceId(R.styleable.ImageGroupView_deleteDrawable, R.drawable.ic_delete);
-        placeholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
+        mAddButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
+        mPlaceholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
 
         a.recycle();
     }
@@ -81,6 +79,12 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     private void updateImages() {
         mGridImageAdapter.updateData(preImages, mShowAddButton && getCanSelectMaxNum() != 0);
+        mGridImageAdapter.updateParam(mAddButtonDrawable, mPlaceholderDrawable, mRoundAsCircle);
+    }
+
+    public void setGridImageAdapter(GridImageAdapter gridImageAdapter) {
+        mGridImageAdapter = gridImageAdapter;
+        updateImages();
     }
 
     public void updateNetPhotos(List<String> photos) {
@@ -135,10 +139,10 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         if (squareImage == null) {
             doUpLoadPhotoClick();
         } else if (clickListener != null) {
-            //clickListener.onImageClick(view.getSquareImage(), getSquarePhotos(), getInternetUrls());
+            clickListener.onImageClick(v, squareImage);
         } else {
             NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
-                    mShowAddButton, placeholderDrawable, getId());
+                    mShowAddButton, mPlaceholderDrawable, getId());
         }
     }
 
@@ -291,5 +295,9 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
             updateImages();
             imageGroupSavedState = null;
         }
+    }
+
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        clickListener = listener;
     }
 }

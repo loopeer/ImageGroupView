@@ -131,11 +131,8 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         }
     }
 
-    public SquareImage getSquareImage() {
-        return mLocalUrl == null && mInternetUrl == null
-                ? null
-                : new SquareImage(getLocalUrl(), getInternetUrl(), getUploadImageKey()
-                , mLocalUrl == null ? SquareImage.PhotoType.NETWORK :SquareImage.PhotoType.LOCAL);
+    public View getSquareImage() {
+        return null;
     }
 
     public void setRoundAsCircle(boolean flag) {

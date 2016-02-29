@@ -161,7 +161,8 @@
             android:scrollbars="vertical"
             android:stretchMode="columnWidth"
             apps:showAddButton="true"
-            apps:maxImageNum="2" />
+            apps:addButtonDrawable="@drawable/ic_launcher"
+            apps:imagePlaceholderDrawable="@drawable/ic_photo_default"/>
     </LinearLayout>
 
 </ScrollView>
