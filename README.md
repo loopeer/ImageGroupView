@@ -19,7 +19,7 @@ Installation
 ====
 ```groovy
 dependencies {
-    compile 'com.loopeer.library:imagegroupview:1.0.0'
+    compile 'com.loopeer.library:imagegroupview:1.0.1'
 }
 ```
 

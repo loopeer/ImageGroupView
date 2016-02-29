@@ -2,7 +2,15 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.0.0"
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///Users/todou/.m2/repository")
+        }
+    }
+}
+
+version = "1.0.1"
 
 android {
     compileSdkVersion 23
