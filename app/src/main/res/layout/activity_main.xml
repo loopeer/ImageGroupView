@@ -156,7 +156,7 @@
             android:padding="12dp"
             android:horizontalSpacing="4dp"
             android:verticalSpacing="4dp"
-            android:numColumns="auto_fit"
+            android:numColumns="5"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="vertical"
             android:stretchMode="columnWidth"
