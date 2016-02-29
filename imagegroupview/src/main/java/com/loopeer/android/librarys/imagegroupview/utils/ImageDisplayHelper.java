@@ -186,7 +186,31 @@ public final class ImageDisplayHelper {
         }
 
         Uri uri = Uri.fromFile(new File(path));
+
         draweeView.setImageURI(uri);
+    }
+
+    public static void displayImageLocal(final PhotoDraweeView draweeView, String path) {
+        if (draweeView == null || TextUtils.isEmpty(path)) {
+            return;
+        }
+
+        Uri uri = Uri.fromFile(new File(path));
+
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setUri(uri);
+        controller.setOldController(draweeView.getController());
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || draweeView == null) {
+                    return;
+                }
+                draweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        draweeView.setController(controller.build());
     }
 
     public static void displayImageLocal(SimpleDraweeView draweeView, String path, int width, int height) {

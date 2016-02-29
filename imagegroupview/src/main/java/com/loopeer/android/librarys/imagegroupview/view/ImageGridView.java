@@ -78,7 +78,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void updateImages() {
-        mGridImageAdapter.updateData(preImages, mShowAddButton && getCanSelectMaxNum() != 0);
+        mGridImageAdapter.updateData(preImages, mShowAddButton && (getCanSelectMaxNum() != 0 || maxImageNum == MAX_VALUE));
         mGridImageAdapter.updateParam(mAddButtonDrawable, mPlaceholderDrawable, mRoundAsCircle);
     }
 
