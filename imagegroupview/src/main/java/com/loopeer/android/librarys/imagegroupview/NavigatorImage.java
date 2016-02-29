@@ -21,7 +21,7 @@ public class NavigatorImage {
     public static final String EXTRA_IMAGE_SELECT_MAX_NUM = "extra_image_select_max_num";
     public static final String EXTRA_IMAGE_URL_POSITION = "image_position";
     public static final String EXTRA_IMAGE_DELETE = "extra_image_delete";
-    public static final String EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_delete";
+    public static final String EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_place_drawable_id";
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
 
     public static final int RESULT_SELECT_PHOTO = 2001;
