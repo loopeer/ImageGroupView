@@ -52,8 +52,8 @@ install {
             project {
                 packaging 'aar'
                 // Add your description here
-                name 'ImageGroupView, you can show image and add images by it. You can click the ' +
-                        'image to see the images by viewpager and it can also be scale. Last you can add photo easily'  //项目描述
+                name 'ImageGroupView, you can show ic_image_default and add images by it. You can click the ' +
+                        'ic_image_default to see the images by viewpager and it can also be scale. Last you can add photo easily'  //项目描述
                 url siteUrl
                 // Set your license
                 licenses {
