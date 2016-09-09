@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = '1.0.2'
 
 uploadArchives {
     repositories {
@@ -8,8 +11,6 @@ uploadArchives {
         }
     }
 }
-
-version = "1.0.1"
 
 android {
     compileSdkVersion Integer.parseInt(compile_sdk_version)
@@ -82,8 +83,7 @@ task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
-/*
-task javadoc(type: Javadoc) {
+/*task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
@@ -92,7 +92,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }*/
 artifacts {
-    //archives javadocJar
+//    archives javadocJar
     archives sourcesJar
 }
 Properties properties = new Properties()
