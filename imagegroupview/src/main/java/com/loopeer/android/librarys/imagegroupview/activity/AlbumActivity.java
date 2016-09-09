@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.IntDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,12 +30,28 @@ import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
 
 import java.io.File;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
     private static final int LOADER_ID_FOLDER = 10001;
+
+    public static final int ALL = 0;
+    public static final int TAKE_PHOTO = 1;
+    public static final int ALBUM = 2;
+
+    @IntDef(flag = true,
+            value = {
+                    ALL,
+                    TAKE_PHOTO,
+                    ALBUM
+            })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AlbumType {
+    }
 
     private RecyclerView mRecyclerView;
     private CustomPopupView mCustomPopupWindowView;
@@ -45,16 +62,22 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private MenuItem mSubmitMenu;
     private TextView mTextSubmit;
     private int mImageGroupId;
+    private int mAlbumType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-
-        parseIntent();
+        mAlbumType = getIntent().getIntExtra(NavigatorImage.EXTRA_ALBUM_TYPE, 0);
         mSelectedImages = new ArrayList<>();
-        setUpView();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (mAlbumType != TAKE_PHOTO) {
+            parseIntent();
+            setContentView(R.layout.activity_album);
+            setUpView();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            startCamera();
+        }
     }
 
     private void parseIntent() {
@@ -66,7 +89,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_image_group_submit, menu);
-        updateSubmitMenu(menu);
+        if (mAlbumType != TAKE_PHOTO) updateSubmitMenu(menu);
         return true;
     }
 
@@ -137,7 +160,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
+        if (mAlbumType != TAKE_PHOTO) getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
     }
 
     private void updateContentView(ImageFolder floder) {
@@ -146,6 +169,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         } else {
             showContentView();
         }
+        mImageAdapter.setAlbumType(mAlbumType);
         mImageAdapter.updateFolderImageData(floder);
         mRecyclerView.scrollToPosition(0);
     }
@@ -301,6 +325,9 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (data == null || resultCode != RESULT_OK && mAlbumType == TAKE_PHOTO) {
+            this.finish();
+        }
         if (data == null || resultCode != RESULT_OK) return;
         String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
         if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeUrl) {

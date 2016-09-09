@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
@@ -24,6 +25,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     private OnImageClickListener mOnImageClickListener;
     private List<Image> mSelectImages;
+    private int mAlbumType;
 
     public ImageAdapter(Context context) {
         super(context);
@@ -32,6 +34,10 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     public void setOnImageClickListener(OnImageClickListener listener) {
         mOnImageClickListener = listener;
+    }
+
+    public void setAlbumType(int albumType) {
+        mAlbumType = albumType;
     }
 
     @Override
@@ -65,7 +71,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
     public void updateFolderImageData(ImageFolder imageFolder) {
         List<Image> images = new ArrayList();
         images.addAll(imageFolder.images);
-        if (TextUtils.isEmpty(imageFolder.dir)) {
+        if (TextUtils.isEmpty(imageFolder.dir) && mAlbumType != AlbumActivity.ALBUM) {
             images.add(0, null);
         }
         updateData(images);

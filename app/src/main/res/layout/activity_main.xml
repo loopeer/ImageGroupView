@@ -21,6 +21,23 @@
             android:textColor="@android:color/white"
             android:background="#777777"
             />
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            >
+
+            <com.loopeer.android.librarys.imagegroupview.view.SingleImageView
+                android:id="@+id/avatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                apps:placeholderImage="@drawable/ic_image_group_camera"
+                apps:backgroundImage="@drawable/ic_image_group_camera"
+                apps:roundAsCircle="true"/>
+
+        </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"

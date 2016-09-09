@@ -24,6 +24,8 @@ public class NavigatorImage {
     public static final String EXTRA_IMAGE_DELETE = "extra_image_delete";
     public static final String EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_place_drawable_id";
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
+    public static final String EXTRA_ALBUM_TYPE = "extra_album_type";
+
 
     public static final int RESULT_SELECT_PHOTO = 2001;
     public static final int RESULT_TAKE_PHOTO = 2003;
@@ -50,6 +52,14 @@ public class NavigatorImage {
         Intent intent = new Intent(context, AlbumActivity.class);
         intent.putExtra(EXTRA_IMAGE_SELECT_MAX_NUM, canSelectMaxNum);
         intent.putExtra(EXTRA_IMAGE_GROUP_ID, groupId);
+        ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
+    }
+
+    public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId, int type) {
+        Intent intent = new Intent(context, AlbumActivity.class);
+        intent.putExtra(EXTRA_IMAGE_SELECT_MAX_NUM, canSelectMaxNum);
+        intent.putExtra(EXTRA_IMAGE_GROUP_ID, groupId);
+        intent.putExtra(EXTRA_ALBUM_TYPE, type);
         ((Activity)context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
     }
 

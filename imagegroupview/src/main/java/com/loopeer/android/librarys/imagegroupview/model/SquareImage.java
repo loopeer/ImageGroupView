@@ -14,6 +14,9 @@ public class SquareImage implements Parcelable {
   public String urlKey;
   public PhotoType type;
 
+  public SquareImage() {
+  }
+
   public SquareImage(String localUrl, String interNetUrl, String urlKey, PhotoType type) {
     this.localUrl = localUrl;
     this.interNetUrl = interNetUrl;

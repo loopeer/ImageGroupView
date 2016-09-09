@@ -12,6 +12,7 @@ import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
+import com.loopeer.android.librarys.imagegroupview.view.SingleImageView;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     private ImageGridView mGridView2;
     private SimpleDraweeView oneImage;
     private SimpleDraweeView oneImage2;
+    private SingleImageView mSingleImageView;
     private TextView text;
 
     @Override
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     private void initGridView() {
         mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
         mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
+        mSingleImageView = (SingleImageView) findViewById(R.id.avatar);
         mGridView.updateNetPhotos(createTestData());
     }
 
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
         if (resultCode == RESULT_OK) {
             mGridView.onParentResult(requestCode, data);
             mGridView2.onParentResult(requestCode, data);
+            mSingleImageView.onParentResult(requestCode, data);
         }
     }
 
