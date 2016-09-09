@@ -25,9 +25,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:' + support_version
-    compile 'com.android.support:recyclerview-v7:' + support_version
-    compile 'com.facebook.fresco:fresco:' + fresco_version
-    compile 'com.facebook.fresco:imagepipeline-okhttp:' + fresco_version
     compile project(':imagegroupview')
 }

@@ -14,48 +14,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="?android:listPreferredItemHeightSmall"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:text="This only show images"
-            android:paddingLeft="12dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:background="#777777"
-            />
-
-        <com.loopeer.android.librarys.imagegroupview.ImageGroupView
-            android:id="@+id/images_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            apps:childMargin="4dp"
-            apps:column="3"
-            apps:showAddButton="false" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="?android:listPreferredItemHeightSmall"
-            android:gravity="center_vertical"
-            android:text="Change the column to 5"
-            android:paddingLeft="12dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:background="#777777"
-            />
-
-        <com.loopeer.android.librarys.imagegroupview.ImageGroupView
-            android:id="@+id/images_group_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            apps:childMargin="4dp"
-            apps:column="5"
-            apps:showAddButton="false" />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="?android:listPreferredItemHeightSmall"
             android:gravity="center_vertical"
             android:text="This can show and add images"
             android:paddingLeft="12dp"
@@ -63,19 +21,6 @@
             android:textColor="@android:color/white"
             android:background="#777777"
             />
-
-        <com.loopeer.android.librarys.imagegroupview.ImageGroupView
-            android:id="@+id/images_group_addable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            apps:addButtonDrawable="@drawable/ic_photo_default"
-            apps:deleteDrawable="@drawable/ic_delete"
-            apps:imagePlaceholderDrawable="@drawable/ic_launcher"
-            apps:childMargin="4dp"
-            apps:maxImageNum="14"
-            apps:column="3"
-            apps:showAddButton="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -161,7 +106,6 @@
             android:scrollbars="vertical"
             android:stretchMode="columnWidth"
             apps:showAddButton="true"
-            apps:addButtonDrawable="@drawable/ic_launcher"
             apps:imagePlaceholderDrawable="@drawable/ic_photo_default"/>
     </LinearLayout>
 
