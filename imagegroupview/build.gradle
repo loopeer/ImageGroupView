@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 
 uploadArchives {
     repositories {
@@ -13,14 +12,14 @@ uploadArchives {
 version = "1.0.1"
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion Integer.parseInt(compile_sdk_version)
+    buildToolsVersion build_tools_version
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode Integer.parseInt(version_code)
+        versionName version_name
     }
     buildTypes {
         release {
@@ -36,10 +35,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.facebook.fresco:fresco:0.7.0'
-    compile 'com.facebook.fresco:imagepipeline-okhttp:0.6.0+'
+    compile 'com.android.support:appcompat-v7:' + support_version
+    compile 'com.android.support:recyclerview-v7:' + support_version
+    compile 'com.facebook.fresco:fresco:' + fresco_version
+    compile 'com.facebook.fresco:imagepipeline-okhttp:' + fresco_version
 }
 
 

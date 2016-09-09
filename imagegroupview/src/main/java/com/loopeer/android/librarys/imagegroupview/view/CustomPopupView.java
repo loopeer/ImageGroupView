@@ -1,5 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview.view;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.AlbumRecyclerAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
-import com.nineoldandroids.animation.ValueAnimator;
+import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 
 import java.util.List;
 
