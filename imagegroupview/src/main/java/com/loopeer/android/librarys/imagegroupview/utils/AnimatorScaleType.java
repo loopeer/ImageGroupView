@@ -51,8 +51,8 @@ public class AnimatorScaleType implements ScalingUtils.ScaleType {
     @Override
     public Matrix getTransform(Matrix outTransform, Rect parentRect, int childWidth, int childHeight, float focusX, float focusY) {
         float scale, dx, dy;
-        float scaleX = (float) parentRect.width() / (float) childWidth + mScale;
-        float scaleY = (float) parentRect.height() / (float) childHeight + mScale;
+        final float scaleX = (float) parentRect.width() / (float) childWidth;
+        final float scaleY = (float) parentRect.height() / (float) childHeight;
         if (scaleY > scaleX) {
             scale = scaleY;
             dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
@@ -64,7 +64,7 @@ public class AnimatorScaleType implements ScalingUtils.ScaleType {
         }
         outTransform.setScale(scale, scale);
         outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-
+        outTransform.postScale(1 + mScale, 1 + mScale, childWidth / 2, childHeight / 2);
         return outTransform;
     }
 }
