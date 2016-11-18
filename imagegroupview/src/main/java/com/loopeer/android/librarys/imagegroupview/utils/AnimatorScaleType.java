@@ -64,7 +64,7 @@ public class AnimatorScaleType implements ScalingUtils.ScaleType {
         }
         outTransform.setScale(scale, scale);
         outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-        outTransform.postScale(1 + mScale, 1 + mScale, childWidth / 2, childHeight / 2);
+        outTransform.postScale(1 + mScale, 1 + mScale, parentRect.width() / 2, parentRect.height() / 2);
         return outTransform;
     }
 }
