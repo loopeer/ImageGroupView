@@ -15,6 +15,8 @@ Screeshot
 
 ![](/screenshot/screenshot_select_photo.gif)  
 
+<img src="/screenshot/screenshot_select_animation.gif" width = "310"/>
+
 Installation
 ====
 ```groovy
@@ -38,9 +40,9 @@ First, add the layout
 * **childMargin** The margin between child, as the left and top.
 * **column** You can set as you need  
 * **showAddButton** When set true, you can add image by album or camera
-* **addButtonDrawable** 
-* **imagePlaceholderDrawable** 
-* **deleteDrawable** 
+* **addButtonDrawable**
+* **imagePlaceholderDrawable**
+* **deleteDrawable**
 
 Then, you can add data.
 ```java
@@ -56,7 +58,7 @@ You can add ClickListener
         imageGroup.setOnImageClickListener(this);
         ......
 ```
-Get data by the method 
+Get data by the method
 ```java
         onImageClick(SquareImage clickImage, ArrayList<SquareImage> squareImages, ArrayList<String> allImageInternetUrl)
 ```
