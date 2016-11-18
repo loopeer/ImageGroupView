@@ -40,7 +40,7 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
     }
 
     @Override
-    public void bindView(final ImageFolder var1, int var2, RecyclerView.ViewHolder var3) {
+    public void bindView(final ImageFolder var1, int var2, RecyclerView.ViewHolder var3, List<Object> payloads) {
         if (var3 instanceof AlbumViewHolder) {
             AlbumViewHolder albumViewHolder = (AlbumViewHolder) var3;
             albumViewHolder.bind(var1);

@@ -1,19 +1,29 @@
 package com.loopeer.android.librarys.imagegroupview.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+import com.loopeer.android.librarys.imagegroupview.utils.AnimatorScaleType;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +32,9 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     private static final int ITEM_CAMERA = 10000;
     private static final int ITEM_IMAMGE = 10001;
+    private static final int ANIMATOR_TIME = 600;
+    private static final float ZOOM_IMAGE_SCALE = AnimatorScaleType.ZOOM_SCALE;
+    private static final float REDUCE_IMAGE_SCALE = AnimatorScaleType.REDUCE_SCALE;
 
     private OnImageClickListener mOnImageClickListener;
     private List<Image> mSelectImages;
@@ -41,14 +54,25 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
     }
 
     @Override
-    public void bindView(final Image product, final int i, RecyclerView.ViewHolder viewHolder) {
+    public void bindView(final Image product, final int i, RecyclerView.ViewHolder viewHolder, List<Object> payloads) {
         if (viewHolder instanceof ImageViewHolder) {
-            ImageViewHolder productViewHolder = (ImageViewHolder) viewHolder;
-            productViewHolder.bind(product);
+            final ImageViewHolder productViewHolder = (ImageViewHolder) viewHolder;
+            productViewHolder.bind(product, !payloads.isEmpty(), isImageSelected(product));
             productViewHolder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnImageClickListener.onImageSelected(product);
+                    //0:无反应  1:选中  2:取消选中
+                    int index = mOnImageClickListener.onImageSelected(product, i);
+                    if (index == 1) {
+                        showSelectedNumberAnimator((ViewGroup) productViewHolder.itemView);
+                    }
+                    if (index != 0) {
+                        if (isImageSelected(product)) {
+                            zoomImageScaleAnimator(productViewHolder.getImage());
+                        } else {
+                            reduceImageScaleAnimator(productViewHolder.getImage());
+                        }
+                    }
                 }
             });
             productViewHolder.itemView.setSelected(isImageSelected(product));
@@ -62,6 +86,60 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
                 }
             });
         }
+    }
+
+    private void zoomImageScaleAnimator(SimpleDraweeView draweeView) {
+        getScaleAnimator(draweeView, REDUCE_IMAGE_SCALE, ZOOM_IMAGE_SCALE).start();
+    }
+
+    private void reduceImageScaleAnimator(SimpleDraweeView draweeView) {
+        getScaleAnimator(draweeView, ZOOM_IMAGE_SCALE, REDUCE_IMAGE_SCALE).start();
+    }
+
+    private ValueAnimator getScaleAnimator(final SimpleDraweeView view, float from, float to) {
+        ValueAnimator animator = ValueAnimator.ofFloat(from, to);
+        animator.setDuration(ANIMATOR_TIME);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                AnimatorScaleType.INSTANCE.setScale((float) animation.getAnimatedValue());
+                ImageDisplayHelper.setImageScaleType(view, AnimatorScaleType.INSTANCE);
+            }
+        });
+        return animator;
+    }
+
+    private void showSelectedNumberAnimator(final ViewGroup view) {
+        final TextView tv = new TextView(view.getContext());
+        tv.setTextColor(Color.WHITE);
+        tv.setTextSize(getNumberAnimatorSize(view));
+        tv.setText(String.valueOf(selectedImageNumber()));
+        tv.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.animator_text_bg));
+        tv.setGravity(Gravity.CENTER);
+        tv.setWidth(view.getWidth());
+        tv.setHeight(view.getHeight());
+
+        view.addView(tv, 1);
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(tv, "alpha", 1.0f, 0.0f);
+        animator.setDuration(ANIMATOR_TIME);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.removeView(tv);
+            }
+        });
+        animator.start();
+    }
+
+    private int getNumberAnimatorSize(View view) {
+        return view.getWidth() / 9;
+    }
+
+    private int selectedImageNumber() {
+        return mSelectImages.size();
     }
 
     private boolean isImageSelected(Image product) {
@@ -99,16 +177,17 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
         return ITEM_IMAMGE;
     }
 
-    public void updateSelectImages(List<Image> selectedImages) {
+    public void updateSelectImages(List<Image> selectedImages, int position) {
         mSelectImages.clear();
         mSelectImages.addAll(selectedImages);
-        notifyDataSetChanged();
+        notifyItemChanged(position, "make it not empty");
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView icon;
         FrameLayout container;
+        private int mWidth;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -118,16 +197,24 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
             final int screenWidth = itemView.getResources().getDisplayMetrics().widthPixels;
             final int parentMargin = itemView.getResources().getDimensionPixelSize(R.dimen.inline_padding);
-            final int width = (screenWidth - parentMargin * 4) / 3;
+            mWidth = (screenWidth - parentMargin * 4) / 3;
             ViewGroup.LayoutParams layoutParams = icon.getLayoutParams();
-            layoutParams.height = width;
-            layoutParams.width = width;
+            layoutParams.height = mWidth;
+            layoutParams.width = mWidth;
             icon.setLayoutParams(layoutParams);
 
         }
 
-        public void bind(Image image) {
-            ImageDisplayHelper.displayImageLocal(icon, image.url, 200, 200);
+        public SimpleDraweeView getImage() {
+            return icon;
+        }
+
+        public void bind(Image image, boolean isDoAnimator, boolean isSelected) {
+            ImageDisplayHelper.displayImageLocal(icon, image.url, mWidth, mWidth);
+            if (!isDoAnimator) {
+                ImageDisplayHelper.setImageScaleType(icon, isSelected ?
+                        AnimatorScaleType.getZoomScaleType() : AnimatorScaleType.getReduceScaleType());
+            }
         }
     }
 
@@ -146,8 +233,9 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
         }
     }
 
-    public interface OnImageClickListener{
-        void onImageSelected(Image image);
+    public interface OnImageClickListener {
+        int onImageSelected(Image image, int position);//0:无反应  1:选中  2:取消选中
+
         void onCameraSelected();
     }
 }

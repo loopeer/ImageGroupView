@@ -95,7 +95,7 @@ public class CustomPopupView extends LinearLayout implements View.OnClickListene
                     mBgView.setVisibility(VISIBLE);
                 }
                 setRecyclerViewHeight(height);
-                setBgViewAlpha((float)height / (float)Math.abs(endHeight - startHeight));
+                setBgViewAlpha((float) height / (float) Math.abs(endHeight - startHeight));
                 if (height == endHeight && !isShow) {
                     mRecyclerView.setVisibility(GONE);
                     mBgView.setVisibility(GONE);
@@ -165,7 +165,7 @@ public class CustomPopupView extends LinearLayout implements View.OnClickListene
         onItemSelect(imageFolder);
     }
 
-    public interface FolderItemSelectListener{
+    public interface FolderItemSelectListener {
         void onFolderItemSelected(ImageFolder imageFolder);
     }
 }

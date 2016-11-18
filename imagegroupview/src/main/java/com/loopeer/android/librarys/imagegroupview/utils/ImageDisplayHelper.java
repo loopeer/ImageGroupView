@@ -13,6 +13,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -242,6 +243,10 @@ public final class ImageDisplayHelper {
                 .setImageRequest(request)
                 .build();
         draweeView.setController(controller);
+    }
+
+    public static void setImageScaleType(SimpleDraweeView draweeView, ScalingUtils.ScaleType scaleType) {
+        draweeView.getHierarchy().setActualImageScaleType(scaleType);
     }
 
 }

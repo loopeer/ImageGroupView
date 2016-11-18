@@ -39,12 +39,18 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         return this.mContext;
     }
 
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        T data = this.getItem(position);
-        this.bindView(data, position, holder);
+
     }
 
-    public abstract void bindView(T var1, int var2, RecyclerView.ViewHolder var3);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        T data = this.getItem(position);
+        this.bindView(data, position, holder, payloads);
+    }
+
+    public abstract void bindView(T var1, int var2, RecyclerView.ViewHolder var3, List<Object> payloads);
 
     public T getItem(int position) {
         return this.mData.get(position);

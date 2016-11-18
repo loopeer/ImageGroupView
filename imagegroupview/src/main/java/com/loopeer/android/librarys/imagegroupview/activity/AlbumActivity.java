@@ -160,7 +160,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (mAlbumType != TAKE_PHOTO) getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
+        if (mAlbumType != TAKE_PHOTO)
+            getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
     }
 
     private void updateContentView(ImageFolder floder) {
@@ -294,16 +295,21 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     @Override
-    public void onImageSelected(Image image) {
+    public int onImageSelected(Image image, int position) {
+        //0:无反应  1:选中  2:取消选中
+        int index;
         if (mSelectedImages.contains(image)) {
             mSelectedImages.remove(image);
+            index = 2;
         } else if (mSelectedImages.size() == mMaxSelectedNum && mMaxSelectedNum != 0) {
-            return;
+            return 0;
         } else {
             mSelectedImages.add(image);
+            index = 1;
         }
-        mImageAdapter.updateSelectImages(mSelectedImages);
+        mImageAdapter.updateSelectImages(mSelectedImages, position);
         updateSubmitText();
+        return index;
     }
 
     @Override
