@@ -2,36 +2,53 @@ package com.loopeer.android.librarys.imagegroupview.utils;
 
 import android.content.Context;
 import android.os.Looper;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ImageUploadHelper {
 
-    public interface OnImageUploadListener{
+    public interface OnImageUploadListener {
         void onImageUploadStart();
+
         void onImageUploadComplete();
     }
 
     private Context context;
-    private OnImageUploadListener listener;
+    private OnImageUploadListener mListener;
+    private ImageUploadHandler mHandler;
+    private Thread mThread;
 
-    ImageUploadHandler handler;
-
-    public ImageUploadHelper(Context context){
+    public ImageUploadHelper(Context context) {
         this.context = context;
     }
 
+    //called when finish activity/fragment
+    public void stopThread() {
+        if (mThread != null) {
+            mThread.interrupt();
+            mThread = null;
+        }
+        if (mHandler != null) {
+            mHandler = null;
+        }
+        if (mListener != null) {
+            mListener = null;
+        }
+    }
+
     public void upload(final HashMap<String, String> map, OnImageUploadListener listener) {
-        this.listener = listener;
-        handler = new ImageUploadHandler(listener);
-        new Thread(new Runnable() {
+        this.mListener = listener;
+        mHandler = new ImageUploadHandler(listener);
+        mThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Looper.prepare();
                 doUpload(map);
                 Looper.loop();
             }
-        }).start();
+        });
+        mThread.start();
     }
 
     private void doUpload(HashMap<String, String> map) {
@@ -39,18 +56,18 @@ public class ImageUploadHelper {
             onFinish();
             return;
         }
-        handler.onHandleStart();
+        mHandler.onHandleStart();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             if (entry.getValue() != null && entry.getKey() != null) {
-                //doUploadImage(entry.getValue(), entry.getKey(), map);
+//                doUploadImage(entry.getValue(), entry.getKey(), map);
                 break;
             }
         }
     }
 
     private void doUploadImage(String url, String key, String token, final HashMap<String, String> map) {
-/*
-        Bitmap scalebmp = ImageUtils.imageZoomByScreen(context, url);
+
+/*        Bitmap scalebmp = ImageUtils.imageZoomByScreen(context, url);
         Bitmap scalebmp2 = ImageUtils.compressImage(scalebmp);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         scalebmp2.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
@@ -67,12 +84,12 @@ public class ImageUploadHelper {
                 map.remove(key);
                 doUpload(map);
             }
-        }, null);
-*/
+        }, null);*/
+
     }
 
     private void onFinish() {
-        handler.onHandleComplete();
+        mHandler.onHandleComplete();
     }
 
 }

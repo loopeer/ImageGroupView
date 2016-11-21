@@ -11,6 +11,7 @@ import android.view.View;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
+import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
@@ -49,16 +50,18 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
 
     public void doUpLoadPhotoClick() {
         new AlertDialog.Builder(getContext())
-                .setItems(new String[]{"拍照", "相册"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            doTakePhoto();
-                        } else {
-                            doAlbum();
-                        }
-                    }
-                })
+                .setItems(new String[]{getContext().getString(R.string.take_photo),
+                                getContext().getString(R.string.select_images)},
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    doTakePhoto();
+                                } else {
+                                    doAlbum();
+                                }
+                            }
+                        })
                 .show();
     }
 
