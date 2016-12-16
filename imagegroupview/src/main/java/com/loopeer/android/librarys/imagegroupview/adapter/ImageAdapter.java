@@ -24,6 +24,7 @@ import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 import com.loopeer.android.librarys.imagegroupview.utils.AnimatorScaleType;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
+import com.loopeer.android.librarys.imagegroupview.view.ScaleImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,23 +89,25 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
         }
     }
 
-    private void zoomImageScaleAnimator(SimpleDraweeView draweeView) {
+    private void zoomImageScaleAnimator(ScaleImageView draweeView) {
         getScaleAnimator(draweeView, REDUCE_IMAGE_SCALE, ZOOM_IMAGE_SCALE).start();
     }
 
-    private void reduceImageScaleAnimator(SimpleDraweeView draweeView) {
+    private void reduceImageScaleAnimator(ScaleImageView draweeView) {
         getScaleAnimator(draweeView, ZOOM_IMAGE_SCALE, REDUCE_IMAGE_SCALE).start();
     }
 
-    private ValueAnimator getScaleAnimator(final SimpleDraweeView view, float from, float to) {
+    private ValueAnimator getScaleAnimator(final ScaleImageView view, float from, float to) {
         ValueAnimator animator = ValueAnimator.ofFloat(from, to);
         animator.setDuration(ANIMATOR_TIME);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                AnimatorScaleType.INSTANCE.setScale((float) animation.getAnimatedValue());
-                ImageDisplayHelper.setImageScaleType(view, AnimatorScaleType.INSTANCE);
+//                AnimatorScaleType.INSTANCE.setScale((float) animation.getAnimatedValue());
+//                ImageDisplayHelper.setImageScaleType(view, AnimatorScaleType.INSTANCE);
+
+                view.setScale((float) animation.getAnimatedValue());
             }
         });
         return animator;
@@ -185,14 +188,14 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
 
-        SimpleDraweeView icon;
+        ScaleImageView icon;
         FrameLayout container;
         private int mWidth;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
 
-            icon = (SimpleDraweeView) itemView.findViewById(android.R.id.icon);
+            icon = (ScaleImageView) itemView.findViewById(android.R.id.icon);
             container = (FrameLayout) itemView.findViewById(R.id.container);
 
             final int screenWidth = itemView.getResources().getDisplayMetrics().widthPixels;
@@ -205,15 +208,16 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
         }
 
-        public SimpleDraweeView getImage() {
+        public ScaleImageView getImage() {
             return icon;
         }
 
         public void bind(Image image, boolean isDoAnimator, boolean isSelected) {
             ImageDisplayHelper.displayImageLocal(icon, image.url, mWidth, mWidth);
             if (!isDoAnimator) {
-                ImageDisplayHelper.setImageScaleType(icon, isSelected ?
-                        AnimatorScaleType.getZoomScaleType() : AnimatorScaleType.getReduceScaleType());
+//                ImageDisplayHelper.setImageScaleType(icon, isSelected ?
+//                        AnimatorScaleType.getZoomScaleType() : AnimatorScaleType.getReduceScaleType());
+                icon.setScale(isSelected ? ScaleImageView.getZoomScale() : ScaleImageView.getReduceScale());
             }
         }
     }
