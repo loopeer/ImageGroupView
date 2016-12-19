@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = '1.0.4'
+version = '1.0.5'
 
 uploadArchives {
     repositories {
@@ -40,6 +40,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:' + support_version
     compile 'com.facebook.fresco:fresco:' + fresco_version
     compile 'com.facebook.fresco:imagepipeline-okhttp:' + fresco_version
+    compile 'com.android.support:support-core-utils:' + support_version
 }
 
 

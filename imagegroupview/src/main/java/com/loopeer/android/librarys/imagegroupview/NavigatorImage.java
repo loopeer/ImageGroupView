@@ -1,5 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NavigatorImage {
+
+    public static final String[] PERMISSION_CAMERA_STARTREQUEST = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,"android.permission.ACCESS_COARSE_LOCATION"};
+    public static final int REQUEST_CAMERA_STARTREQUEST = 1;
 
     public static final String ACTION_IMAGE_GROUP = "com.loopeer.android.librarys.imagegroupview";
     public static final String URI_IMAGEGROUPVIEW_SWITCHER = "imagegroupview://switcher";

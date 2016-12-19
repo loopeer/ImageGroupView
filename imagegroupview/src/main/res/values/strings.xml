@@ -8,4 +8,6 @@
     <string name="action_submit_string">Submit(%1$d/%2$d)</string>
     <string name="action_submit_string_no_max">Submit(%1$d)</string>
 
+    <string name="camera_permission_setting_reject">Please set the permission in the app settings</string>
+
 </resources>

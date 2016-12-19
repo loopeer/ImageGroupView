@@ -1,5 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -21,19 +23,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+import com.loopeer.android.librarys.imagegroupview.utils.PermissionUtils;
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
+import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration;
 
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_CAMERA_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_CAMERA_STARTREQUEST;
 
 public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
@@ -76,7 +82,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             setUpView();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
-            startCamera();
+            checkPermissionToStartCamera();
         }
     }
 
@@ -314,7 +320,15 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onCameraSelected() {
-        startCamera();
+        checkPermissionToStartCamera();
+    }
+
+    private void checkPermissionToStartCamera() {
+        if (PermissionUtils.hasSelfPermissions(this, PERMISSION_CAMERA_STARTREQUEST)) {
+            startCamera();
+        } else {
+            ActivityCompat.requestPermissions(this, PERMISSION_CAMERA_STARTREQUEST, REQUEST_CAMERA_STARTREQUEST);
+        }
     }
 
     private void startCamera() {
@@ -346,4 +360,31 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     public void onClick(View v) {
         finishWithResult();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    public void onRequestPermissionsResult(Activity target, int requestCode, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA_STARTREQUEST:
+                if (PermissionUtils.getTargetSdkVersion(target) < 23
+                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_CAMERA_STARTREQUEST)) {
+                    return;
+                }
+                if (PermissionUtils.verifyPermissions(grantResults)) {
+                    startCamera();
+                } else {
+                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_CAMERA_STARTREQUEST)) {
+                        Toast.makeText(this, R.string.camera_permission_setting_reject, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 }
