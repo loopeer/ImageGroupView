@@ -136,6 +136,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     @Override
     public void photoClick(View v, SquareImage squareImage, int position) {
+        if (!isEnabled() || isClickable()) return;
         if (squareImage == null) {
             doUpLoadPhotoClick();
         } else if (clickListener != null) {
