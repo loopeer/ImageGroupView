@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
     private final static int MAX_VALUE = -1;
 
-    private String unionKey;
     private ImageGroupSavedState imageGroupSavedState;
     private List<SquareImage> preImages;
     private OnImageClickListener clickListener;
@@ -173,10 +173,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         }
     }
 
-    public void setUnionKey(String key) {
-        unionKey = key;
-    }
-
     public ArrayList<String> getImageKeys() {
         ArrayList<String> result = new ArrayList<>();
         for (SquareImage squareImage : preImages) {
@@ -259,7 +255,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     @NonNull
     private String getPhotoKey() {
-        return "image_" + unionKey + "_" + System.currentTimeMillis();
+        return UUID.randomUUID().toString();
     }
 
     private int createIndex() {
