@@ -9,17 +9,18 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.GridView;
+
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
     private final static int MAX_VALUE = -1;
@@ -255,7 +256,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     @NonNull
     private String getPhotoKey() {
-        return UUID.randomUUID().toString();
+        return "image_" + System.currentTimeMillis();
     }
 
     private int createIndex() {
