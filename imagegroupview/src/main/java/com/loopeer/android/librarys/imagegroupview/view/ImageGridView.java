@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
 
@@ -72,8 +73,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void init() {
-        setEnabled(true);
-        setClickable(true);
+        /*setEnabled(true);
+        setClickable(true);*/
         preImages = new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(getContext(), this);
         setAdapter(mGridImageAdapter);
@@ -139,7 +140,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     @Override
     public void photoClick(View v, SquareImage squareImage, int position) {
-        if (!isEnabled() || !isClickable()) return;
         if (squareImage == null) {
             doUpLoadPhotoClick();
         } else if (clickListener != null) {
@@ -164,7 +164,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     public void onParentResult(int requestCode, Intent data) {
-        if (data == null || data.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0) != getId()) return;
+        if (data == null || data.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0) != getId())
+            return;
         List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
         if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
@@ -299,5 +300,14 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     public void setOnImageClickListener(OnImageClickListener listener) {
         clickListener = listener;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (!isEnabled() || !isClickable()) return false;
+        if (pointToPosition((int) ev.getX(), (int) ev.getY()) == -1 && ev.getAction() == MotionEvent.ACTION_DOWN) {
+            return false;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }
