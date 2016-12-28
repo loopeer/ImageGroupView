@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/drag_frame"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:dragDismissDistance="112dp"
+    app:dragDismissScale="0.95"
     android:orientation="vertical">
 
     <com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager
@@ -20,4 +25,4 @@
         android:layout_gravity="top|right"
         android:src="@drawable/ic_image_delete_icon"/>
 
-</FrameLayout>
+</com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout>

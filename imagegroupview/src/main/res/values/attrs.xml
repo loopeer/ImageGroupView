@@ -11,4 +11,11 @@
         <attr name="deleteDrawable" format="reference|color"/>
     </declare-styleable>
 
+    <declare-styleable name="ElasticDragDismissFrameLayout">
+        <attr name="dragDismissDistance" format="dimension" />
+        <attr name="dragDismissFraction" format="float" />
+        <attr name="dragDismissScale" format="float" />
+        <attr name="dragElasticity" format="float" />
+    </declare-styleable>
+
 </resources>

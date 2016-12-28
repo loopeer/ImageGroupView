@@ -14,6 +14,7 @@ import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImagesSwitcherAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.ImageSwitcherWrapper;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
+import com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout;
 import com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager;
 
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         parseIntent();
         updateView();
         updateData();
+        ((ElasticDragDismissFrameLayout)findViewById(R.id.drag_frame)).addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
+            @Override
+            public void onDragDismissed() {
+                super.onDragDismissed();
+                ImageSwitcherActivity.this.finish();
+            }
+        });
     }
 
     private void parseIntent() {
