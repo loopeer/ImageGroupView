@@ -20,6 +20,8 @@ keys.xml
 bin/
 gen/
 
+captures/
+
 # Local configuration file (sdk path, etc)
 local.properties
 keystore.properties
