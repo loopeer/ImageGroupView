@@ -52,6 +52,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
 
     public void setPlaceholderDrawable(int src) {
         placeholderDrawable = src;
+        getHierarchy().setPlaceholderImage(placeholderDrawable);
     }
 
     @Override

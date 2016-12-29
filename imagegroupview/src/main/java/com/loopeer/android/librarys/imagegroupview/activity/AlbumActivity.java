@@ -133,18 +133,14 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void finishWithResult() {
         Intent intent = getIntent();
-        intent.putStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages));
+        intent.putExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages));
         intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId);
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    private ArrayList<String> createUrls(List<Image> selectedImages) {
-        ArrayList<String> results = new ArrayList<>();
-        for (Image image : selectedImages) {
-            results.add(image.url);
-        }
-        return results;
+    private ArrayList<Image> createUrls(List<Image> selectedImages) {
+        return (ArrayList<Image>) selectedImages;
     }
 
     private void setUpView() {
@@ -351,7 +347,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         if (data == null || resultCode != RESULT_OK) return;
         String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
         if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeUrl) {
-            mSelectedImages.add(new Image(photoTakeUrl));
+            mSelectedImages.add(new Image(photoTakeUrl, "", System.currentTimeMillis()));
         }
         finishWithResult();
     }

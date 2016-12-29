@@ -14,6 +14,7 @@ import android.widget.GridView;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 
@@ -166,7 +167,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     public void onParentResult(int requestCode, Intent data) {
         if (data == null || data.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0) != getId())
             return;
-        List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
+        List<Image> images = (List<Image>) data.getSerializableExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
         if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
             doPhotosDelete(positions);
@@ -239,25 +240,25 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         updateImages();
     }
 
-    private void doSelectPhotos(List<String> images) {
-        for (String url : images) {
+    private void doSelectPhotos(List<Image> images) {
+        for (Image url : images) {
             doSelectPhotosByUrl(url);
         }
     }
 
-    private void doSelectPhotosByUrl(String url) {
+    private void doSelectPhotosByUrl(Image url) {
         refreshPhotoView(url);
     }
 
-    private void refreshPhotoView(String url) {
-        SquareImage squareImage = new SquareImage(url, null, getPhotoKey(), SquareImage.PhotoType.LOCAL);
+    private void refreshPhotoView(Image image) {
+        SquareImage squareImage = new SquareImage(image.url, null, getPhotoKey(image.time), SquareImage.PhotoType.LOCAL);
         preImages.add(squareImage);
         updateImages();
     }
 
     @NonNull
-    private String getPhotoKey() {
-        return "image_" + System.currentTimeMillis();
+    private String getPhotoKey(long time) {
+        return "image_" + time;
     }
 
     private int createIndex() {

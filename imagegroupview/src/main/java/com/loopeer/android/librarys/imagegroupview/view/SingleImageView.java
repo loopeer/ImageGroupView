@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
+import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 
@@ -80,9 +81,9 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
 
     public void onParentResult(int requestCode, Intent data) {
         if (data == null) return;
-        List<String> images = data.getStringArrayListExtra(NavigatorImage.EXTRA_PHOTOS_URL);
+        List<Image> images = (List<Image>) data.getSerializableExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
-            refreshLocalImage(images.get(0));
+            refreshLocalImage(images.get(0).url);
         }
     }
 
