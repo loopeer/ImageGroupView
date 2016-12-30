@@ -38,8 +38,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_CAMERA_STARTREQUEST;
-import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_CAMERA_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_ALBUM_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_ALBUM_STARTREQUEST;
 
 public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
@@ -76,14 +76,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         setContentView(R.layout.activity_album);
         mAlbumType = getIntent().getIntExtra(NavigatorImage.EXTRA_ALBUM_TYPE, 0);
         mSelectedImages = new ArrayList<>();
-        if (mAlbumType != TAKE_PHOTO) {
-            parseIntent();
-            setContentView(R.layout.activity_album);
-            setUpView();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else {
-            checkPermissionToStartCamera();
-        }
+        checkPermissionToStartAlbum();
     }
 
     private void parseIntent() {
@@ -162,8 +155,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (mAlbumType != TAKE_PHOTO)
-            getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
+
+
     }
 
     private void updateContentView(ImageFolder floder) {
@@ -316,14 +309,12 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onCameraSelected() {
-        checkPermissionToStartCamera();
+        startCamera();
     }
 
-    private void checkPermissionToStartCamera() {
-        if (PermissionUtils.hasSelfPermissions(this, PERMISSION_CAMERA_STARTREQUEST)) {
-            startCamera();
-        } else {
-            ActivityCompat.requestPermissions(this, PERMISSION_CAMERA_STARTREQUEST, REQUEST_CAMERA_STARTREQUEST);
+    private void checkPermissionToStartAlbum() {
+        if (!PermissionUtils.hasSelfPermissions(this, PERMISSION_ALBUM_STARTREQUEST)) {
+            ActivityCompat.requestPermissions(this, PERMISSION_ALBUM_STARTREQUEST, REQUEST_ALBUM_STARTREQUEST);
         }
     }
 
@@ -365,17 +356,27 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     public void onRequestPermissionsResult(Activity target, int requestCode, int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CAMERA_STARTREQUEST:
+            case REQUEST_ALBUM_STARTREQUEST:
                 if (PermissionUtils.getTargetSdkVersion(target) < 23
-                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_CAMERA_STARTREQUEST)) {
+                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_ALBUM_STARTREQUEST)) {
+                    finish();
                     return;
                 }
                 if (PermissionUtils.verifyPermissions(grantResults)) {
-                    startCamera();
+                    if (mAlbumType != TAKE_PHOTO) {
+                        parseIntent();
+                        setContentView(R.layout.activity_album);
+                        setUpView();
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        getSupportLoaderManager().initLoader(LOADER_ID_FOLDER, null, this);
+                    } else {
+                        startCamera();
+                    }
                 } else {
-                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_CAMERA_STARTREQUEST)) {
+                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_ALBUM_STARTREQUEST)) {
                         Toast.makeText(this, R.string.camera_permission_setting_reject, Toast.LENGTH_SHORT).show();
                     }
+                    finish();
                 }
                 break;
             default:

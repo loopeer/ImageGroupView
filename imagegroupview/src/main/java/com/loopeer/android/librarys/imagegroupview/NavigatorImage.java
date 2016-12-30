@@ -17,8 +17,8 @@ import java.util.List;
 
 public class NavigatorImage {
 
-    public static final String[] PERMISSION_CAMERA_STARTREQUEST = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    public static final int REQUEST_CAMERA_STARTREQUEST = 1;
+    public static final String[] PERMISSION_ALBUM_STARTREQUEST = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public static final int REQUEST_ALBUM_STARTREQUEST = 1;
 
     public static final String ACTION_IMAGE_GROUP = "com.loopeer.android.librarys.imagegroupview";
     public static final String URI_IMAGEGROUPVIEW_SWITCHER = "imagegroupview://switcher";
