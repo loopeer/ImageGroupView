@@ -40,8 +40,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_ALBUM_STARTREQUEST;
-import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_ALBUM_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_CAMERA_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_WRITE_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_CAMERA_STARTREQUEST;
+import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_WRITE_STARTREQUEST;
 
 public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
@@ -314,13 +316,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         startCamera();
     }
 
-    private void checkPermissionToStartAlbum() {
-        if (!PermissionUtils.hasSelfPermissions(this, PERMISSION_ALBUM_STARTREQUEST)) {
-            ActivityCompat.requestPermissions(this, PERMISSION_ALBUM_STARTREQUEST, REQUEST_ALBUM_STARTREQUEST);
-        } else {
-            startAlbumOrCamera();
-        }
-    }
 
     private void startCamera() {
         String SDState = Environment.getExternalStorageState();
@@ -370,19 +365,50 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
+    private void checkPermissionToStartAlbum() {
+        if (!PermissionUtils.hasSelfPermissions(this, PERMISSION_WRITE_STARTREQUEST)) {
+            ActivityCompat.requestPermissions(this, PERMISSION_WRITE_STARTREQUEST, REQUEST_WRITE_STARTREQUEST);
+        } else {
+            if (!PermissionUtils.hasSelfPermissions(this, PERMISSION_CAMERA_STARTREQUEST)) {
+                ActivityCompat.requestPermissions(this, PERMISSION_CAMERA_STARTREQUEST, REQUEST_CAMERA_STARTREQUEST);
+            } else {
+                startAlbumOrCamera();
+            }
+        }
+    }
+
     public void onRequestPermissionsResult(Activity target, int requestCode, int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_ALBUM_STARTREQUEST:
+            case REQUEST_CAMERA_STARTREQUEST:
                 if (PermissionUtils.getTargetSdkVersion(target) < 23
-                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_ALBUM_STARTREQUEST)) {
+                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_CAMERA_STARTREQUEST)) {
                     finish();
                     return;
                 }
                 if (PermissionUtils.verifyPermissions(grantResults)) {
-                   startAlbumOrCamera();
+                    startAlbumOrCamera();
                 } else {
-                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_ALBUM_STARTREQUEST)) {
-                        Toast.makeText(this, R.string.camera_permission_setting_reject, Toast.LENGTH_SHORT).show();
+                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_CAMERA_STARTREQUEST)) {
+                        Toast.makeText(this, com.loopeer.android.librarys.imagegroupview.R.string.camera_permission_setting_reject, Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                }
+                break;
+            case REQUEST_WRITE_STARTREQUEST:
+                if (PermissionUtils.getTargetSdkVersion(target) < 23
+                        && !PermissionUtils.hasSelfPermissions(target, PERMISSION_WRITE_STARTREQUEST)) {
+                    finish();
+                    return;
+                }
+                if (PermissionUtils.verifyPermissions(grantResults)) {
+                    if (!PermissionUtils.hasSelfPermissions(this, PERMISSION_CAMERA_STARTREQUEST)) {
+                        ActivityCompat.requestPermissions(this, PERMISSION_CAMERA_STARTREQUEST, REQUEST_CAMERA_STARTREQUEST);
+                    } else {
+                        startAlbumOrCamera();
+                    }
+                } else {
+                    if (!PermissionUtils.shouldShowRequestPermissionRationale(target, PERMISSION_WRITE_STARTREQUEST)) {
+                        Toast.makeText(this, com.loopeer.android.librarys.imagegroupview.R.string.camera_permission_setting_reject, Toast.LENGTH_SHORT).show();
                     }
                     finish();
                 }
