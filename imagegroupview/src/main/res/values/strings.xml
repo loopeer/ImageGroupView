@@ -10,4 +10,7 @@
 
     <string name="camera_permission_setting_reject">Please set the permission in the app settings</string>
 
+    <string name="image_group_intent_action">com.loopeer.android.librarys.imagegroupview</string>
+    <string name="image_group_intent_switcher_uri">imagegroupview://switcher</string>
+    <string name="image_group_intent_album_uri">imagegroupview://album</string>
 </resources>

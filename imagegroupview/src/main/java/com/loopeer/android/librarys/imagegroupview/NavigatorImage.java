@@ -22,10 +22,6 @@ public class NavigatorImage {
     public static final int REQUEST_CAMERA_STARTREQUEST = 1;
     public static final int REQUEST_WRITE_STARTREQUEST = 2;
 
-    public static final String ACTION_IMAGE_GROUP = "com.loopeer.android.librarys.imagegroupview";
-    public static final String URI_IMAGEGROUPVIEW_SWITCHER = "imagegroupview://switcher";
-    public static final String URI_IMAGEGROUPVIEW_ALBUM = "imagegroupview://album";
-
     public static final String EXTRA_PHOTO_URL = "extra_photo_url";
     public static final String EXTRA_PHOTOS_URL = "extra_photos_url";
     public static final String EXTRA_IMAGE_URL = "image_url";
@@ -51,8 +47,8 @@ public class NavigatorImage {
 
     public static void startImageSwitcherActivity(Context context, List<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable, int groupId) {
         Intent intent;
-        intent = new Intent(ACTION_IMAGE_GROUP);
-        intent.setData(Uri.parse(URI_IMAGEGROUPVIEW_SWITCHER));
+        intent = new Intent(getImageGroupIntentAction(context));
+        intent.setData(Uri.parse(getImageGroupIntentSwitcherUri(context)));
         if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
             intent = new Intent(context, ImageSwitcherActivity.class);
         }
@@ -70,8 +66,8 @@ public class NavigatorImage {
 
     public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId) {
         Intent intent;
-        intent = new Intent(ACTION_IMAGE_GROUP);
-        intent.setData(Uri.parse(URI_IMAGEGROUPVIEW_ALBUM));
+        intent = new Intent(getImageGroupIntentAction(context));
+        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
         if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
             intent = new Intent(context, AlbumActivity.class);
         }
@@ -86,8 +82,8 @@ public class NavigatorImage {
 
     public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId, int type) {
         Intent intent;
-        intent = new Intent(ACTION_IMAGE_GROUP);
-        intent.setData(Uri.parse(URI_IMAGEGROUPVIEW_ALBUM));
+        intent = new Intent(getImageGroupIntentAction(context));
+        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
         if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
             intent = new Intent(context, AlbumActivity.class);
         }
@@ -101,4 +97,15 @@ public class NavigatorImage {
         intent.putExtra(extraAlbumType, type);
     }
 
+    private static String getImageGroupIntentAction(Context context) {
+        return context.getString(R.string.image_group_intent_action);
+    }
+
+    private static String getImageGroupIntentSwitcherUri(Context context) {
+        return context.getString(R.string.image_group_intent_switcher_uri);
+    }
+
+    private static String getImageGroupIntentAlbumUri(Context context) {
+        return context.getString(R.string.image_group_intent_album_uri);
+    }
 }
