@@ -66,6 +66,8 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
                     int index = mOnImageClickListener.onImageSelected(product, i);
                     if (index == 1) {
                         showSelectedNumberAnimator((ViewGroup) productViewHolder.itemView);
+
+
                     }
                     if (index != 0) {
                         if (isImageSelected(product)) {

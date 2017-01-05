@@ -1,8 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -303,6 +301,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         } else if (mSelectedImages.size() == mMaxSelectedNum && mMaxSelectedNum != 0) {
             return 0;
         } else {
+            image.time = System.currentTimeMillis();
             mSelectedImages.add(image);
             index = 1;
         }
