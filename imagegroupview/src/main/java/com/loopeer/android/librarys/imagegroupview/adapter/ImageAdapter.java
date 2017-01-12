@@ -17,7 +17,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
@@ -66,8 +65,6 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
                     int index = mOnImageClickListener.onImageSelected(product, i);
                     if (index == 1) {
                         showSelectedNumberAnimator((ViewGroup) productViewHolder.itemView);
-
-
                     }
                     if (index != 0) {
                         if (isImageSelected(product)) {

@@ -16,6 +16,7 @@ import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
+import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 
 import java.text.SimpleDateFormat;
@@ -87,6 +88,22 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         mGridImageAdapter.updateParam(mAddButtonDrawable, mPlaceholderDrawable, mRoundAsCircle);
     }
 
+    private void updateImagesPosition() {
+        int[] position = new int[2];
+        this.getLocationOnScreen(position);
+
+        int columnWidth = getColumnWidth();
+        int numColumns = getNumColumns();
+        int horizontalSpacing = getHorizontalSpacing();
+        int verticalSpacing = getVerticalSpacing();
+        int left, top;
+        for (int i = 0; i < preImages.size(); i++) {
+            left = position[0] + getPaddingLeft() + i % numColumns * columnWidth + i % numColumns * horizontalSpacing;
+            top = position[1] + getPaddingTop() - DisplayUtils.getStatusBarHeight(getContext()) + i / numColumns * columnWidth + i / numColumns * verticalSpacing;
+            preImages.get(i).setPosition(left, top, columnWidth, columnWidth);
+        }
+    }
+
     public void setGridImageAdapter(GridImageAdapter gridImageAdapter) {
         mGridImageAdapter = gridImageAdapter;
         updateImages();
@@ -146,6 +163,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         } else if (clickListener != null) {
             clickListener.onImageClick(v, squareImage);
         } else {
+            updateImagesPosition();
             NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
                     mShowAddButton, mPlaceholderDrawable, getId());
         }
@@ -241,18 +259,10 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doSelectPhotos(List<Image> images) {
-        for (Image url : images) {
-            doSelectPhotosByUrl(url);
+        for (Image image : images) {
+            SquareImage squareImage = new SquareImage(image.url, null, getPhotoKey(image.time), SquareImage.PhotoType.LOCAL);
+            preImages.add(squareImage);
         }
-    }
-
-    private void doSelectPhotosByUrl(Image url) {
-        refreshPhotoView(url);
-    }
-
-    private void refreshPhotoView(Image image) {
-        SquareImage squareImage = new SquareImage(image.url, null, getPhotoKey(image.time), SquareImage.PhotoType.LOCAL);
-        preImages.add(squareImage);
         updateImages();
     }
 

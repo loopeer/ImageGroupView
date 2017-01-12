@@ -4,7 +4,6 @@
  */
 package com.loopeer.android.librarys.imagegroupview.utils;
 
-import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -15,8 +14,6 @@ import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -161,7 +158,7 @@ public final class ImageDisplayHelper {
         draweeView.setController(controller);
     }
 
-    public static void displayImage(final PhotoDraweeView draweeView, String path) {
+    public static void displayImage(final PhotoDraweeView draweeView, String path, ControllerListener listener) {
         if (draweeView == null || TextUtils.isEmpty(path)) {
             return;
         }
@@ -171,16 +168,7 @@ public final class ImageDisplayHelper {
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
         controller.setUri(uri);
         controller.setOldController(draweeView.getController());
-        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
-                if (imageInfo == null || draweeView == null) {
-                    return;
-                }
-                draweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
-            }
-        });
+        controller.setControllerListener(listener);
         draweeView.setController(controller.build());
     }
 
@@ -194,7 +182,7 @@ public final class ImageDisplayHelper {
         draweeView.setImageURI(uri);
     }
 
-    public static void displayImageLocal(final PhotoDraweeView draweeView, String path) {
+    public static void displayImageLocal(final PhotoDraweeView draweeView, String path, ControllerListener listener) {
         if (draweeView == null || TextUtils.isEmpty(path)) {
             return;
         }
@@ -204,16 +192,7 @@ public final class ImageDisplayHelper {
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
         controller.setUri(uri);
         controller.setOldController(draweeView.getController());
-        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
-                if (imageInfo == null || draweeView == null) {
-                    return;
-                }
-                draweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
-            }
-        });
+        controller.setControllerListener(listener);
         draweeView.setController(controller.build());
     }
 

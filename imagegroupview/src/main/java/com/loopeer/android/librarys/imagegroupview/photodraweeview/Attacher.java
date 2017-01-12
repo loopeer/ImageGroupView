@@ -79,6 +79,14 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
         }
     }
 
+    public int getImageInfoWidth() {
+        return mImageInfoWidth;
+    }
+
+    public int getImageInfoHeight() {
+        return mImageInfoHeight;
+    }
+
     @Nullable public DraweeView<GenericDraweeHierarchy> getDraweeView() {
         return mDraweeView.get();
     }

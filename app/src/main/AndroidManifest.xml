@@ -17,8 +17,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".GridViewTestActivity">
-        </activity>
         <activity android:name=".TestIntentActivity">
             <intent-filter>
                 <action android:name="com.loopeer.android.librarys.imagegroupview"/>

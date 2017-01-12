@@ -3,6 +3,7 @@ package com.loopeer.android.librarys.imagegroupview.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -69,13 +70,17 @@ public class DisplayUtils {
 
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
-        return width;
+        return wm.getDefaultDisplay().getWidth();
     }
 
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int height = wm.getDefaultDisplay().getHeight();
-        return height;
+        return wm.getDefaultDisplay().getHeight();
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        Rect frame = new Rect();
+        ((Activity)context).getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        return frame.top;
     }
 }

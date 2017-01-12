@@ -6,7 +6,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#222222"
+    android:background="@color/scale_bg_black"
     android:fillViewport="true">
 
     <FrameLayout
@@ -30,13 +30,13 @@
             android:id="@+id/progress_scale_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:layout_gravity="center"/>
 
         <com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView
             android:id="@+id/image_scale_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="centerCrop"/>
 
     </FrameLayout>
 </com.loopeer.android.librarys.imagegroupview.view.FixedNestedScrollView>

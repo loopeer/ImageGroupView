@@ -17,4 +17,7 @@
     <color name="image_group_image_bg">#dcdcdc</color>
 
     <color name="animator_text_bg">#55000000</color>
+
+    <color name="scale_bg_black">#FF222222</color>
+    <color name="scale_bg_white">#00222222</color>
 </resources>
