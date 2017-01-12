@@ -34,12 +34,12 @@ import java.util.ArrayList;
 public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOneClickListener {
 
     private MutipleTouchViewPager pager;
-    private ArrayList<ImageSwitcherWrapper> imageSwitcherWrappers;
+    private ArrayList<ImageSwitcherWrapper> mImageSwitcherWrappers;
     private ImagesSwitcherAdapter mAdapter;
     private boolean canImageDelete;
     private int mCurrentPagerPosition;
     private int placeholderDrawable;
-    private ArrayList<Integer> deletePositions;
+    private ArrayList<Integer> mDeletePositions;
     private ImageView btnDelete;
     private int mImageGroupId;
     private ElasticDragDismissFrameLayout mDragDismissFrameLayout;
@@ -52,7 +52,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         setContentView(R.layout.activity_image_switcher);
         mDragDismissFrameLayout = (ElasticDragDismissFrameLayout) findViewById(R.id.drag_frame);
 
-        deletePositions = new ArrayList<>();
+        mDeletePositions = new ArrayList<>();
         parseIntent();
         updateView();
         updateData();
@@ -89,7 +89,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         int whiteColor = ContextCompat.getColor(this, R.color.scale_bg_white);
         float[] scaleX, scaleY, translationX, translationY;
         int[] bgColor;
-        SquareImage squareImage = imageSwitcherWrappers.get(mCurrentPagerPosition).squareImage;
+        SquareImage squareImage = mImageSwitcherWrappers.get(mCurrentPagerPosition).squareImage;
         float distanceX = squareImage.getCenterX() - DisplayUtils.getScreenWidth(this) / 2;
         float distanceY = squareImage.getCenterY() - (DisplayUtils.getScreenHeight(this) - DisplayUtils.getStatusBarHeight(this)) / 2;
         if (isEnter) {
@@ -149,9 +149,9 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void setUpImageWrappers(ArrayList<SquareImage> images) {
-        imageSwitcherWrappers = new ArrayList<>();
+        mImageSwitcherWrappers = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
-            imageSwitcherWrappers.add(new ImageSwitcherWrapper(images.get(i), i));
+            mImageSwitcherWrappers.add(new ImageSwitcherWrapper(images.get(i), i));
         }
     }
 
@@ -197,7 +197,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 
     private ArrayList<SquareImage> createShowImages() {
         ArrayList<SquareImage> squareImages = new ArrayList<>();
-        for (ImageSwitcherWrapper imageSwitcherWrapper : imageSwitcherWrappers) {
+        for (ImageSwitcherWrapper imageSwitcherWrapper : mImageSwitcherWrappers) {
             squareImages.add(imageSwitcherWrapper.squareImage);
         }
         return squareImages;
@@ -208,15 +208,27 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void deleteImage() {
-        deletePositions.add(imageSwitcherWrappers.get(mCurrentPagerPosition).originPosition);
-        imageSwitcherWrappers.remove(mCurrentPagerPosition);
-        if (imageSwitcherWrappers.size() == 0) {
+        mDeletePositions.add(mImageSwitcherWrappers.get(mCurrentPagerPosition).originPosition);
+        updateImagesPosition();
+        mImageSwitcherWrappers.remove(mCurrentPagerPosition);
+        if (mImageSwitcherWrappers.size() == 0) {
             goBackWithResult(false);
-        } else if (mCurrentPagerPosition == imageSwitcherWrappers.size()) {
+        } else if (mCurrentPagerPosition == mImageSwitcherWrappers.size()) {
             mCurrentPagerPosition = mCurrentPagerPosition - 1;
             updateData();
         } else {
             updateData();
+        }
+    }
+
+    private void updateImagesPosition() {
+        if (mCurrentPagerPosition == mImageSwitcherWrappers.size() - 1) {
+            return;
+        }
+        for (int i = mCurrentPagerPosition; i < mImageSwitcherWrappers.size() - 1; i++) {
+            SquareImage squareImage = mImageSwitcherWrappers.get(i).squareImage;
+            mImageSwitcherWrappers.get(i + 1).squareImage.setPosition(
+                    squareImage.left, squareImage.top, squareImage.width, squareImage.height);
         }
     }
 
@@ -227,7 +239,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 
     private void goBackWithResult(boolean doAnimation) {
         Intent intent = new Intent();
-        intent.putExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, deletePositions);
+        intent.putExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, mDeletePositions);
         intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId);
         setResult(Activity.RESULT_OK, intent);
         if (doAnimation) {
