@@ -7,6 +7,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
@@ -24,8 +26,7 @@ import com.loopeer.android.librarys.imagegroupview.adapter.ImagesSwitcherAdapter
 import com.loopeer.android.librarys.imagegroupview.fragment.ScaleImageFragment;
 import com.loopeer.android.librarys.imagegroupview.model.ImageSwitcherWrapper;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
-import com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout;
+import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
 import com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private ArrayList<Integer> mDeletePositions;
     private ImageView btnDelete;
     private int mImageGroupId;
-    private ElasticDragDismissFrameLayout mDragDismissFrameLayout;
+    private FrameLayout mDragDismissFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +51,19 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_switcher);
-        mDragDismissFrameLayout = (ElasticDragDismissFrameLayout) findViewById(R.id.drag_frame);
+        mDragDismissFrameLayout = (FrameLayout) findViewById(R.id.drag_frame);
 
         mDeletePositions = new ArrayList<>();
         parseIntent();
         updateView();
         updateData();
-        mDragDismissFrameLayout.addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
-            @Override
-            public void onDragDismissed() {
-                super.onDragDismissed();
-                ImageSwitcherActivity.this.finish();
-            }
-        });
+//        mDragDismissFrameLayout.addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
+//            @Override
+//            public void onDragDismissed() {
+//                super.onDragDismissed();
+//                ImageSwitcherActivity.this.finish();
+//            }
+//        });
         mDragDismissFrameLayout.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -76,44 +77,44 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 
     private void doAnimation(final boolean isEnter) {
         ScaleImageFragment imageFragment = mAdapter.getFragmentByPosition(mCurrentPagerPosition);
-        View scaleView = imageFragment.getViewScaleView();
-        View containerScrollView = imageFragment.getContainerScrollView();
-        View placeholderView = imageFragment.getPlaceholderView();
+        PhotoDraweeView photoDraweeView = (PhotoDraweeView) imageFragment.getScaleImage();
+        View dismissFrameLayout = imageFragment.getDismissFrameLayout();
+        View placeholderImage = imageFragment.getPlaceholderImage();
 
-        if (imageFragment.getImageSuccess()) {
-            placeholderView.setVisibility(View.INVISIBLE);
+        if (imageFragment.isImageLoadSuccess()) {
+            placeholderImage.setVisibility(View.INVISIBLE);
         }
-        float width = imageFragment.getImageWidth();
-        float height = imageFragment.getImageHeight();
+        float width = photoDraweeView.getImageWidth();
+        float height = photoDraweeView.getImageHeight();
         int blackColor = ContextCompat.getColor(this, R.color.scale_bg_black);
         int whiteColor = ContextCompat.getColor(this, R.color.scale_bg_white);
         float[] scaleX, scaleY, translationX, translationY;
         int[] bgColor;
         SquareImage squareImage = mImageSwitcherWrappers.get(mCurrentPagerPosition).squareImage;
-        float distanceX = squareImage.getCenterX() - DisplayUtils.getScreenWidth(this) / 2;
-        float distanceY = squareImage.getCenterY() - (DisplayUtils.getScreenHeight(this) - DisplayUtils.getStatusBarHeight(this)) / 2;
+        float distanceX = squareImage.getCenterX() - photoDraweeView.getCenterX();
+        float distanceY = squareImage.getCenterY() - photoDraweeView.getCenterY();
         if (isEnter) {
-            scaleView.setScaleX((float) squareImage.width / width);
-            scaleView.setScaleY((float) squareImage.height / height);
-            scaleView.setTranslationX(distanceX);
-            scaleView.setTranslationY(distanceY);
-            scaleX = new float[]{scaleView.getScaleX(), 1};
-            scaleY = new float[]{scaleView.getScaleY(), 1};
+            photoDraweeView.setScaleX((float) squareImage.width / width);
+            photoDraweeView.setScaleY((float) squareImage.height / height);
+            photoDraweeView.setTranslationX(distanceX);
+            photoDraweeView.setTranslationY(distanceY);
+            scaleX = new float[]{photoDraweeView.getScaleX(), 1};
+            scaleY = new float[]{photoDraweeView.getScaleY(), 1};
             translationX = new float[]{distanceX, 0};
             translationY = new float[]{distanceY, 0};
             bgColor = new int[]{whiteColor, blackColor};
         } else {
-            scaleX = new float[]{1, (float) squareImage.width / width};
-            scaleY = new float[]{1, (float) squareImage.height / height};
-            translationX = new float[]{0, distanceX};
-            translationY = new float[]{0, distanceY};
-            bgColor = new int[]{blackColor, whiteColor};
+            scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / width};
+            scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / height};
+            translationX = new float[]{photoDraweeView.getTranslationX(), distanceX};
+            translationY = new float[]{photoDraweeView.getTranslationY(), distanceY};
+            bgColor = new int[]{((ColorDrawable) dismissFrameLayout.getBackground()).getColor(), whiteColor};
         }
-        ObjectAnimator sX = ObjectAnimator.ofFloat(scaleView, View.SCALE_X, scaleX);
-        ObjectAnimator sY = ObjectAnimator.ofFloat(scaleView, View.SCALE_Y, scaleY);
-        ObjectAnimator tX = ObjectAnimator.ofFloat(scaleView, View.TRANSLATION_X, translationX);
-        ObjectAnimator tY = ObjectAnimator.ofFloat(scaleView, View.TRANSLATION_Y, translationY);
-        ObjectAnimator bg = ObjectAnimator.ofInt(containerScrollView, "backgroundColor", bgColor);
+        ObjectAnimator sX = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_X, scaleX);
+        ObjectAnimator sY = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_Y, scaleY);
+        ObjectAnimator tX = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_X, translationX);
+        ObjectAnimator tY = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_Y, translationY);
+        ObjectAnimator bg = ObjectAnimator.ofInt(dismissFrameLayout, "backgroundColor", bgColor);
         bg.setEvaluator(new ArgbEvaluator());
         bg.setDuration(125);
 

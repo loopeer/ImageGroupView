@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout
     android:id="@+id/drag_frame"
-    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:dragDismissDistance="112dp"
-    app:dragDismissScale="0.95"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager
         android:id="@+id/view_pager"
@@ -19,10 +16,10 @@
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="12dp"
         android:layout_gravity="top|right"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
         android:src="@drawable/ic_image_delete_icon"/>
 
-</com.loopeer.android.librarys.imagegroupview.view.ElasticDragDismissFrameLayout>
+</FrameLayout>

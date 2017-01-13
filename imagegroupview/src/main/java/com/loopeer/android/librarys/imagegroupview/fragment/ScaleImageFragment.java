@@ -1,6 +1,5 @@
 package com.loopeer.android.librarys.imagegroupview.fragment;
 
-import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,23 +31,20 @@ import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.OnViewTapListener;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
-import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
-import com.loopeer.android.librarys.imagegroupview.view.FixedNestedScrollView;
+import com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class ScaleImageFragment extends Fragment {
 
-    private SimpleDraweeView mViewPlaceholder;
-    private PhotoDraweeView mViewScale;
+    private SimpleDraweeView mPlaceholderImage;
+    private PhotoDraweeView mScaleImage;
     private OnTabOneClickListener listener;
     private SquareImage squareImage;
     private int placeholderDrawable;
-    private FixedNestedScrollView mScrollView;
-    private float mImageHeight;
-    private float mImageWidth;
+    private DragDismissFrameLayout mDismissFrameLayout;
     private boolean mHasLoadSuccess;
     private ProgressBar mProgressBar;
 
@@ -77,71 +72,58 @@ public class ScaleImageFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewPlaceholder = (SimpleDraweeView) view.findViewById(R.id.image_scale_placeholder);
-        mScrollView = (FixedNestedScrollView) view.findViewById(R.id.container_scroll);
-        mViewScale = (PhotoDraweeView) view.findViewById(R.id.image_scale_image);
+        mPlaceholderImage = (SimpleDraweeView) view.findViewById(R.id.image_scale_placeholder);
+        mDismissFrameLayout = (DragDismissFrameLayout) view.findViewById(R.id.container_layout);
+        mScaleImage = (PhotoDraweeView) view.findViewById(R.id.image_scale_image);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_scale_image);
 
-        initImageSize();
+        mDismissFrameLayout.setPhotoDraweeView(mScaleImage);
         setUpPlaceHolderView();
         setViewScaleListener();
         setupData();
     }
 
-    private void initImageSize() {
-        mImageWidth = DisplayUtils.getScreenWidth(getContext());
-        mImageHeight = DisplayUtils.getScreenHeight(getContext()) - DisplayUtils.getStatusBarHeight(getContext());
-    }
-
-    public boolean getImageSuccess() {
+    public boolean isImageLoadSuccess() {
         return mHasLoadSuccess;
     }
 
-    public float getImageHeight() {
-        return mImageHeight;
+    public View getDismissFrameLayout() {
+        return mDismissFrameLayout;
     }
 
-    public float getImageWidth() {
-        return mImageWidth;
+    public View getScaleImage() {
+        return mScaleImage;
     }
 
-    public View getContainerScrollView() {
-        return mScrollView;
-    }
-
-    public View getViewScaleView() {
-        return mViewScale;
-    }
-
-    public View getPlaceholderView() {
-        return mViewPlaceholder;
+    public View getPlaceholderImage() {
+        return mPlaceholderImage;
     }
 
     private void setViewScaleListener() {
-        mViewScale.getAttacher().setOnViewTapListener(new OnViewTapListener() {
+        mScaleImage.getAttacher().setOnViewTapListener(new OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                if (mViewScale.getScale() == mViewScale.getMinimumScale() && listener != null) {
-                    listener.onTabOneClick();
+                if (mScaleImage.getScale() == mScaleImage.getMinimumScale() && listener != null) {
+//                    listener.onTabOneClick();
                 } else {
-                    mViewScale.getAttacher().setScale(mViewScale.getMinimumScale(), x, y, true);
+                    mScaleImage.getAttacher().setScale(mScaleImage.getMinimumScale(), x, y, true);
                 }
             }
         });
-        mViewScale.getAttacher().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("保存该图片？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        doSaveImage(squareImage.interNetUrl);
-                    }
-                }).setNegativeButton("取消", null);
-                builder.show();
-                return false;
-            }
-        });
+//        mScaleImage.getAttacher().setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setMessage("保存该图片？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        doSaveImage(squareImage.interNetUrl);
+//                    }
+//                }).setNegativeButton("取消", null);
+//                builder.show();
+//                return false;
+//            }
+//        });
     }
 
     public void setUpPlaceHolderView() {
@@ -153,18 +135,18 @@ public class ScaleImageFragment extends Fragment {
                 .setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable))
                 .setPlaceholderImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
                 .build();
-        mViewPlaceholder.setHierarchy(hierarchy);
+        mPlaceholderImage.setHierarchy(hierarchy);
     }
 
     private void setupData() {
         switch (squareImage.type) {
             case LOCAL:
-                ImageDisplayHelper.displayImageLocal(mViewPlaceholder, squareImage.localUrl, 200, 200);
-                ImageDisplayHelper.displayImageLocal(mViewScale, squareImage.localUrl, mControllerListener);
+                ImageDisplayHelper.displayImageLocal(mPlaceholderImage, squareImage.localUrl, 200, 200);
+                ImageDisplayHelper.displayImageLocal(mScaleImage, squareImage.localUrl, mControllerListener);
                 break;
             case NETWORK:
-                ImageDisplayHelper.displayImage(mViewPlaceholder, squareImage.interNetUrl, 200, 200);
-                ImageDisplayHelper.displayImage(mViewScale, squareImage.interNetUrl, mControllerListener);
+                ImageDisplayHelper.displayImage(mPlaceholderImage, squareImage.interNetUrl, 200, 200);
+                ImageDisplayHelper.displayImage(mScaleImage, squareImage.interNetUrl, mControllerListener);
                 break;
         }
     }
@@ -177,9 +159,10 @@ public class ScaleImageFragment extends Fragment {
                 return;
             }
             mProgressBar.setVisibility(View.INVISIBLE);
+            mPlaceholderImage.setVisibility(View.INVISIBLE);
             mHasLoadSuccess = true;
-            mImageHeight = (float) imageInfo.getHeight() / imageInfo.getHeight() * mImageWidth;
-            mViewScale.update(imageInfo.getWidth(), imageInfo.getHeight());
+            mScaleImage.setImageHeight((float) imageInfo.getHeight() / imageInfo.getWidth() * mScaleImage.getImageWidth());
+            mScaleImage.update(imageInfo.getWidth(), imageInfo.getHeight());
         }
     };
 
