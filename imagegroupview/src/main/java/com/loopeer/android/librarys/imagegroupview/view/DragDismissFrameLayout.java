@@ -60,7 +60,8 @@ public class DragDismissFrameLayout extends FrameLayout {
             case MotionEvent.ACTION_MOVE:
                 moveX = event.getX();
                 moveY = event.getY();
-                if (!mIsMoving && moveY > downY && Math.abs(moveY - downY) > Math.abs(moveX - downX)) {
+                if (!mIsMoving && mPhotoDraweeView.getScale() == mPhotoDraweeView.getMinimumScale()
+                        && moveY > downY && Math.abs(moveY - downY) > Math.abs(moveX - downX)) {
                     mIsMoving = true;
                 }
 
@@ -75,14 +76,24 @@ public class DragDismissFrameLayout extends FrameLayout {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (mIsMoving) {
+                    moveTouchUp();
+                }
                 mIsMoving = false;
-                touchUp();
                 break;
         }
         return super.dispatchTouchEvent(event);
     }
 
-    private void touchUp() {
+    private void notMoveTouchUp() {
+        if (mPhotoDraweeView.getScaleX() == 1.0f && mPhotoDraweeView.getScaleY() == 1.0f
+                && mPhotoDraweeView.getTranslationX() == 0.0f && mPhotoDraweeView.getTranslationY() == 0.0f) {
+            //消失
+            ((ImageSwitcherActivity) getContext()).onTabOneClick();
+        }
+    }
+
+    private void moveTouchUp() {
         if (mPhotoDraweeView.getTranslationY() >= mDragDismissDistance) {
             //消失
             ((ImageSwitcherActivity) getContext()).onTabOneClick();

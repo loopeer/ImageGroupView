@@ -9,13 +9,14 @@
         <attr name="addButtonDrawable" format="reference|color"/>
         <attr name="imagePlaceholderDrawable" format="reference|color"/>
         <attr name="deleteDrawable" format="reference|color"/>
+        <attr name="dragDismiss" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ElasticDragDismissFrameLayout">
-        <attr name="dragDismissDistance" format="dimension" />
-        <attr name="dragDismissFraction" format="float" />
-        <attr name="dragDismissScale" format="float" />
-        <attr name="dragElasticity" format="float" />
+        <attr name="dragDismissDistance" format="dimension"/>
+        <attr name="dragDismissFraction" format="float"/>
+        <attr name="dragDismissScale" format="float"/>
+        <attr name="dragElasticity" format="float"/>
     </declare-styleable>
 
 </resources>

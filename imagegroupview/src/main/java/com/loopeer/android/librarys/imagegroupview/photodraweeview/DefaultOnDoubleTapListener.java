@@ -15,13 +15,14 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         setPhotoDraweeViewAttacher(attacher);
     }
 
-    @Override public boolean onSingleTapConfirmed(MotionEvent e) {
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
 
         if (mAttacher == null) {
             return false;
         }
         DraweeView<GenericDraweeHierarchy> draweeView = mAttacher.getDraweeView();
-        if (draweeView == null) {
+        if (draweeView == null || draweeView.getTranslationX() != 0.0f || draweeView.getScaleX() != 1.0f) {
             return false;
         }
 
@@ -47,7 +48,8 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return false;
     }
 
-    @Override public boolean onDoubleTap(MotionEvent event) {
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
         if (mAttacher == null) {
             return false;
         }
@@ -70,7 +72,8 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return true;
     }
 
-    @Override public boolean onDoubleTapEvent(MotionEvent event) {
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) {
         return false;
     }
 

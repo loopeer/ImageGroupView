@@ -28,7 +28,6 @@
     <com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView
         android:id="@+id/image_scale_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        fresco:actualImageScaleType="centerCrop"/>
+        android:layout_height="match_parent"/>
 
 </com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout>

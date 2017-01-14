@@ -35,6 +35,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private int mPlaceholderDrawable;
     private boolean mShowAddButton, mRoundAsCircle;
     private int maxImageNum;
+    private boolean mDragDismiss;
     private GridImageAdapter mGridImageAdapter;
 
     public ImageGridView(Context context) {
@@ -70,6 +71,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
         mAddButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
         mPlaceholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
+        mDragDismiss = a.getBoolean(R.styleable.ImageGroupView_dragDismiss, true);
 
         a.recycle();
     }

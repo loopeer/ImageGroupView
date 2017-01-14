@@ -1,5 +1,7 @@
 package com.loopeer.android.librarys.imagegroupview.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -104,26 +106,26 @@ public class ScaleImageFragment extends Fragment {
             @Override
             public void onViewTap(View view, float x, float y) {
                 if (mScaleImage.getScale() == mScaleImage.getMinimumScale() && listener != null) {
-//                    listener.onTabOneClick();
+                    listener.onTabOneClick();
                 } else {
                     mScaleImage.getAttacher().setScale(mScaleImage.getMinimumScale(), x, y, true);
                 }
             }
         });
-//        mScaleImage.getAttacher().setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                builder.setMessage("保存该图片？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        doSaveImage(squareImage.interNetUrl);
-//                    }
-//                }).setNegativeButton("取消", null);
-//                builder.show();
-//                return false;
-//            }
-//        });
+        mScaleImage.getAttacher().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("保存该图片？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        doSaveImage(squareImage.interNetUrl);
+                    }
+                }).setNegativeButton("取消", null);
+                builder.show();
+                return false;
+            }
+        });
     }
 
     public void setUpPlaceHolderView() {
