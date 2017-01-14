@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;
@@ -27,7 +28,8 @@ public class UserCameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             photoUrl = savedInstanceState.getString(EXTRA_PHOTO_URL);
-            recoverFile(photoUrl);
+            if (!TextUtils.isEmpty(photoUrl))
+                recoverFile(photoUrl);
         }
 
         if (savedInstanceState == null) {
@@ -36,9 +38,9 @@ public class UserCameraActivity extends AppCompatActivity {
     }
 
     private void recoverFile(String url) {
-        File mFile = new File(ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url)));
+        String path = ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url));
         try {
-            if (FileUtils.fileIsAvaliableImage(mFile)) {
+            if (!TextUtils.isEmpty(path) && FileUtils.fileIsAvaliableImage(new File(path))) {
                 finishWithResult(url);
             } else {
                 finishAfterDelete(url);
@@ -63,7 +65,9 @@ public class UserCameraActivity extends AppCompatActivity {
     }
 
     private void finishAfterDelete(String url) {
-        FileUtils.deleteFile(new File(ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url))));
+        String path = ImageGroupUtils.getPathOfPhotoByUri(this, Uri.parse(url));
+        if (!TextUtils.isEmpty(path))
+            FileUtils.deleteFile(new File(path));
         finish();
     }
 
