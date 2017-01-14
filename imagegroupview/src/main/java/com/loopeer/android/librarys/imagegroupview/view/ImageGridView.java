@@ -122,7 +122,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         updateImages();
     }
 
-    public void setNetworkPhotosWithKey(ArrayList<String> urls) {
+    public void setNetworkPhotosWithKey(List<String> urls) {
         if (urls == null) return;
         preImages.clear();
         for (String url : urls) {
@@ -130,6 +130,15 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
             preImages.add(new SquareImage(null, url, headWithKey[headWithKey.length - 1], SquareImage.PhotoType.NETWORK));
         }
         updateImages();
+    }
+
+    public void setNetworkPhotosWithKey(List<String> urls, List<String> keys) {
+        if (urls == null || keys == null || urls.size() != keys.size()) {
+            return;
+        }
+        for (int i = 0; i < urls.size(); i++) {
+
+        }
     }
 
     public void updateLocalPhotos(List<String> photos) {
