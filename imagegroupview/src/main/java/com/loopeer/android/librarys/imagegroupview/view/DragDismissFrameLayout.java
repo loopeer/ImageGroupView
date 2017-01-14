@@ -20,6 +20,7 @@ public class DragDismissFrameLayout extends FrameLayout {
     private int mBlackColor;
     private int mWhiteColor;
     private boolean mIsMoving;
+    private boolean mDragDismiss = true;
 
     public DragDismissFrameLayout(Context context) {
         this(context, null);
@@ -32,6 +33,10 @@ public class DragDismissFrameLayout extends FrameLayout {
     public DragDismissFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public void setDragDismiss(boolean dragDismiss) {
+        mDragDismiss = dragDismiss;
     }
 
     private void init() {
@@ -49,7 +54,7 @@ public class DragDismissFrameLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mPhotoDraweeView == null) {
+        if (!mDragDismiss || mPhotoDraweeView == null) {
             return super.dispatchTouchEvent(event);
         }
         switch (event.getAction()) {

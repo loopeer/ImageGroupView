@@ -27,6 +27,7 @@ import com.loopeer.android.librarys.imagegroupview.fragment.ScaleImageFragment;
 import com.loopeer.android.librarys.imagegroupview.model.ImageSwitcherWrapper;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
+import com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout;
 import com.loopeer.android.librarys.imagegroupview.view.MutipleTouchViewPager;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private ImageView btnDelete;
     private int mImageGroupId;
     private FrameLayout mDragDismissFrameLayout;
+    private boolean mDragDismiss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,8 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private void doAnimation(final boolean isEnter) {
         ScaleImageFragment imageFragment = mAdapter.getFragmentByPosition(mCurrentPagerPosition);
         PhotoDraweeView photoDraweeView = (PhotoDraweeView) imageFragment.getScaleImage();
-        View dismissFrameLayout = imageFragment.getDismissFrameLayout();
+        DragDismissFrameLayout dismissFrameLayout = (DragDismissFrameLayout) imageFragment.getDismissFrameLayout();
+        dismissFrameLayout.setDragDismiss(mDragDismiss);
         View placeholderImage = imageFragment.getPlaceholderImage();
 
         if (imageFragment.isImageLoadSuccess()) {
@@ -147,6 +150,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         mCurrentPagerPosition = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION, 0);
         canImageDelete = intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_DELETE, false);
         placeholderDrawable = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_PLACE_DRAWABLE_ID, R.drawable.ic_image_default);
+        mDragDismiss = intent.getBooleanExtra(NavigatorImage.EXTRA_DRAG_DISMISS, true);
     }
 
     private void setUpImageWrappers(ArrayList<SquareImage> images) {

@@ -32,6 +32,7 @@ public class NavigatorImage {
     public static final String EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_place_drawable_id";
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
     public static final String EXTRA_ALBUM_TYPE = "extra_album_type";
+    public static final String EXTRA_DRAG_DISMISS = "extra_drag_dismiss";
 
 
     public static final int RESULT_SELECT_PHOTO = 2001;
@@ -45,23 +46,29 @@ public class NavigatorImage {
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Images.Media._ID};
 
-    public static void startImageSwitcherActivity(Context context, List<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable, int groupId) {
+    public static void startImageSwitcherActivity(Context context, List<SquareImage> images,
+                                                  int position, boolean showAddButton,
+                                                  int placeholderDrawable, int groupId,
+                                                  boolean dragDismiss) {
         Intent intent;
         intent = new Intent(getImageGroupIntentAction(context));
         intent.setData(Uri.parse(getImageGroupIntentSwitcherUri(context)));
         if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
             intent = new Intent(context, ImageSwitcherActivity.class);
         }
-        addImageSwitcherData(images, position, showAddButton, placeholderDrawable, groupId, intent);
+        addImageSwitcherData(images, position, showAddButton, placeholderDrawable, groupId, intent, dragDismiss);
         ((Activity) context).startActivityForResult(intent, RESULT_IMAGE_SWITCHER);
     }
 
-    private static void addImageSwitcherData(List<SquareImage> images, int position, boolean showAddButton, int placeholderDrawable, int groupId, Intent intent) {
+    private static void addImageSwitcherData(List<SquareImage> images, int position,
+                                             boolean showAddButton, int placeholderDrawable,
+                                             int groupId, Intent intent, boolean dragDismiss) {
         intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, new ArrayList<Parcelable>(images));
         intent.putExtra(EXTRA_IMAGE_DELETE, showAddButton);
         intent.putExtra(EXTRA_IMAGE_URL_POSITION, position);
         intent.putExtra(EXTRA_IMAGE_PLACE_DRAWABLE_ID, placeholderDrawable);
         intent.putExtra(EXTRA_IMAGE_GROUP_ID, groupId);
+        intent.putExtra(EXTRA_DRAG_DISMISS, dragDismiss);
     }
 
     public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId) {
