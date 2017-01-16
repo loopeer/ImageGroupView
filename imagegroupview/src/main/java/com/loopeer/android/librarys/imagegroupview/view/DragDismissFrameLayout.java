@@ -90,14 +90,6 @@ public class DragDismissFrameLayout extends FrameLayout {
         return super.dispatchTouchEvent(event);
     }
 
-    private void notMoveTouchUp() {
-        if (mPhotoDraweeView.getScaleX() == 1.0f && mPhotoDraweeView.getScaleY() == 1.0f
-                && mPhotoDraweeView.getTranslationX() == 0.0f && mPhotoDraweeView.getTranslationY() == 0.0f) {
-            //消失
-            ((ImageSwitcherActivity) getContext()).onTabOneClick();
-        }
-    }
-
     private void moveTouchUp() {
         if (mPhotoDraweeView.getTranslationY() >= mDragDismissDistance) {
             //消失

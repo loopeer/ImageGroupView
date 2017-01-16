@@ -82,11 +82,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         PhotoDraweeView photoDraweeView = (PhotoDraweeView) imageFragment.getScaleImage();
         DragDismissFrameLayout dismissFrameLayout = (DragDismissFrameLayout) imageFragment.getDismissFrameLayout();
         dismissFrameLayout.setDragDismiss(mDragDismiss);
-        View placeholderImage = imageFragment.getPlaceholderImage();
 
-        if (imageFragment.isImageLoadSuccess()) {
-            placeholderImage.setVisibility(View.INVISIBLE);
-        }
         float width = photoDraweeView.getImageWidth();
         float height = photoDraweeView.getImageHeight();
         int blackColor = ContextCompat.getColor(this, R.color.scale_bg_black);

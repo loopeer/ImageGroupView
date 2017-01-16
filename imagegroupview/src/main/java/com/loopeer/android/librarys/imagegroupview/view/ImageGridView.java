@@ -176,7 +176,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         } else {
             updateImagesPosition();
             NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
-                    mShowAddButton, mPlaceholderDrawable, getId(),mDragDismiss);
+                    mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
         }
     }
 

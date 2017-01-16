@@ -3,9 +3,10 @@ package com.loopeer.android.librarys.imagegroupview.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.lang.reflect.Field;
 
 public class DisplayUtils {
 
@@ -78,9 +79,21 @@ public class DisplayUtils {
         return wm.getDefaultDisplay().getHeight();
     }
 
-    public static int getStatusBarHeight(Context context) {
-        Rect frame = new Rect();
-        ((Activity)context).getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        return frame.top;
+    public static int getStatusBarHeight(Context context){
+        Class<?> c;
+        Object obj;
+        Field field;
+
+        int x, statusBarHeight = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return statusBarHeight;
     }
 }

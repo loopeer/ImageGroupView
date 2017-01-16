@@ -47,7 +47,6 @@ public class ScaleImageFragment extends Fragment {
     private SquareImage squareImage;
     private int placeholderDrawable;
     private DragDismissFrameLayout mDismissFrameLayout;
-    private boolean mHasLoadSuccess;
     private ProgressBar mProgressBar;
 
     public static ScaleImageFragment newInstance(SquareImage image, int placeholderDrawable) {
@@ -83,10 +82,6 @@ public class ScaleImageFragment extends Fragment {
         setUpPlaceHolderView();
         setViewScaleListener();
         setupData();
-    }
-
-    public boolean isImageLoadSuccess() {
-        return mHasLoadSuccess;
     }
 
     public View getDismissFrameLayout() {
@@ -162,7 +157,6 @@ public class ScaleImageFragment extends Fragment {
             }
             mProgressBar.setVisibility(View.INVISIBLE);
             mPlaceholderImage.setVisibility(View.INVISIBLE);
-            mHasLoadSuccess = true;
             mScaleImage.setImageHeight((float) imageInfo.getHeight() / imageInfo.getWidth() * mScaleImage.getImageWidth());
             mScaleImage.update(imageInfo.getWidth(), imageInfo.getHeight());
         }
