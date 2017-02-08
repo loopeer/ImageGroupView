@@ -140,6 +140,7 @@ public class NavigatorImage {
             UCrop.Options options = new UCrop.Options();
             options.setToolbarColor(ContextCompat.getColor(context, toolbarColor));
             options.setStatusBarColor(ContextCompat.getColor(context, statusBarColor));
+            options.setToolbarTitle("  ");
             options.setHideBottomControls(true);
 
             uCrop.withOptions(options);
