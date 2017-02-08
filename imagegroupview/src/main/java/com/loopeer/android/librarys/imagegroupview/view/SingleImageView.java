@@ -50,6 +50,10 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public void doUpLoadPhotoClick() {
+        doUpLoadPhotoClick(1, 1);
+    }
+
+    public void doUpLoadPhotoClick(final int aspectRatioX, final int aspectRatioY) {
         new AlertDialog.Builder(getContext())
                 .setItems(new String[]{getContext().getString(R.string.take_photo),
                                 getContext().getString(R.string.select_images)},
@@ -57,21 +61,21 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (which == 0) {
-                                    doTakePhoto();
+                                    doTakePhoto(aspectRatioX, aspectRatioY);
                                 } else {
-                                    doAlbum();
+                                    doAlbum(aspectRatioX, aspectRatioY);
                                 }
                             }
                         })
                 .show();
     }
 
-    public void doTakePhoto() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), 1, getId(), AlbumActivity.TAKE_PHOTO);
+    public void doTakePhoto(int aspectRatioX, int aspectRatioY) {
+        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.TAKE_PHOTO, aspectRatioX, aspectRatioY);
     }
 
-    public void doAlbum() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), 1, getId(), AlbumActivity.ALBUM);
+    public void doAlbum(int aspectRatioX, int aspectRatioY) {
+        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.ALBUM, aspectRatioX, aspectRatioY);
     }
 
     @Override

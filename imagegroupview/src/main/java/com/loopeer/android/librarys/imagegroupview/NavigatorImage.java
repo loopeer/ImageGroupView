@@ -7,11 +7,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivity;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +37,17 @@ public class NavigatorImage {
     public static final String EXTRA_IMAGE_FOLDER = "extra_image_folder";
     public static final String EXTRA_ALBUM_TYPE = "extra_album_type";
     public static final String EXTRA_DRAG_DISMISS = "extra_drag_dismiss";
+    public static final String EXTRA_IS_AVATAR_CROP = "extra_is_avatar_crop";
 
 
     public static final int RESULT_SELECT_PHOTO = 2001;
     public static final int RESULT_TAKE_PHOTO = 2003;
     public static final int RESULT_IMAGE_SWITCHER = 2004;
     public static final int RESULT_SELECT_PHOTOS = 2005;
+
+    private static final String CROPPED_IMAGE_NAME = "image_group_view_cropped_image.jpg";
+    private static int ASPECT_RATIO_X = 1;
+    private static int ASPECT_RATIO_Y = 1;
 
     public static final String[] IMAGE_PROJECTION = {
             MediaStore.Images.Media.DATA,
@@ -102,6 +111,41 @@ public class NavigatorImage {
         intent.putExtra(extraImageSelectMaxNum, canSelectMaxNum);
         intent.putExtra(extraImageGroupId, groupId);
         intent.putExtra(extraAlbumType, type);
+    }
+
+    public static void startAvatarAlbumActivity(Context context, int groupId, int type) {
+        startAvatarAlbumActivity(context, groupId, type, 1, 1);
+    }
+
+    public static void startAvatarAlbumActivity(Context context, int groupId, int type, int aspectRatioX, int aspectRatioY) {
+        ASPECT_RATIO_X = aspectRatioX;
+        ASPECT_RATIO_Y = aspectRatioY;
+        Intent intent;
+        intent = new Intent(getImageGroupIntentAction(context));
+        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
+        if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
+            intent = new Intent(context, AlbumActivity.class);
+        }
+        intent.putExtra(EXTRA_IS_AVATAR_CROP, true);
+        addAlbumDataWithType(1, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE);
+        ((Activity) context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
+    }
+
+    public static void startCropActivity(Context context, String uri, boolean isAvatar,
+                                         @ColorRes int toolbarColor,@ColorRes int statusBarColor) {
+        UCrop uCrop = UCrop.of(Uri.parse(uri), Uri.fromFile(new File(context.getCacheDir(), CROPPED_IMAGE_NAME)));
+
+        if (isAvatar) {
+            uCrop.withAspectRatio(ASPECT_RATIO_X, ASPECT_RATIO_Y);
+            UCrop.Options options = new UCrop.Options();
+            options.setToolbarColor(ContextCompat.getColor(context, toolbarColor));
+            options.setStatusBarColor(ContextCompat.getColor(context, statusBarColor));
+            options.setHideBottomControls(true);
+
+            uCrop.withOptions(options);
+        }
+
+        uCrop.start((Activity) context);
     }
 
     private static String getImageGroupIntentAction(Context context) {

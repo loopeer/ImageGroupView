@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopeer.android.librarys.imagegroupview.R;
@@ -31,7 +32,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     private static final int ITEM_CAMERA = 10000;
-    private static final int ITEM_IMAMGE = 10001;
+    private static final int ITEM_IMAGE = 10001;
     private static final int ANIMATOR_TIME = 600;
     private static final float ZOOM_IMAGE_SCALE = AnimatorScaleType.ZOOM_SCALE;
     private static final float REDUCE_IMAGE_SCALE = AnimatorScaleType.REDUCE_SCALE;
@@ -39,6 +40,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
     private OnImageClickListener mOnImageClickListener;
     private List<Image> mSelectImages;
     private int mAlbumType;
+    private boolean mIsAvatarType;
 
     public ImageAdapter(Context context) {
         super(context);
@@ -51,6 +53,10 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
     public void setAlbumType(int albumType) {
         mAlbumType = albumType;
+    }
+
+    public void setIsAvatarType(boolean isAvatarType) {
+        mIsAvatarType = isAvatarType;
     }
 
     @Override
@@ -167,7 +173,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
                 return new CameraViewHolder(view);
             default:
                 view = inflater.inflate(R.layout.list_item_image, parent, false);
-                return new ImageViewHolder(view);
+                return new ImageViewHolder(view, mIsAvatarType);
         }
     }
 
@@ -176,7 +182,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
         if (getItem(position) == null) {
             return ITEM_CAMERA;
         }
-        return ITEM_IMAMGE;
+        return ITEM_IMAGE;
     }
 
     public void updateSelectImages(List<Image> selectedImages, int position) {
@@ -189,13 +195,15 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
         ScaleImageView icon;
         FrameLayout container;
+        ImageView mImgCheck;
         private int mWidth;
 
-        public ImageViewHolder(View itemView) {
+        public ImageViewHolder(View itemView, boolean isAvatarType) {
             super(itemView);
 
             icon = (ScaleImageView) itemView.findViewById(android.R.id.icon);
             container = (FrameLayout) itemView.findViewById(R.id.container);
+            mImgCheck = (ImageView) itemView.findViewById(R.id.img_check);
 
             final int screenWidth = itemView.getResources().getDisplayMetrics().widthPixels;
             final int parentMargin = itemView.getResources().getDimensionPixelSize(R.dimen.inline_padding);
@@ -204,7 +212,9 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
             layoutParams.height = mWidth;
             layoutParams.width = mWidth;
             icon.setLayoutParams(layoutParams);
-
+            if (isAvatarType) {
+                mImgCheck.setVisibility(View.INVISIBLE);
+            }
         }
 
         public ScaleImageView getImage() {

@@ -3,6 +3,7 @@ package com.loopeer.android.librarys.imagegroupview.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,11 +32,16 @@ import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
 import com.loopeer.android.librarys.imagegroupview.utils.PermissionUtils;
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
 import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISSION_CAMERA_STARTREQUEST;
@@ -71,12 +77,14 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private TextView mTextSubmit;
     private int mImageGroupId;
     private int mAlbumType;
+    private boolean mIsAvatarType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         mAlbumType = getIntent().getIntExtra(NavigatorImage.EXTRA_ALBUM_TYPE, 0);
+        mIsAvatarType = getIntent().getBooleanExtra(NavigatorImage.EXTRA_IS_AVATAR_CROP, false);
         mSelectedImages = new ArrayList<>();
         checkPermissionToStartAlbum();
     }
@@ -98,6 +106,9 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         mSubmitMenu = menuItem.findItem(R.id.action_submit);
         View view = mSubmitMenu.getActionView();
         mTextSubmit = (TextView) view.findViewById(R.id.text_image_submit);
+        if (mIsAvatarType) {
+            mTextSubmit.setVisibility(View.INVISIBLE);
+        }
         mTextSubmit.setOnClickListener(this);
         updateSubmitText();
     }
@@ -168,6 +179,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             showContentView();
         }
         mImageAdapter.setAlbumType(mAlbumType);
+        mImageAdapter.setIsAvatarType(mIsAvatarType);
         mImageAdapter.updateFolderImageData(floder);
         mRecyclerView.scrollToPosition(0);
     }
@@ -301,6 +313,10 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         } else if (mSelectedImages.size() == mMaxSelectedNum && mMaxSelectedNum != 0) {
             return 0;
         } else {
+            if (mIsAvatarType) {
+                startCrop(image.url);
+                return 0;
+            }
             image.time = System.currentTimeMillis();
             mSelectedImages.add(image);
             index = 1;
@@ -327,6 +343,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
+    private void startCrop(String url) {
+        NavigatorImage.startCropActivity(this, "file://" + url, true,
+                R.color.image_group_status_bar, R.color.image_group_toolbar);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -334,11 +355,52 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
             this.finish();
         }
         if (data == null || resultCode != RESULT_OK) return;
-        String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
-        if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeUrl) {
-            mSelectedImages.add(new Image(photoTakeUrl, "", System.currentTimeMillis()));
+
+        switch (requestCode) {
+            case UCrop.REQUEST_CROP:
+                Uri resultUri = UCrop.getOutput(data);
+                if (resultUri != null) {
+                    mSelectedImages.clear();
+                    mSelectedImages.add(new Image(copyFileToDownloads(resultUri), "", System.currentTimeMillis()));
+                    finishWithResult();
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);
+                if (requestCode == NavigatorImage.RESULT_TAKE_PHOTO && null != photoTakeUrl) {
+                    mSelectedImages.add(new Image(photoTakeUrl, "", System.currentTimeMillis()));
+                    if (mIsAvatarType) {
+                        startCrop(photoTakeUrl);
+                    }
+                } else {
+                    finishWithResult();
+                }
+                break;
         }
-        finishWithResult();
+    }
+
+    private String copyFileToDownloads(Uri croppedFileUri) {
+        String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        String filename = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), croppedFileUri.getLastPathSegment());
+
+        File saveFile = new File(downloadsDirectoryPath, filename);
+
+        FileInputStream inStream = null;
+        try {
+            inStream = new FileInputStream(new File(croppedFileUri.getPath()));
+            FileOutputStream outStream = new FileOutputStream(saveFile);
+            FileChannel inChannel = inStream.getChannel();
+            FileChannel outChannel = outStream.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inStream.close();
+            outStream.close();
+            return saveFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

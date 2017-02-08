@@ -10,6 +10,9 @@
     <color name="image_group_background_color">#DDDDDD</color>
     <color name="image_group_button_disable">@color/button_disable</color>
 
+    <color name="image_group_status_bar">#000000</color>
+    <color name="image_group_toolbar">#212121</color>
+
     <color name="button_disable">#CBCBCB</color>
     <color name="color_D80C18">#D80C18</color><!--主色-->
     <color name="image_group_text_color_hint">#CCCCCC</color>

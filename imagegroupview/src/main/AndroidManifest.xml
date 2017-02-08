@@ -19,8 +19,12 @@
 
         <activity
             android:name=".activity.AlbumActivity"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop"/>
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
