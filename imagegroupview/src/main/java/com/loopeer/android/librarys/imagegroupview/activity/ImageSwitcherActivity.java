@@ -20,6 +20,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
@@ -180,6 +181,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
             @Override
             public void onPageSelected(int position) {
                 mCurrentPagerPosition = position;
+                updatePositionText();
             }
 
             @Override
@@ -193,9 +195,14 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         });
     }
 
+    protected void updatePositionText() {
+        ((TextView)findViewById(R.id.text_bottom)).setText((mCurrentPagerPosition + 1) + "/" + mImageSwitcherWrappers.size());
+    }
+
     private void updateData() {
         mAdapter.setImages(createShowImages());
         setCurrentPosition();
+        updatePositionText();
     }
 
     private ArrayList<SquareImage> createShowImages() {
