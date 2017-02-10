@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
+import com.loopeer.android.librarys.imagegroupview.utils.ImageDisplayHelper;
 
 import java.util.List;
 

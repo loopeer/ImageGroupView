@@ -379,7 +379,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private void startCrop(String url) {
         NavigatorImage.startCropActivity(this, "file://" + url, true,
-                R.color.image_group_theme_primary_dark, R.color.image_group_theme_primary);
+                R.color.image_group_theme_primary, R.color.image_group_theme_primary_dark);
     }
 
     @Override
