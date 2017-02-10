@@ -7,6 +7,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -36,17 +37,18 @@ import java.util.ArrayList;
 
 public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOneClickListener {
 
-    private MutipleTouchViewPager pager;
+    private MutipleTouchViewPager mViewPager;
     private ArrayList<ImageSwitcherWrapper> mImageSwitcherWrappers;
     private ImagesSwitcherAdapter mAdapter;
     private boolean canImageDelete;
     private int mCurrentPagerPosition;
     private int placeholderDrawable;
     private ArrayList<Integer> mDeletePositions;
-    private ImageView btnDelete;
+    private ImageView mBtnDelete;
     private int mImageGroupId;
     private FrameLayout mDragDismissFrameLayout;
     private boolean mDragDismiss;
+    private FrameLayout mDragLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,10 +153,11 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void updateView() {
-        pager = (MutipleTouchViewPager) findViewById(R.id.view_pager);
-        btnDelete = (ImageView) findViewById(R.id.btn_delete);
-        btnDelete.setVisibility(canImageDelete ? View.VISIBLE : View.GONE);
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+        mViewPager = (MutipleTouchViewPager) findViewById(R.id.view_pager);
+        mBtnDelete = (ImageView) findViewById(R.id.btn_delete);
+        mDragLayout = (FrameLayout) findViewById(R.id.drag_frame);
+        mBtnDelete.setVisibility(canImageDelete ? View.VISIBLE : View.GONE);
+        mBtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteImage();
@@ -166,8 +169,9 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private void setUpView() {
         mAdapter = new ImagesSwitcherAdapter(getSupportFragmentManager(), placeholderDrawable);
         mAdapter.setOnTabOneClickListener(this);
-        pager.setAdapter(mAdapter);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.view_pager_page_margin));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -180,7 +184,11 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    mDragLayout.setBackgroundColor(Color.TRANSPARENT);
+                } else {
+                    mDragLayout.setBackgroundResource(R.color.scale_bg_black);
+                }
             }
         });
     }
@@ -199,7 +207,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void setCurrentPosition() {
-        pager.setCurrentItem(mCurrentPagerPosition);
+        mViewPager.setCurrentItem(mCurrentPagerPosition);
     }
 
     private void deleteImage() {
