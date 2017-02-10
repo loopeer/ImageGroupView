@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
@@ -50,7 +51,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_switcher);
         mDragDismissFrameLayout = (FrameLayout) findViewById(R.id.drag_frame);
@@ -59,13 +60,6 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         parseIntent();
         updateView();
         updateData();
-//        mDragDismissFrameLayout.addListener(new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
-//            @Override
-//            public void onDragDismissed() {
-//                super.onDragDismissed();
-//                ImageSwitcherActivity.this.finish();
-//            }
-//        });
         mDragDismissFrameLayout.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override

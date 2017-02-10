@@ -19,7 +19,7 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
 
     private ImageFolder mSelectFolder;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(ImageFolder imageFolder);
     }
 
@@ -80,7 +80,7 @@ public class AlbumRecyclerAdapter extends RecyclerViewAdapter<ImageFolder> {
             mTextAlbumName = (TextView) itemView.findViewById(R.id.text_album_name);
             mTextSize = (TextView) itemView.findViewById(R.id.text_album_size);
             mSelectedIndicator = (ImageView) itemView.findViewById(R.id.image_album_selected_indicator);
-            mSelectedIndicator.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.image_group_theme_primary));
+            mSelectedIndicator.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.image_group_widget));
         }
 
         public void bind(ImageFolder imageFolder) {

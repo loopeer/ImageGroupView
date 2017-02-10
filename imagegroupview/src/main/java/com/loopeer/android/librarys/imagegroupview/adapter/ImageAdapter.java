@@ -130,7 +130,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
 
         view.addView(tv, 1);
 
-        ObjectAnimator animator = ObjectAnimator.ofFloat(tv, "alpha", 1.0f, 0.0f);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(tv, View.ALPHA, 1.0f, 0.0f);
         animator.setDuration(ANIMATOR_TIME);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addListener(new AnimatorListenerAdapter() {

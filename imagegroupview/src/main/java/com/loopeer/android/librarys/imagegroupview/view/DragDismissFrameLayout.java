@@ -36,8 +36,7 @@ public class DragDismissFrameLayout extends FrameLayout {
     }
 
     public void setDragDismiss(boolean dragDismiss) {
-//        mDragDismiss = dragDismiss;
-        mDragDismiss = false;
+        mDragDismiss = dragDismiss;
     }
 
     private void init() {

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/image_group_button_background_primary_corner_selector"
         android:textColor="@android:color/white"
-        android:text="@string/action_submit"
+        android:text="@string/submit_button_text_prefix"
         android:padding="@dimen/image_group_default_padding"
         android:layout_marginRight="@dimen/image_group_default_padding"
         android:gravity="center"
