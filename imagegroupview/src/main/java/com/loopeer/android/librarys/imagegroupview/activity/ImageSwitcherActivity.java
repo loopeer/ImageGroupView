@@ -63,6 +63,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         parseIntent();
         updateView();
         updateData();
+
         mDragDismissFrameLayout.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -73,6 +74,19 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
                     }
                 });
     }
+
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            getWindow().getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
+//        }
+//    }
 
     private void doAnimation(final boolean isEnter) {
         ScaleImageFragment imageFragment = mAdapter.getFragmentByPosition(mCurrentPagerPosition);
@@ -196,7 +210,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     protected void updatePositionText() {
-        ((TextView)findViewById(R.id.text_bottom)).setText((mCurrentPagerPosition + 1) + "/" + mImageSwitcherWrappers.size());
+        ((TextView) findViewById(R.id.text_bottom)).setText((mCurrentPagerPosition + 1) + "/" + mImageSwitcherWrappers.size());
     }
 
     private void updateData() {

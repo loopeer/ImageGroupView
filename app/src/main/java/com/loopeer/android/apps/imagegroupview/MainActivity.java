@@ -3,14 +3,10 @@ package com.loopeer.android.apps.imagegroupview;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.View;
-import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
 import com.loopeer.android.librarys.imagegroupview.view.SingleImageView;
 
@@ -20,18 +16,13 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
     private ImageGridView mGridView;
     private ImageGridView mGridView2;
-    private SimpleDraweeView oneImage;
-    private SimpleDraweeView oneImage2;
     private SingleImageView mSingleImageView;
-    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initView();
-        setData();
         initGridView();
     }
 
@@ -40,19 +31,6 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
         mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
         mSingleImageView = (SingleImageView) findViewById(R.id.avatar);
         mGridView.updateNetPhotos(createTestData());
-    }
-
-    private void initView() {
-        oneImage = (SimpleDraweeView) findViewById(R.id.image_one_show);
-        oneImage2 = (SimpleDraweeView) findViewById(R.id.image_one_show2);
-        text = (TextView) findViewById(R.id.text);
-    }
-
-    private void setData() {
-        ImageGroupDisplayHelper.displayImageOneShow(oneImage, "http://img1.3lian.com/img13/c3/82/d/64.jpg", getResources().getDimensionPixelSize(R.dimen.image_dimen));
-        ImageGroupDisplayHelper.displayImageOneShow(oneImage2, "http://pic2.ooopic.com/10/23/79/75bOOOPICa3.jpg", getResources().getDimensionPixelSize(R.dimen.image_dimen));
-
-        text.setText(Html.fromHtml("<strike>从首批发布的赞助商来看，全球云计算大会·中国站“本土化”成果显著，国内厂商的大力投入充分显示了对该平台的认可，也积极响应了国务院“积极开展国际合作、整合国际创新资源、加强国内外企业研发合作”的号召。战略合作伙伴、首席赞助商等独家权益早早被预订，一些新兴的云计算品牌也把大会作为商务和宣传重地，积极参与各项展示与合作。</strike>"));
     }
 
     private ArrayList<String> createTestData() {

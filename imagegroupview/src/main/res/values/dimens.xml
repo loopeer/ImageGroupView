@@ -10,5 +10,5 @@
     <dimen name="image_select_folder_height">94dp</dimen>
     <dimen name="btn_height">48dp</dimen>
 
-    <dimen name="view_pager_page_margin">18dp</dimen>
+    <dimen name="view_pager_page_margin">16dp</dimen>
 </resources>
