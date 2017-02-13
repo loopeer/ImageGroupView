@@ -6,8 +6,6 @@ import android.graphics.Point;
 import android.view.Display;
 import android.view.WindowManager;
 
-import java.lang.reflect.Field;
-
 public class DisplayUtils {
 
     public static int getWindowHeight(Context context) {
@@ -80,20 +78,21 @@ public class DisplayUtils {
     }
 
     public static int getStatusBarHeight(Context context){
-        Class<?> c;
-        Object obj;
-        Field field;
-
-        int x, statusBarHeight = 0;
-        try {
-            c = Class.forName("com.android.internal.R$dimen");
-            obj = c.newInstance();
-            field = c.getField("status_bar_height");
-            x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return statusBarHeight;
+//        Class<?> c;
+//        Object obj;
+//        Field field;
+//
+//        int x, statusBarHeight = 0;
+//        try {
+//            c = Class.forName("com.android.internal.R$dimen");
+//            obj = c.newInstance();
+//            field = c.getField("status_bar_height");
+//            x = Integer.parseInt(field.get(obj).toString());
+//            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+//        } catch (Exception e1) {
+//            e1.printStackTrace();
+//        }
+//        return statusBarHeight;
+        return 0;
     }
 }
