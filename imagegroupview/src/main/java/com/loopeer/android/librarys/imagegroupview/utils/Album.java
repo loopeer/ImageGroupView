@@ -54,24 +54,29 @@ public class Album {
             return mOptionBundle;
         }
 
-        public void setToolBarColor(@ColorInt int color) {
+        public Options setToolBarColor(@ColorInt int color) {
             mOptionBundle.putInt(EXTRA_TOOL_BAR_COLOR, color);
+            return this;
         }
 
-        public void setStatusBarColor(@ColorInt int color) {
+        public Options setStatusBarColor(@ColorInt int color) {
             mOptionBundle.putInt(EXTRA_STATUS_BAR_COLOR, color);
+            return this;
         }
 
-        public void setSubmitButtonDrawable(@DrawableRes int drawable) {
+        public Options setSubmitButtonDrawable(@DrawableRes int drawable) {
             mOptionBundle.putInt(EXTRA_SUBMIT_BUTTON_DRAWABLE, drawable);
+            return this;
         }
 
-        public void setToolBarTitle(String title) {
+        public Options setToolBarTitle(String title) {
             mOptionBundle.putString(EXTRA_TOOL_BAR_TITLE, title);
+            return this;
         }
 
-        public void setSubmitButtonTextPrefix(String textPrefix) {
+        public Options setSubmitButtonTextPrefix(String textPrefix) {
             mOptionBundle.putString(EXTRA_SUBMIT_BUTTON_TEXT_PREFIX, textPrefix);
+            return this;
         }
 
     }

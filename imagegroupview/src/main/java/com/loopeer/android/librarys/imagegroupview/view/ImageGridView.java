@@ -88,7 +88,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         updateImages();
     }
 
-    private void setAlbumOptions(Album.Options options) {
+    public void setAlbumOptions(Album.Options options) {
         mAlbum.withOptions(options);
     }
 

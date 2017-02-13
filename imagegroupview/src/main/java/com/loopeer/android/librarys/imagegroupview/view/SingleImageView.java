@@ -52,7 +52,7 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
         mAlbum = new Album(getContext());
     }
 
-    private void setAlbumOptions(Album.Options options) {
+    public void setAlbumOptions(Album.Options options) {
         mAlbum.withOptions(options);
     }
 
