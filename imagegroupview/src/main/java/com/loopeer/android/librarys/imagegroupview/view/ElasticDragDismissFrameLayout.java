@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.NestedScrollingParent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -36,7 +37,7 @@ import java.util.List;
  * Applies an elasticity factor to reduce movement as you approach the given dismiss distance.
  * Optionally also scales down content during drag.
  */
-public class ElasticDragDismissFrameLayout extends FrameLayout {
+public class ElasticDragDismissFrameLayout extends FrameLayout implements NestedScrollingParent{
 
     // configurable attribs
     private float dragDismissDistance = Float.MAX_VALUE;
