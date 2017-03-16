@@ -64,10 +64,19 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    public void setLocalUrl(String localUrl) {
+    public void setLocalUrl(final String localUrl) {
         if (!TextUtils.isEmpty(mInternetUrl)) mInternetUrl = null;
+        if (getHeight() == 0) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    setLocalUrl(localUrl);
+                }
+            });
+            return;
+        }
         mLocalUrl = localUrl;
-        ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, 100, 100);
+        ImageGroupDisplayHelper.displayImageLocal(this, mLocalUrl, getWidth(), getHeight());
     }
 
     @SuppressWarnings("unused")
@@ -95,14 +104,23 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         return mInternetUrl;
     }
 
-    public void setInternetData(String netUrl) {
+    public void setInternetData(final String netUrl) {
         mInternetUrl = netUrl;
         mLocalUrl = null;
         if (netUrl == null) {
             setImageResource(placeholderDrawable);
             return;
         }
-        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, 100, 100);
+        if (getHeight() == 0) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    setInternetData(netUrl);
+                }
+            });
+            return;
+        }
+        ImageGroupDisplayHelper.displayImage(this, mInternetUrl, placeholderDrawable, getWidth(), getHeight());
     }
 
     public void setImageData(SquareImage squareImage) {
