@@ -7,8 +7,8 @@ import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 
+import com.loopeer.android.librarys.imagegroupview.OnTabOneClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivity;
 import com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 
@@ -66,7 +66,7 @@ public class DragDismissFrameLayout extends FrameLayout {
                 moveX = event.getX();
                 moveY = event.getY();
                 if (!mIsMoving && mPhotoDraweeView.getScale() == mPhotoDraweeView.getMinimumScale()
-                        && moveY > downY && Math.abs(moveY - downY) > Math.abs(moveX - downX)) {
+                    && moveY > downY && Math.abs(moveY - downY) > Math.abs(moveX - downX)) {
                     mIsMoving = true;
                 }
 
@@ -93,7 +93,9 @@ public class DragDismissFrameLayout extends FrameLayout {
     private void moveTouchUp() {
         if (mPhotoDraweeView.getTranslationY() >= mDragDismissDistance) {
             //消失
-            ((ImageSwitcherActivity) getContext()).onTabOneClick();
+            if (getContext() instanceof OnTabOneClickListener) {
+                ((OnTabOneClickListener) getContext()).onTabOneClick();
+            }
         } else {
             //复位
             doRestoreAnimation();
@@ -103,13 +105,13 @@ public class DragDismissFrameLayout extends FrameLayout {
     private void doRestoreAnimation() {
         setBackgroundColor(mBlackColor);
         mPhotoDraweeView.animate()
-                .scaleX(1.0f)
-                .scaleY(1.0f)
-                .translationX(0.0f)
-                .translationY(0.0f)
-                .setDuration(100)
-                .setInterpolator(new AccelerateInterpolator())
-                .start();
+            .scaleX(1.0f)
+            .scaleY(1.0f)
+            .translationX(0.0f)
+            .translationY(0.0f)
+            .setDuration(100)
+            .setInterpolator(new AccelerateInterpolator())
+            .start();
     }
 
     private float calculateScale(float distance) {
@@ -138,8 +140,8 @@ public class DragDismissFrameLayout extends FrameLayout {
         int endB = endColor & 0xff;
 
         return (startA + (int) (fraction * (endA - startA))) << 24 |
-                (startR + (int) (fraction * (endR - startR))) << 16 |
-                (startG + (int) (fraction * (endG - startG))) << 8 |
-                (startB + (int) (fraction * (endB - startB)));
+            (startR + (int) (fraction * (endR - startR))) << 16 |
+            (startG + (int) (fraction * (endG - startG))) << 8 |
+            (startB + (int) (fraction * (endB - startB)));
     }
 }
