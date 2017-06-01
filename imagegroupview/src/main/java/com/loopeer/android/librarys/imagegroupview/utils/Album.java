@@ -15,7 +15,7 @@ public class Album {
     private Context mContext;
 
     public Album(Context context) {
-        mContext=context;
+        mContext = context;
         mAlbumIntent = new Intent();
         mAlbumOptionBundle = new Bundle();
     }

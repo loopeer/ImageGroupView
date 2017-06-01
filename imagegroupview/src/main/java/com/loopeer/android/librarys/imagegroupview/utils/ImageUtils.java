@@ -9,8 +9,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,9 +56,16 @@ public class ImageUtils {
         return bitmap;
     }
 
-    public static Bitmap compressImage(Bitmap bitmap) {
+    public static byte[] compressImage(Bitmap bitmap) {
+        return compressImage(bitmap, 100.00);
+    }
+
+    public static byte[] compressImage(Bitmap bitmap, double mSize) {
         //图片允许最大空间   单位：KB
         double maxSize = 100.00;
+        if (mSize > 0.0) {
+            maxSize = mSize;
+        }
         int option = 100;
         //将bitmap放至数组中，意在bitmap的大小（与实际读取的原文件要大）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -79,14 +84,14 @@ public class ImageUtils {
                 break;
             }
         }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
-        bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
-        if (mid > maxSize) {
-            double i = mid / maxSize;
-            return zoomImage(bitmap, bitmap.getWidth() / Math.sqrt(i),
-                    bitmap.getHeight() / Math.sqrt(i));
-        }
-        return bitmap;
+//        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+//        bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+//        if (mid > maxSize) {
+//            double i = mid / maxSize;
+//            return zoomImage(bitmap, bitmap.getWidth() / Math.sqrt(i),
+//                    bitmap.getHeight() / Math.sqrt(i));
+//        }
+        return baos.toByteArray();
     }
 
     public static Bitmap imageZoomByScreen(Context context, String uri) {

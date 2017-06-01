@@ -82,11 +82,7 @@ public class ImageUploadHelper {
 
     private void doUploadImage(String url, String key, final HashMap<String, String> map) {
 //        Bitmap scalebmp = ImageUtils.imageZoomByScreen(getAppContext(), url);
-//        Bitmap scalebmp2 = ImageUtils.compressImage(scalebmp);
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        scalebmp2.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
-//        scalebmp2.recycle();
-//        byte[] bytes = byteArrayOutputStream.toByteArray();
+//        byte[] bytes =  ImageUtils.compressImage(scalebmp);
 //        if (TextUtils.isEmpty(mToken)) {
 //            onFinish();
 //            return;

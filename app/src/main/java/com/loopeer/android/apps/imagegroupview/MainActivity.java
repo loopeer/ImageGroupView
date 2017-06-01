@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
         mGridView.updateNetPhotos(createTestData());
 
         mGridView2.setAlbumOptions(new Album.Options()
-                .setStatusBarColor(Color.RED).setToolBarColor(Color.GREEN)
+                .setStatusBarColor(Color.RED).setToolBarColor(Color.BLACK)
                 .setToolBarTitle("kshfd").setSubmitButtonTextPrefix("fsdfsdfsdfs"));
     }
 
