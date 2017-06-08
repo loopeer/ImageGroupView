@@ -1,14 +1,12 @@
 package com.loopeer.android.apps.imagegroupview;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.utils.Album;
 import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
 import com.loopeer.android.librarys.imagegroupview.view.SingleImageView;
 
@@ -33,10 +31,6 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
         mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
         mSingleImageView = (SingleImageView) findViewById(R.id.avatar);
         mGridView.updateNetPhotos(createTestData());
-
-        mGridView2.setAlbumOptions(new Album.Options()
-                .setStatusBarColor(Color.RED).setToolBarColor(Color.BLACK)
-                .setToolBarTitle("kshfd").setSubmitButtonTextPrefix("fsdfsdfsdfs"));
     }
 
     private ArrayList<String> createTestData() {

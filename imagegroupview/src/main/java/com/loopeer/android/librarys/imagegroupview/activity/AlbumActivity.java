@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,13 +15,11 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +34,6 @@ import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder;
-import com.loopeer.android.librarys.imagegroupview.utils.Album;
 import com.loopeer.android.librarys.imagegroupview.utils.PermissionUtils;
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView;
 import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration;
@@ -87,11 +83,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private int mImageGroupId;
     private int mAlbumType;
     private boolean mIsAvatarType;
-    private int mToolbarColor;
-    private int mStatusBarColor;
-    private int mSubmitButtonDrawable;
-    private String mToolbarTitle;
-    private String mSubmitButtonTextPrefix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,18 +99,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         Intent intent = getIntent();
         mImageGroupId = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0);
         mMaxSelectedNum = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_SELECT_MAX_NUM, 0);
-
-        mToolbarColor = intent.getIntExtra(Album.Options.EXTRA_TOOL_BAR_COLOR, ContextCompat.getColor(this, R.color.image_group_theme_primary));
-        mStatusBarColor = intent.getIntExtra(Album.Options.EXTRA_STATUS_BAR_COLOR, ContextCompat.getColor(this, R.color.image_group_theme_primary_dark));
-        mSubmitButtonDrawable = intent.getIntExtra(Album.Options.EXTRA_SUBMIT_BUTTON_DRAWABLE, R.drawable.image_group_button_background_primary_corner_selector);
-        mToolbarTitle = intent.getStringExtra(Album.Options.EXTRA_TOOL_BAR_TITLE);
-        mSubmitButtonTextPrefix = intent.getStringExtra(Album.Options.EXTRA_SUBMIT_BUTTON_TEXT_PREFIX);
-        if (TextUtils.isEmpty(mToolbarTitle)) {
-            mToolbarTitle = getString(R.string.toolbar_title);
-        }
-        if (TextUtils.isEmpty(mSubmitButtonTextPrefix)) {
-            mSubmitButtonTextPrefix = getString(R.string.submit_button_text_prefix);
-        }
     }
 
     @Override
@@ -133,7 +112,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         mSubmitMenu = menuItem.findItem(R.id.action_submit);
         View view = mSubmitMenu.getActionView();
         mTextSubmit = (TextView) view.findViewById(R.id.text_image_submit);
-        mTextSubmit.setBackground(ContextCompat.getDrawable(this, mSubmitButtonDrawable));
         if (mIsAvatarType) {
             mTextSubmit.setVisibility(View.INVISIBLE);
         }
@@ -148,11 +126,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private String getSubmitText() {
         return mSelectedImages.size() == 0
-                ? getResources().getString(R.string.action_submit, mSubmitButtonTextPrefix)
+                ? getResources().getString(R.string.action_submit)
                 :
                 mMaxSelectedNum == 0
-                        ? getResources().getString(R.string.action_submit_string_no_max, mSubmitButtonTextPrefix, mSelectedImages.size())
-                        : getResources().getString(R.string.action_submit_string, mSubmitButtonTextPrefix, mSelectedImages.size(), mMaxSelectedNum);
+                        ? getResources().getString(R.string.action_submit_string_no_max, mSelectedImages.size())
+                        : getResources().getString(R.string.action_submit_string, mSelectedImages.size(), mMaxSelectedNum);
     }
 
     @Override
@@ -182,9 +160,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         mViewAnimator = (ViewAnimator) findViewById(R.id.view_album_animator);
         mCustomPopupWindowView = (CustomPopupView) findViewById(R.id.view_popup_folder_window);
 
-        getSupportActionBar().setTitle(mToolbarTitle);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(mToolbarColor));
-        setStatusBarColor(mStatusBarColor);
         setUpTextView();
         showProgressView();
         setUpRecyclerView();

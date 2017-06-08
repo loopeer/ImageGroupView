@@ -15,7 +15,6 @@ import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.utils.Album;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 
 import java.util.List;
@@ -24,7 +23,6 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
 
     private SquareImage mImage;
     private int mPlaceholderDrawable;
-    private Album mAlbum;
 
     public SingleImageView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
@@ -49,11 +47,6 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     private void init() {
         setOnClickListener(this);
         mImage = new SquareImage();
-        mAlbum = new Album(getContext());
-    }
-
-    public void setAlbumOptions(Album.Options options) {
-        mAlbum.withOptions(options);
     }
 
     public void doUpLoadPhotoClick() {
@@ -78,11 +71,11 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public void doTakePhoto(int aspectRatioX, int aspectRatioY) {
-        NavigatorImage.startAvatarAlbumActivity(mAlbum, getId(), AlbumActivity.TAKE_PHOTO, aspectRatioX, aspectRatioY);
+        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.TAKE_PHOTO, aspectRatioX, aspectRatioY);
     }
 
     public void doAlbum(int aspectRatioX, int aspectRatioY) {
-        NavigatorImage.startAvatarAlbumActivity(mAlbum, getId(), AlbumActivity.ALBUM, aspectRatioX, aspectRatioY);
+        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.ALBUM, aspectRatioX, aspectRatioY);
     }
 
     @Override

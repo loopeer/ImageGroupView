@@ -40,6 +40,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="?android:listPreferredItemHeightSmall"
             android:background="#777777"
@@ -47,8 +48,7 @@
             android:paddingLeft="12dp"
             android:text="Test one Image show with image self size"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:id="@+id/textView"/>
+            android:textSize="16sp"/>
 
         <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
             android:id="@+id/grid_test_group"
@@ -88,6 +88,7 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="10dp"
             apps:imagePlaceholderDrawable="@drawable/ic_image_default"
+            apps:maxImageNum="6"
             apps:showAddButton="true"/>
     </LinearLayout>
 

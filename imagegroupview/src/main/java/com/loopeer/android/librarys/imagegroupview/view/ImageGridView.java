@@ -16,7 +16,6 @@ import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.utils.Album;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 
@@ -38,7 +37,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private int maxImageNum;
     private boolean mDragDismiss;
     private GridImageAdapter mGridImageAdapter;
-    private Album mAlbum;
 
     public ImageGridView(Context context) {
         this(context, null);
@@ -81,16 +79,12 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private void init() {
         /*setEnabled(true);
         setClickable(true);*/
-        mAlbum = new Album(getContext());
         preImages = new ArrayList<>();
         mGridImageAdapter = new GridImageAdapter(getContext(), this);
         setAdapter(mGridImageAdapter);
         updateImages();
     }
 
-    public void setAlbumOptions(Album.Options options) {
-        mAlbum.withOptions(options);
-    }
 
     private void updateImages() {
         mGridImageAdapter.updateData(preImages, mShowAddButton && (getCanSelectMaxNum() != 0 || maxImageNum == MAX_VALUE));
@@ -192,7 +186,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(mAlbum, getCanSelectMaxNum(), getId());
+        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
     }
 
     private int getCanSelectMaxNum() {
