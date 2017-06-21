@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
@@ -19,13 +20,19 @@ import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
+    private static final String TAG = "ImageGridView";
+
     private final static int MAX_VALUE = -1;
 
     private ImageGroupSavedState imageGroupSavedState;
@@ -186,12 +193,27 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
+        NavigatorImage.startCustomAlbumActivity(this, getContext(), getCanSelectMaxNum(), getId());
     }
 
     private int getCanSelectMaxNum() {
         if (maxImageNum == MAX_VALUE) return 0;
         return maxImageNum - preImages.size();
+    }
+
+    public void startActivityForResultReflect(Intent intent, int requestCode) {
+        Method method;
+        try {
+            method = this.getClass().getMethod("startActivityForResult", Intent.class, int.class);
+            method.invoke(this, intent, requestCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK)
+            onParentResult(requestCode, data);
     }
 
     public void onParentResult(int requestCode, Intent data) {

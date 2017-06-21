@@ -17,7 +17,10 @@ import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 
+import java.lang.reflect.Method;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class SingleImageView extends SimpleDraweeView implements View.OnClickListener {
 
@@ -75,12 +78,27 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public void doAlbum(int aspectRatioX, int aspectRatioY) {
-        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.ALBUM, aspectRatioX, aspectRatioY);
+        NavigatorImage.startAvatarAlbumActivity(this, getContext(), getId(), AlbumActivity.ALBUM, aspectRatioX, aspectRatioY);
     }
 
     @Override
     public void onClick(View v) {
         doUpLoadPhotoClick();
+    }
+
+    public void startActivityForResultReflect(Intent intent, int requestCode) {
+        Method method;
+        try {
+            method = this.getClass().getMethod("startActivityForResult", Intent.class, int.class);
+            method.invoke(this, intent, requestCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK)
+            onParentResult(requestCode, data);
     }
 
     public void onParentResult(int requestCode, Intent data) {
