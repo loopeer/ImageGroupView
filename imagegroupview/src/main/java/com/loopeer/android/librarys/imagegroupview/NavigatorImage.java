@@ -93,17 +93,6 @@ public class NavigatorImage {
         ((Activity) context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
     }
 
-    public static void startCustomAlbumActivity(ImageGridView imageGridView, Context context, int canSelectMaxNum, int groupId) {
-        Intent intent;
-        intent = new Intent(getImageGroupIntentAction(context));
-        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
-        if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
-            intent = new Intent(context, AlbumActivity.class);
-        }
-        addAlbumData(canSelectMaxNum, groupId, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID);
-        imageGridView.startActivityForResultReflect(intent, RESULT_SELECT_PHOTOS);
-    }
-
     private static void addAlbumData(int canSelectMaxNum, int groupId, Intent intent, String extraImageSelectMaxNum, String extraImageGroupId) {
         intent.putExtra(extraImageSelectMaxNum, canSelectMaxNum);
         intent.putExtra(extraImageGroupId, groupId);
@@ -142,20 +131,6 @@ public class NavigatorImage {
         intent.putExtra(EXTRA_IS_AVATAR_CROP, true);
         addAlbumDataWithType(1, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE);
         ((Activity) context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
-    }
-
-    public static void startAvatarAlbumActivity(SingleImageView imageView, Context context, int groupId, int type, int aspectRatioX, int aspectRatioY) {
-        ASPECT_RATIO_X = aspectRatioX;
-        ASPECT_RATIO_Y = aspectRatioY;
-        Intent intent;
-        intent = new Intent(getImageGroupIntentAction(context));
-        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
-        if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
-            intent = new Intent(context, AlbumActivity.class);
-        }
-        intent.putExtra(EXTRA_IS_AVATAR_CROP, true);
-        addAlbumDataWithType(1, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE);
-        imageView.startActivityForResultReflect(intent, RESULT_SELECT_PHOTOS);
     }
 
     public static void startCropActivity(Context context, String uri, boolean isAvatar,

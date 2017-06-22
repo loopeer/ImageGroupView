@@ -50,4 +50,14 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     public void onImageClick(View clickImage, SquareImage squareImage) {
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            mGridView.onParentResult(requestCode, data);
+            mGridView2.onParentResult(requestCode, data);
+            mSingleImageView.onParentResult(requestCode, data);
+        }
+    }
 }

@@ -193,27 +193,12 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(this, getContext(), getCanSelectMaxNum(), getId());
+        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
     }
 
     private int getCanSelectMaxNum() {
         if (maxImageNum == MAX_VALUE) return 0;
         return maxImageNum - preImages.size();
-    }
-
-    public void startActivityForResultReflect(Intent intent, int requestCode) {
-        Method method;
-        try {
-            method = this.getClass().getMethod("startActivityForResult", Intent.class, int.class);
-            method.invoke(this, intent, requestCode);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK)
-            onParentResult(requestCode, data);
     }
 
     public void onParentResult(int requestCode, Intent data) {
