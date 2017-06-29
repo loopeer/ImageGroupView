@@ -203,11 +203,10 @@ public final class ImageGroupDisplayHelper {
     }
 
     public static void displayImageLocal(SimpleDraweeView draweeView, String path, int width, int height) {
-        if (draweeView == null || TextUtils.isEmpty(path)) {
+        if (draweeView == null) {
             return;
         }
-
-        Uri uri = Uri.fromFile(new File(path));
+        Uri uri = TextUtils.isEmpty(path) ? null : Uri.fromFile(new File(path));
         ImageRequest
                 request = ImageRequestBuilder.newBuilderWithSource(uri).setResizeOptions(new ResizeOptions(width, height))
                 .setAutoRotateEnabled(true)

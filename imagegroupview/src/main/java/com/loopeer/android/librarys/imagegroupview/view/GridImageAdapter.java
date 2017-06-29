@@ -1,6 +1,7 @@
 package com.loopeer.android.librarys.imagegroupview.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -59,17 +60,23 @@ public class GridImageAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         SquareImageView squareView;
-        if (convertView == null) {
+        if (convertView == null || !convertView.getTag().equals(getTag(position))) {
             squareView = new SquareImageView(mContext);
             squareView.setPlaceholderDrawable(mPlaceholderDrawable);
             squareView.setRoundAsCircle(mRoundAsCircle);
             squareView.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
+            squareView.setTag(getTag(position));
         } else {
             squareView = (SquareImageView) convertView;
         }
 
         bindData(squareView, position);
         return squareView;
+    }
+
+    @NonNull
+    private String getTag(int position) {
+        return "POSITION" + position;
     }
 
     private void bindData(SquareImageView squareView, final int position) {
