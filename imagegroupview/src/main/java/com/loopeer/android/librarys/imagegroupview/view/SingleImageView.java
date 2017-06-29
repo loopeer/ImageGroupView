@@ -87,7 +87,7 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public void onParentResult(int requestCode, Intent data) {
-        if (data == null) return;
+        if (data == null || data.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0) != getId()) return;
         List<Image> images = (List<Image>) data.getSerializableExtra(NavigatorImage.EXTRA_PHOTOS_URL);
         if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
             refreshLocalImage(images.get(0).url);

@@ -208,9 +208,12 @@ public final class ImageGroupDisplayHelper {
         }
         Uri uri = TextUtils.isEmpty(path) ? null : Uri.fromFile(new File(path));
         ImageRequest
-                request = ImageRequestBuilder.newBuilderWithSource(uri).setResizeOptions(new ResizeOptions(width, height))
-                .setAutoRotateEnabled(true)
-                .build();
+                request = null;
+        if (uri != null) {
+            request = ImageRequestBuilder.newBuilderWithSource(uri).setResizeOptions(new ResizeOptions(width, height))
+                    .setAutoRotateEnabled(true)
+                    .build();
+        }
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
                 .build();
