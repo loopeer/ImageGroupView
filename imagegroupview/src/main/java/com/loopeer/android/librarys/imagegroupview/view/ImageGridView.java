@@ -322,7 +322,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private void restoreView() {
         if (imageGroupSavedState != null) {
             preImages.clear();
-            preImages.addAll(getSquarePhotos());
+            preImages.addAll(imageGroupSavedState.getSquarePhotos());
             updateImages();
             imageGroupSavedState = null;
         }

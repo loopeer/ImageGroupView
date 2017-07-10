@@ -80,7 +80,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     @SuppressWarnings("unused")
-    public void setmInternetUrl(String internetUrl) {
+    public void setInternetUrl(String internetUrl) {
         mInternetUrl = internetUrl;
     }
 
