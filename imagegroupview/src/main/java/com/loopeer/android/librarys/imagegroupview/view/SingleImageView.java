@@ -100,10 +100,19 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     private void updateView() {
+        if (getHeight() == 0) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    updateView();
+                }
+            });
+            return;
+        }
         if (mImage.localUrl != null) {
-            ImageGroupDisplayHelper.displayImageLocal(this, mImage.localUrl, 100, 100);
+            ImageGroupDisplayHelper.displayImageLocal(this, mImage.localUrl, getWidth(), getHeight());
         } else if (mImage.interNetUrl != null) {
-            ImageGroupDisplayHelper.displayImage(this, mImage.interNetUrl, mPlaceholderDrawable, 100, 100);
+            ImageGroupDisplayHelper.displayImage(this, mImage.interNetUrl, mPlaceholderDrawable, getWidth(), getHeight());
         } else {
             setImageResource(mPlaceholderDrawable);
         }
