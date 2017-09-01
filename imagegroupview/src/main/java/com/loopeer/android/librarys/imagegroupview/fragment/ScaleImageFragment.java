@@ -165,8 +165,8 @@ public class ScaleImageFragment extends Fragment {
     private void doSaveImage(String imageUrl) {
         ImageRequest downloadRequest = ImageRequest.fromUri(Uri.parse(imageUrl));
         CacheKey cacheKey = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(downloadRequest, null);
-        if (ImagePipelineFactory.getInstance().getMainDiskStorageCache().hasKey(cacheKey)) {
-            BinaryResource resource = ImagePipelineFactory.getInstance().getMainDiskStorageCache().getResource(cacheKey);
+        if (ImagePipelineFactory.getInstance().getMainFileCache().hasKey(cacheKey)) {
+            BinaryResource resource = ImagePipelineFactory.getInstance().getMainFileCache().getResource(cacheKey);
             File cacheFile = ((FileBinaryResource) resource).getFile();
             try {
                 MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), cacheFile.getAbsolutePath(), cacheFile.getName(), "");
