@@ -34,7 +34,7 @@ public class ImagesSwitcherAdapter extends CustomFragmentPagerAdapter {
         this.onTabOneClickListener = onTabOneClickListener;
     }
 
-    public void setImages(ArrayList<SquareImage> strings) {
+    public void setImages(ArrayList<SquareImage> strings) {//变量名真奇怪
         images.clear();
         images.addAll(strings);
         notifyDataSetChanged();

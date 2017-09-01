@@ -25,11 +25,13 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
         initGridView();
     }
+    //bug复现：正方形图片没有问题，宽大于高的款压缩失真，高大于宽的，高压缩失真
+    //但是第一次点开图片时失真效果不定
 
     private void initGridView() {
-        mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
-        mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
-        mSingleImageView = (SingleImageView) findViewById(R.id.avatar);
+        mGridView = (ImageGridView) findViewById(R.id.grid_test_group);//九宫格图片
+        mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);//可添加多选九宫格
+        mSingleImageView = (SingleImageView) findViewById(R.id.avatar);//头像单张图片
         mGridView.updateNetPhotos(createTestData());
     }
 

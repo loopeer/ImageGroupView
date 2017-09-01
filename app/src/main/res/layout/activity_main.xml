@@ -63,7 +63,7 @@
             android:scrollbars="vertical"
             android:stretchMode="columnWidth"
             android:verticalSpacing="4dp"
-            apps:showAddButton="false"/>
+            apps:showAddButton="false" />
 
 
         <TextView

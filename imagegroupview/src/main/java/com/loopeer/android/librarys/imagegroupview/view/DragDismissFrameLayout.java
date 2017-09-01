@@ -109,7 +109,7 @@ public class DragDismissFrameLayout extends FrameLayout {
             .scaleY(1.0f)
             .translationX(0.0f)
             .translationY(0.0f)
-            .setDuration(100)
+            .setDuration(3000)
             .setInterpolator(new AccelerateInterpolator())
             .start();
     }
