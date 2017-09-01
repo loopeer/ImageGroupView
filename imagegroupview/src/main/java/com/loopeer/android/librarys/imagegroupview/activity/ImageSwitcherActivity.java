@@ -111,8 +111,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
                 photoDraweeView.setScaleX((float) squareImage.width / height);
                 photoDraweeView.setScaleY((float) squareImage.height / height);
             }
-//            photoDraweeView.setScaleX((float) squareImage.width / width);//初始值失真
-//            photoDraweeView.setScaleY((float) squareImage.height / height);
+
             photoDraweeView.setTranslationX(distanceX);
             photoDraweeView.setTranslationY(distanceY);
             scaleX = new float[]{photoDraweeView.getScaleX(), 1};
@@ -128,20 +127,19 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
                 scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / height};
                 scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / height};
             }
-//            scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / width};
-//            scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / height};
+
             translationX = new float[]{photoDraweeView.getTranslationX(), distanceX};
             translationY = new float[]{photoDraweeView.getTranslationY(), distanceY};
             bgColor = new int[]{((ColorDrawable) dismissFrameLayout.getBackground()).getColor(), whiteColor};
         }
-        ObjectAnimator sX = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_X, scaleX);//终态可能有问题，x和y
+        ObjectAnimator sX = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_X, scaleX);
         ObjectAnimator sY = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_Y, scaleY);
         ObjectAnimator tX = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_X, translationX);
         ObjectAnimator tY = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_Y, translationY);
         ObjectAnimator bg = ObjectAnimator.ofInt(dismissFrameLayout, "backgroundColor", bgColor);
         bg.setEvaluator(new ArgbEvaluator());
-//        bg.setDuration(125);
-        bg.setDuration(2500);//背景颜色过渡时长
+        bg.setDuration(125);
+
 
         AnimatorSet animatorSet = new AnimatorSet();
         if (isEnter) {
@@ -149,10 +147,10 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         } else {
             animatorSet.setInterpolator(new AccelerateInterpolator());
         }
-//        animatorSet.setDuration(250);
-        animatorSet.setDuration(5000);
-        animatorSet.play(sX).with(sY).with(tX).with(tY);//四个动画同时进行？
-        animatorSet.addListener(new AnimatorListenerAdapter() {//结束后事件
+        animatorSet.setDuration(250);
+
+        animatorSet.play(sX).with(sY).with(tX).with(tY);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (!isEnter) {
@@ -179,14 +177,14 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private void setUpImageWrappers(ArrayList<SquareImage> images) {
         mImageSwitcherWrappers = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
-            mImageSwitcherWrappers.add(new ImageSwitcherWrapper(images.get(i), i));//加载的图片集合
+            mImageSwitcherWrappers.add(new ImageSwitcherWrapper(images.get(i), i));
         }
     }
 
     private void updateView() {
         mViewPager = (MutipleTouchViewPager) findViewById(R.id.view_pager);
         mBtnDelete = (ImageView) findViewById(R.id.btn_delete);
-        mDragLayout = (FrameLayout) findViewById(R.id.drag_frame);//最外层的布局
+        mDragLayout = (FrameLayout) findViewById(R.id.drag_frame);
         mBtnDelete.setVisibility(canImageDelete ? View.VISIBLE : View.GONE);
         mBtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,10 +196,10 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     }
 
     private void setUpView() {
-        mAdapter = new ImagesSwitcherAdapter(getSupportFragmentManager(), placeholderDrawable);//应该是页码
+        mAdapter = new ImagesSwitcherAdapter(getSupportFragmentManager(), placeholderDrawable);
         mAdapter.setOnTabOneClickListener(this);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.view_pager_page_margin));//两fragment之间间距
+        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.view_pager_page_margin));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -225,7 +223,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         });
     }
 
-    protected void updatePositionText() {//更新页码
+    protected void updatePositionText() {
         ((TextView) findViewById(R.id.text_bottom)).setText((mCurrentPagerPosition + 1) + "/" + mImageSwitcherWrappers.size());
     }
 
