@@ -2,6 +2,7 @@ package com.loopeer.android.librarys.imagegroupview.photodraweeview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -18,6 +19,8 @@ public class PhotoDraweeView extends SimpleDraweeView implements IAttacher {
     private float mImageWidth;
     private float mCenterX;
     private float mCenterY;
+
+    private Matrix mMatrix;
 
     public PhotoDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
@@ -44,6 +47,7 @@ public class PhotoDraweeView extends SimpleDraweeView implements IAttacher {
             mAttacher = new Attacher(this);
         }
         initImageSize();
+        mMatrix = new Matrix();
     }
 
     private void initImageSize() {
@@ -81,6 +85,7 @@ public class PhotoDraweeView extends SimpleDraweeView implements IAttacher {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        canvas.concat(mMatrix);
         int saveCount = canvas.save();
         canvas.concat(mAttacher.getDrawMatrix());
         super.onDraw(canvas);
@@ -147,6 +152,12 @@ public class PhotoDraweeView extends SimpleDraweeView implements IAttacher {
     @Override
     public void setScale(float scale, float focalX, float focalY, boolean animate) {
         mAttacher.setScale(scale, focalX, focalY, animate);
+    }
+
+
+    public void setScale(float scalex,float scaley) {
+        mMatrix.setScale(1+scalex, 1 + scaley, getMeasuredWidth() / 2, getMeasuredWidth() / 2);
+        invalidate();
     }
 
     @Override

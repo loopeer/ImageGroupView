@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -75,7 +76,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
                 });
     }
 
-//    @Override
+    //    @Override
 //    public void onWindowFocusChanged(boolean hasFocus) {
 //        super.onWindowFocusChanged(hasFocus);
 //        if (hasFocus) {
@@ -88,29 +89,63 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 //        }
 //    }
 
+    private ValueAnimator getScaleAnimator(final PhotoDraweeView view, final float from, final float to, boolean isx) {
+        final ValueAnimator animator = ValueAnimator.ofFloat(from, to);
+
+        animator.setDuration(250);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        if (isx)
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+
+                    view.setScale((float) animator.getAnimatedValue(),0.0f);
+                }
+            });
+        else{
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+
+                    view.setScale(0.0f,(float) animator.getAnimatedValue());
+                }
+            });
+        }
+        return animator;
+    }
+
     private void doAnimation(final boolean isEnter) {
-        ScaleImageFragment imageFragment = mAdapter.getFragmentByPosition(mCurrentPagerPosition);//应该是滑动时显示图片的那个页面
-        PhotoDraweeView photoDraweeView = (PhotoDraweeView) imageFragment.getScaleImage();
+        ScaleImageFragment imageFragment = mAdapter.getFragmentByPosition(mCurrentPagerPosition);
+        final PhotoDraweeView photoDraweeView = (PhotoDraweeView) imageFragment.getScaleImage();
         DragDismissFrameLayout dismissFrameLayout = (DragDismissFrameLayout) imageFragment.getDismissFrameLayout();//imageFragment中负责消失动画的frameLayout
         dismissFrameLayout.setDragDismiss(mDragDismiss);
 
-        float width = photoDraweeView.getImageWidth();
-        float height = photoDraweeView.getImageHeight();
+        final float width = photoDraweeView.getImageWidth();
+        final float height = photoDraweeView.getImageHeight();
         int blackColor = ContextCompat.getColor(this, R.color.scale_bg_black);
         int whiteColor = ContextCompat.getColor(this, R.color.scale_bg_white);
         float[] scaleX, scaleY, translationX, translationY;
+        float scalexto, scaleyto, scalexfrom, scaleyfrom;
         int[] bgColor;
         SquareImage squareImage = mImageSwitcherWrappers.get(mCurrentPagerPosition).squareImage;
         float distanceX = squareImage.getCenterX() - photoDraweeView.getCenterX();
         float distanceY = squareImage.getCenterY() - photoDraweeView.getCenterY();
         if (isEnter) {//进入
-            if (squareImage.width >= squareImage.height) {
-                photoDraweeView.setScaleX((float) squareImage.width / width);
-                photoDraweeView.setScaleY((float) squareImage.height / width);
+            if (width >= height) {
+                scalexfrom = (float) width / height - 1;
+                scaleyfrom = 0.0f;
+                scalexto = 0.0f;
+                scaleyto = 0.0f;
+
             } else {
-                photoDraweeView.setScaleX((float) squareImage.width / height);
-                photoDraweeView.setScaleY((float) squareImage.height / height);
+                scalexfrom = 0.0f;
+                scaleyfrom = (float) height / width - 1;
+                scalexto = 0.0f;
+                scaleyto = 0.0f;
             }
+
+            photoDraweeView.setScaleX((float) squareImage.width / width);
+            photoDraweeView.setScaleY((float) squareImage.height / height);
 
             photoDraweeView.setTranslationX(distanceX);
             photoDraweeView.setTranslationY(distanceY);
@@ -120,26 +155,38 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
             translationY = new float[]{distanceY, 0};
             bgColor = new int[]{whiteColor, blackColor};
         } else {//退出
-            if (squareImage.width >= squareImage.height) {
-                scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / width};
-                scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / width};
-            } else {
-                scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / height};
-                scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / height};
-            }
+
+            scaleX = new float[]{photoDraweeView.getScaleX(), (float) squareImage.width / width};
+            scaleY = new float[]{photoDraweeView.getScaleY(), (float) squareImage.height / height};
 
             translationX = new float[]{photoDraweeView.getTranslationX(), distanceX};
             translationY = new float[]{photoDraweeView.getTranslationY(), distanceY};
             bgColor = new int[]{((ColorDrawable) dismissFrameLayout.getBackground()).getColor(), whiteColor};
+            if (width >= height) {
+                scalexfrom = 0.0f;
+                scaleyfrom = 0.0f;
+                scalexto = (float) width / height - 1;
+                scaleyto = 0.0f;
+            } else {
+                scalexfrom = 0.0f;
+                scaleyfrom = 0.0f;
+                scalexto = 0.0f;
+                scaleyto = (float) height / width - 1;
+            }
         }
         ObjectAnimator sX = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_X, scaleX);
         ObjectAnimator sY = ObjectAnimator.ofFloat(photoDraweeView, View.SCALE_Y, scaleY);
         ObjectAnimator tX = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_X, translationX);
         ObjectAnimator tY = ObjectAnimator.ofFloat(photoDraweeView, View.TRANSLATION_Y, translationY);
+        ValueAnimator vc = new ValueAnimator();
+        if (scalexfrom!=0||scalexto!=0){
+            vc = getScaleAnimator(photoDraweeView, scalexfrom, scalexto, true);
+        }else{
+            vc = getScaleAnimator(photoDraweeView, scaleyfrom, scaleyto, false);
+        }
         ObjectAnimator bg = ObjectAnimator.ofInt(dismissFrameLayout, "backgroundColor", bgColor);
         bg.setEvaluator(new ArgbEvaluator());
         bg.setDuration(125);
-
 
         AnimatorSet animatorSet = new AnimatorSet();
         if (isEnter) {
@@ -148,19 +195,20 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
             animatorSet.setInterpolator(new AccelerateInterpolator());
         }
         animatorSet.setDuration(250);
-
-        animatorSet.play(sX).with(sY).with(tX).with(tY);
+        animatorSet.play(sX).with(sY).with(tX).with(tY).with(vc);
         animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (!isEnter) {
-                    finish();
-                    overridePendingTransition(0, 0);
-                }
-            }
-        });
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        if (!isEnter) {
+                                            finish();
+                                            overridePendingTransition(0, 0);
+                                        }
+                                    }
+                                }
+        );
         bg.start();
         animatorSet.start();
+
     }
 
     private void parseIntent() {

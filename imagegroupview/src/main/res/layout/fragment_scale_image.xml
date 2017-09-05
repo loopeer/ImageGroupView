@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout
-    android:id="@+id/container_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
+<com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/scale_bg_black">
@@ -17,17 +15,19 @@
         android:visibility="visible"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/ic_image_default"
-        fresco:placeholderImageScaleType="centerCrop"/>
+        fresco:placeholderImageScaleType="centerCrop" />
 
     <ProgressBar
         android:id="@+id/progress_scale_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <com.loopeer.android.librarys.imagegroupview.photodraweeview.PhotoDraweeView
         android:id="@+id/image_scale_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImageScaleType="centerCrop" />
 
 </com.loopeer.android.librarys.imagegroupview.view.DragDismissFrameLayout>

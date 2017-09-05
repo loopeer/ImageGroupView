@@ -39,7 +39,8 @@ public class ScaleImageView extends SimpleDraweeView {
     }
 
     public void setScale(float scale) {
-        mMatrix.setScale(1 + scale, 1 + scale, getMeasuredWidth() / 2, getMeasuredWidth() / 2);
+//        mMatrix.setScale(1 + scale, 1+scale, getMeasuredWidth() / 2, getMeasuredWidth() / 2);
+        mMatrix.setScale(1 + scale, 1+scale, getMeasuredWidth() / 2, getMeasuredWidth() / 2);
         invalidate();
     }
 
