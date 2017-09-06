@@ -3,8 +3,12 @@ package com.loopeer.android.librarys.imagegroupview.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.lang.reflect.Field;
 
 public class DisplayUtils {
 
@@ -77,22 +81,27 @@ public class DisplayUtils {
         return wm.getDefaultDisplay().getHeight();
     }
 
-    public static int getStatusBarHeight(Context context){
-//        Class<?> c;
-//        Object obj;
-//        Field field;
-//
-//        int x, statusBarHeight = 0;
-//        try {
-//            c = Class.forName("com.android.internal.R$dimen");
-//            obj = c.newInstance();
-//            field = c.getField("status_bar_height");
-//            x = Integer.parseInt(field.get(obj).toString());
-//            statusBarHeight = context.getResources().getDimensionPixelSize(x);
-//        } catch (Exception e1) {
-//            e1.printStackTrace();
-//        }
-//        return statusBarHeight;
-        return 0;
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c;
+        Object obj;
+        Field field;
+
+        int x, statusBarHeight = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        Log.d("displaystatusLog", "" + statusBarHeight);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return 0;
+        } else {
+            return statusBarHeight;
+        }
+
     }
 }
