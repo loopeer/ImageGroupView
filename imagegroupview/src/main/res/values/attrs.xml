@@ -10,6 +10,7 @@
         <attr name="imagePlaceholderDrawable" format="reference|color"/>
         <attr name="deleteDrawable" format="reference|color"/>
         <attr name="dragDismiss" format="boolean"/>
+        <attr name="showDialog" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ElasticDragDismissFrameLayout">

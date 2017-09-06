@@ -82,22 +82,6 @@ public class NavigatorImage {
         intent.putExtra(EXTRA_DRAG_DISMISS, dragDismiss);
     }
 
-    public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId) {
-        Intent intent;
-        intent = new Intent(getImageGroupIntentAction(context));
-        intent.setData(Uri.parse(getImageGroupIntentAlbumUri(context)));
-        if (intent == null || intent.resolveActivity(context.getPackageManager()) == null) {
-            intent = new Intent(context, AlbumActivity.class);
-        }
-        addAlbumData(canSelectMaxNum, groupId, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID);
-        ((Activity) context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
-    }
-
-    private static void addAlbumData(int canSelectMaxNum, int groupId, Intent intent, String extraImageSelectMaxNum, String extraImageGroupId) {
-        intent.putExtra(extraImageSelectMaxNum, canSelectMaxNum);
-        intent.putExtra(extraImageGroupId, groupId);
-    }
-
     public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId, int type) {
         Intent intent;
         intent = new Intent(getImageGroupIntentAction(context));
@@ -107,6 +91,10 @@ public class NavigatorImage {
         }
         addAlbumDataWithType(canSelectMaxNum, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE);
         ((Activity) context).startActivityForResult(intent, RESULT_SELECT_PHOTOS);
+    }
+
+    public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId) {
+        startCustomAlbumActivity(context, canSelectMaxNum, groupId, AlbumActivity.ALL);
     }
 
     private static void addAlbumDataWithType(int canSelectMaxNum, int groupId, int type, Intent intent, String extraImageSelectMaxNum, String extraImageGroupId, String extraAlbumType) {

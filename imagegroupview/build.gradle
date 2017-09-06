@@ -1,16 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-version = '1.0.36'
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file:///Users/todou/.m2/repository")
-        }
-    }
-}
 
 android {
     compileSdkVersion Integer.parseInt(compile_sdk_version)
@@ -44,71 +32,4 @@ dependencies {
     compile 'com.yalantis:ucrop:2.2.0'
 }
 
-
-def siteUrl = 'https://github.com/loopeer/ImageGroupView'      // 项目的主页
-def gitUrl = 'https://github.com/loopeer/ImageGroupView.git'   // Git仓库的url
-group = "com.loopeer.library"
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                // Add your description here
-                name 'ImageGroupView, you can show ic_image_default and add images by it. You can click the ' +
-                        'ic_image_default to see the images by viewpager and it can also be scale. Last you can add photo easily'  //项目描述
-                url siteUrl
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'ToDou'       //填写开发者基本信息
-                        name 'ToDou'
-                        email 'yytodou123@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-/*task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}*/
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"  //发布到Bintray的那个仓库里，默认账户有四个库，我们这里上传到maven库
-        name = "imagegroupview"  //发布到Bintray上的项目名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
+apply from: 'bintray.gradle'

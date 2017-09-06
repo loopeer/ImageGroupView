@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.utils.FileUtils;

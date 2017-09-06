@@ -89,8 +89,6 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         parseIntent();
-        mAlbumType = getIntent().getIntExtra(NavigatorImage.EXTRA_ALBUM_TYPE, 0);
-        mIsAvatarType = getIntent().getBooleanExtra(NavigatorImage.EXTRA_IS_AVATAR_CROP, false);
         mSelectedImages = new ArrayList<>();
         checkPermissionToStartAlbum();
     }
@@ -99,6 +97,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         Intent intent = getIntent();
         mImageGroupId = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, 0);
         mMaxSelectedNum = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_SELECT_MAX_NUM, 0);
+        mAlbumType = getIntent().getIntExtra(NavigatorImage.EXTRA_ALBUM_TYPE, 0);
+        mIsAvatarType = getIntent().getBooleanExtra(NavigatorImage.EXTRA_IS_AVATAR_CROP, false);
     }
 
     @Override
@@ -382,6 +382,8 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                     mSelectedImages.add(new Image(photoTakeUrl, "", System.currentTimeMillis()));
                     if (mIsAvatarType) {
                         startCrop(photoTakeUrl);
+                    } else {
+                        finishWithResult();
                     }
                 } else {
                     finishWithResult();
