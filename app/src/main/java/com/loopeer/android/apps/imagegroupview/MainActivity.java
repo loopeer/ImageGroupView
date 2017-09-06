@@ -37,14 +37,14 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
     private ArrayList<String> createTestData() {
         ArrayList<String> result = new ArrayList<>();
-        result.add("http://img4.imgtn.bdimg.com/it/u=434281914,1810736344&fm=21&gp=0.jpg");
+        result.add("http://img2.imgtn.bdimg.com/it/u=2042486160,1330339958&fm=200&gp=0.jpg");
         result.add("http://img1.3lian.com/img13/c3/82/d/64.jpg");
-        result.add("http://img3.imgtn.bdimg.com/it/u=4219766182,574313781&fm=21&gp=0.jpg");
-        result.add("http://img0.imgtn.bdimg.com/it/u=3326236795,89092727&fm=21&gp=0.jpg");
-        result.add("http://img5.imgtn.bdimg.com/it/u=2645226784,1850525231&fm=21&gp=0.jpg");
-        result.add("http://img5.imgtn.bdimg.com/it/u=1849768669,2102852722&fm=21&gp=0.jpg");
-        result.add("http://img5.imgtn.bdimg.com/it/u=138250353,211064234&fm=21&gp=0.jpg");
-        result.add("http://img4.imgtn.bdimg.com/it/u=434281914,1810736344&fm=21&gp=0.jpg");
+        result.add("http://img3.duitang.com/uploads/item/201601/23/20160123202447_kYyjz.jpeg");
+        result.add("http://img.ycwb.com/news/attachement/jpg/site2/20130328/90fba601558912bdd7bd4d.jpg");
+        result.add("http://h.hiphotos.baidu.com/zhidao/pic/item/5fdf8db1cb1349549e1cd9df534e9258d1094a0e.jpg");
+        result.add("http://duwanjuancn.qiniudn.com/wp-content/uploads/20141018/20141018185310259.jpg");
+        result.add("http://img.7160.com/uploads/allimg/160513/12-160513155949.jpg");
+        result.add("http://img2.imgtn.bdimg.com/it/u=1724555645,204198543&fm=27&gp=0.jpg");
         return result;
     }
 
