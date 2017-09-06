@@ -1,10 +1,12 @@
 package com.loopeer.android.librarys.imagegroupview.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.GridView;
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
 import com.loopeer.android.librarys.imagegroupview.R;
+import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
@@ -43,6 +46,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private boolean mShowAddButton, mRoundAsCircle;
     private int maxImageNum;
     private boolean mDragDismiss;
+    private boolean mDoUploadShowDialog;
     private GridImageAdapter mGridImageAdapter;
 
     public ImageGridView(Context context) {
@@ -79,6 +83,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         mAddButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
         mPlaceholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
         mDragDismiss = a.getBoolean(R.styleable.ImageGroupView_dragDismiss, true);
+        mDoUploadShowDialog = a.getBoolean(R.styleable.ImageGroupView_showDialog, false);
 
         a.recycle();
     }
@@ -193,7 +198,24 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     }
 
     private void doUpLoadPhotoClick() {
-        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
+        if (mDoUploadShowDialog) {
+            new AlertDialog.Builder(getContext())
+                    .setItems(new String[]{getContext().getString(R.string.take_photo),
+                                    getContext().getString(R.string.select_images)},
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == 0) {
+                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.TAKE_PHOTO);
+                                    } else {
+                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.ALBUM);
+                                    }
+                                }
+                            })
+                    .show();
+        } else {
+            NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
+        }
     }
 
     private int getCanSelectMaxNum() {
