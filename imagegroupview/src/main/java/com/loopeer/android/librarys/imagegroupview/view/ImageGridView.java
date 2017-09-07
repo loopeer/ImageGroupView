@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener ,GridImageAdapter.OnSquareLongClickListener{
+public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
     private static final String TAG = "ImageGridView";
 
     private final static int MAX_VALUE = -1;
@@ -88,7 +88,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         /*setEnabled(true);
         setClickable(true);*/
         preImages = new ArrayList<>();
-        mGridImageAdapter = new GridImageAdapter(getContext(), this,this);
+        mGridImageAdapter = new GridImageAdapter(getContext(), this);
         setAdapter(mGridImageAdapter);
         updateImages();
     }
@@ -188,15 +188,6 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                     mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
         }
     }
-
-    @Override
-    public void photoLongClick(View v, SquareImage squareImage, int position) {
-        //区分ImagePickerActivity和其他不需要长点击的页面
-        Log.d("ImageGridViewLog","onLongClick"+position);
-//        v.setTranslationY(300);
-
-    }
-
 
 
     private List<SquareImage> getSquarePhotos() {

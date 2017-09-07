@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
+    <com.loopeer.android.librarys.imagegroupview.view.DragGridView
         android:id="@+id/grid_test_group"
         android:layout_width="260dp"
         android:layout_height="wrap_content"

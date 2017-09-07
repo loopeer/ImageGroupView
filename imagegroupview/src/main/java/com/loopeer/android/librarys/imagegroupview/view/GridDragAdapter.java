@@ -1,5 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview.view;
 
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -12,18 +13,27 @@ import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridImageAdapter extends BaseAdapter {
+public class GridDragAdapter extends BaseAdapter {
     private Context mContext;
     private List<SquareImage> mData;
-    private OnSquareClickListener mClickListener;
+    private GridDragAdapter.OnSquareClickListener mClickListener;
+    private GridDragAdapter.OnSquareLongClickListener mLongClickListener;
     private int mAddButtonDrawable;
     private int mPlaceholderDrawable;
     private boolean mRoundAsCircle;
 
-    public GridImageAdapter(Context c, OnSquareClickListener listener) {
+    public GridDragAdapter(Context c, GridDragAdapter.OnSquareClickListener listener) {
         mContext = c;
         mData = new ArrayList<>();
         mClickListener = listener;
+    }
+
+
+    public GridDragAdapter(Context c, OnSquareClickListener listener, DragGridView longListener) {
+        mContext = c;
+        mData = new ArrayList<>();
+        mClickListener = listener;
+        mLongClickListener = longListener;
     }
 
     public void updateParam(int addButtonDrawable, int placeholderDrawable, boolean roundAsCircle) {
@@ -91,10 +101,21 @@ public class GridImageAdapter extends BaseAdapter {
                 mClickListener.photoClick(v, getItem(position), position);
             }
         });
+        squareView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                mLongClickListener.photoLongClick(v,getItem(position),position);
+                return true;
+            }
+        });
     }
 
     interface OnSquareClickListener {
         void photoClick(View v, SquareImage squareImage, int position);
     }
 
+    interface OnSquareLongClickListener {//长点击事件，用于长按滑动图片
+        void photoLongClick(View v, SquareImage squareImage, int position);
+    }
 }

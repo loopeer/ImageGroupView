@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
-import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
+import com.loopeer.android.librarys.imagegroupview.view.DragGridView;
 
 import java.util.ArrayList;
 
@@ -18,14 +18,14 @@ import java.util.ArrayList;
 //TODO 三个页面逻辑和启动模式
 public class ImagePickerActivity extends AppCompatActivity {
 
-    private ImageGridView mGridView;
+    private DragGridView mGridView;
     private ArrayList<String> urls = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_picker);
-        mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
+        mGridView = (DragGridView) findViewById(R.id.grid_test_group);
         pareIntent();
     }
 
