@@ -27,6 +27,14 @@ public class GridImageAdapter extends BaseAdapter {
         mClickListener = listener;
     }
 
+
+    public GridImageAdapter(Context c, OnSquareClickListener listener,OnSquareLongClickListener longListener) {
+        mContext = c;
+        mData = new ArrayList<>();
+        mClickListener = listener;
+        mLongClickListener = longListener;
+    }
+
     public void updateParam(int addButtonDrawable, int placeholderDrawable, boolean roundAsCircle) {
         mAddButtonDrawable = addButtonDrawable;
         mPlaceholderDrawable = placeholderDrawable;

@@ -88,7 +88,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         /*setEnabled(true);
         setClickable(true);*/
         preImages = new ArrayList<>();
-        mGridImageAdapter = new GridImageAdapter(getContext(), this);
+        mGridImageAdapter = new GridImageAdapter(getContext(), this,this);
         setAdapter(mGridImageAdapter);
         updateImages();
     }
@@ -188,6 +188,14 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                     mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
         }
     }
+
+    @Override
+    public void photoLongClick(View v, SquareImage squareImage, int position) {
+        //区分ImagePickerActivity和其他不需要长点击的页面
+        Log.d("ImageGridViewLog","onLongClick"+position);
+    }
+
+
 
     private List<SquareImage> getSquarePhotos() {
         return preImages;
@@ -371,9 +379,4 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
-    public void photoLongClick(View v, SquareImage squareImage, int position) {
-        //区分ImagePickerActivity和其他不需要长点击的页面
-        Log.d("ImageGridViewLog","onLongClick"+position);
-    }
 }
