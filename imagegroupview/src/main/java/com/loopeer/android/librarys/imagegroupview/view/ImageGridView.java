@@ -193,6 +193,8 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     public void photoLongClick(View v, SquareImage squareImage, int position) {
         //区分ImagePickerActivity和其他不需要长点击的页面
         Log.d("ImageGridViewLog","onLongClick"+position);
+//        v.setTranslationY(300);
+
     }
 
 
@@ -375,6 +377,19 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         if (!isEnabled() || !isClickable()) return false;
         if (pointToPosition((int) ev.getX(), (int) ev.getY()) == -1 && ev.getAction() == MotionEvent.ACTION_DOWN) {
             return false;
+        }
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                Log.d("ImageGridViewLog"," action_down");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Log.d("ImageGridViewLog"," action_move");
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.d("ImageGridViewLog"," action_up");
+                break;
+            default:
+                break;
         }
         return super.dispatchTouchEvent(ev);
     }

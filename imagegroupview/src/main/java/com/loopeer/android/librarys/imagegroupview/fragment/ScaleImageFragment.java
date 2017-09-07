@@ -78,7 +78,7 @@ public class ScaleImageFragment extends Fragment {
         mScaleImage = (PhotoDraweeView) view.findViewById(R.id.image_scale_image);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_scale_image);
 
-        mDismissFrameLayout.setPhotoDraweeView(mScaleImage);//消失动画时用到
+        mDismissFrameLayout.setPhotoDraweeView(mScaleImage);
         setUpPlaceHolderView();
         setViewScaleListener();
         setupData();

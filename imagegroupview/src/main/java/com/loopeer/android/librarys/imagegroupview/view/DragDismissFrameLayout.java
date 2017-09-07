@@ -58,11 +58,11 @@ public class DragDismissFrameLayout extends FrameLayout {
             return super.dispatchTouchEvent(event);
         }
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN://手指刚接触屏幕
                 downX = event.getX();
                 downY = event.getY();
                 break;
-            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_MOVE://手指在屏幕上移动
                 moveX = event.getX();
                 moveY = event.getY();
                 if (!mIsMoving && mPhotoDraweeView.getScale() == mPhotoDraweeView.getMinimumScale()
