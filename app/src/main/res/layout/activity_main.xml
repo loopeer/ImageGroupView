@@ -87,7 +87,7 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="10dp"
             apps:imagePlaceholderDrawable="@drawable/ic_image_default"
-            apps:maxImageNum="6"
+            apps:maxImageNum="9"
             apps:showAddButton="true"/>
     </LinearLayout>
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -96,7 +95,6 @@ public class DisplayUtils {
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        Log.d("displaystatusLog", "" + statusBarHeight);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return 0;
         } else {

@@ -23,17 +23,13 @@ import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.DisplayUtils;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupSavedState;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-
-public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener {
+public class ImageGridView extends GridView implements GridImageAdapter.OnSquareClickListener ,GridImageAdapter.OnSquareLongClickListener{
     private static final String TAG = "ImageGridView";
 
     private final static int MAX_VALUE = -1;
@@ -235,6 +231,18 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         }
     }
 
+    public void onParentResults(int requestCode, Intent data) {
+        if (data == null)
+            return;
+        List<Image> images = (List<Image>) data.getSerializableExtra(NavigatorImage.EXTRA_PHOTOS_URL);
+        ArrayList<Integer> positions = data.getIntegerArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL_POSITION);
+        if (requestCode == NavigatorImage.RESULT_IMAGE_SWITCHER && null != positions) {
+            doPhotosDelete(positions);
+        } else if (requestCode == NavigatorImage.RESULT_SELECT_PHOTOS && null != images) {
+            doSelectPhotos(images);
+        }
+    }
+
     public ArrayList<String> getImageKeys() {
         ArrayList<String> result = new ArrayList<>();
         for (SquareImage squareImage : preImages) {
@@ -361,5 +369,11 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
             return false;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void photoLongClick(View v, SquareImage squareImage, int position) {
+        //区分ImagePickerActivity和其他不需要长点击的页面
+        Log.d("ImageGridViewLog","onLongClick"+position);
     }
 }

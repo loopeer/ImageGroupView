@@ -16,6 +16,7 @@ public class GridImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<SquareImage> mData;
     private OnSquareClickListener mClickListener;
+    private OnSquareLongClickListener mLongClickListener;
     private int mAddButtonDrawable;
     private int mPlaceholderDrawable;
     private boolean mRoundAsCircle;
@@ -91,9 +92,21 @@ public class GridImageAdapter extends BaseAdapter {
                 mClickListener.photoClick(v, getItem(position), position);
             }
         });
+        squareView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                mLongClickListener.photoLongClick(v,getItem(position),position);
+                return true;
+            }
+        });
     }
 
-    public interface OnSquareClickListener {
+    interface OnSquareClickListener {
         void photoClick(View v, SquareImage squareImage, int position);
+    }
+
+    interface OnSquareLongClickListener {//长点击事件，用于长按滑动图片
+        void photoLongClick(View v, SquareImage squareImage, int position);
     }
 }

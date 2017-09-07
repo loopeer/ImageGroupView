@@ -52,6 +52,8 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private boolean mDragDismiss;
     private FrameLayout mDragLayout;
 
+
+    //第一次点击时首次出现的图片还是有问题
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
@@ -66,7 +68,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         updateData();
 
         mDragDismissFrameLayout.getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {//可见性发生变化时调用的方法
                     @Override
                     public void onGlobalLayout() {
                         mDragDismissFrameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -92,7 +94,7 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private ValueAnimator getScaleAnimator(final PhotoDraweeView view, final float from, final float to, boolean isx) {
         final ValueAnimator animator = ValueAnimator.ofFloat(from, to);
 
-        animator.setDuration(250);
+//        animator.setDuration(250);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         if (isx)
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

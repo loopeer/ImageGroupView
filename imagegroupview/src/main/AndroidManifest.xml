@@ -28,6 +28,9 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <activity android:name=".activity.ImagePickerActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
