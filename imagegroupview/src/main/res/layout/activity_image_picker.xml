@@ -30,6 +30,7 @@
         android:horizontalSpacing="14dip"
         android:numColumns="3"
         android:scrollbars="vertical"
+        android:clickable="true"
         android:stretchMode="columnWidth"
         android:verticalSpacing="14.0px" />
 </LinearLayout>

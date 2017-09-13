@@ -40,6 +40,7 @@ public class SquareImageView extends SimpleDraweeView implements View.OnClickLis
         placeholderDrawable = R.drawable.ic_image_default;
         setScaleType(ScaleType.CENTER_CROP);
         setClickable(mClickUpload);
+        setLongClickable(false);
         setOnClickListener(this);
         GenericDraweeHierarchyBuilder builder1 = new GenericDraweeHierarchyBuilder(getContext().getResources());
         builder1.setPlaceholderImage(ContextCompat.getDrawable(getContext(), placeholderDrawable), ScalingUtils.ScaleType.CENTER_CROP);

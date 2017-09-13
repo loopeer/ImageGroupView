@@ -60,11 +60,16 @@ public class DragAdapter extends BaseAdapter {
         }*/
 //        view.setId(position);
         if (position != hidePosition) {
+            squareView.setVisibility(View.VISIBLE);
             bindData(squareView, position);
         } else {
+            squareView.setVisibility(View.INVISIBLE);
             //
         }
         squareView.setId(position);
+        squareView.setFocusable(false);
+        squareView.setFocusableInTouchMode(false);
+        squareView.setLongClickable(true);
         return squareView;
     }
 
