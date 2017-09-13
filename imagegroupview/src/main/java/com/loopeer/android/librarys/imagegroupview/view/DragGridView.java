@@ -42,8 +42,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class DragGridView extends GridView implements GridDragAdapter.OnSquareClickListener, GridDragAdapter.OnSquareLongClickListener {
-    private static final String TAG = "ImageGridView";
+public class DragGridView extends GridView implements DragGridAdapters.OnSquareClickListener, DragGridAdapters.OnSquareLongClickListener {
+    private static final String TAG = "DragGridView";
 
     private boolean isDrag = false;//是否是在拖动
     private int downX, downY;//点击时的X和Y位置
@@ -83,7 +83,7 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
     private int maxImageNum;
     private boolean mDragDismiss;
     private boolean mDoUploadShowDialog;
-    private GridDragAdapter mGridDragAdapter;
+    private DragGridAdapters mDragGridAdapter;
 
     public DragGridView(Context context) {
         this(context, null);
@@ -145,13 +145,11 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
             downY = (int) ev.getY();//获取点击的x和y
             windowX = (int) ev.getX();
             windowY = (int) ev.getY();
-
             int position = pointToPosition(downX, downY);//返回点下的位置
             if (position != AdapterView.INVALID_POSITION) {
                 //获取当前点击的view
                 View view = getChildAt(position - getFirstVisiblePosition());
                 if (isDrag) {
-                    Log.d("DragGridLog", "已点击");
                 } else {
                     //实现长按item的操作
                     setOnClickListener(ev);
@@ -226,12 +224,14 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
             int y = (int) ev.getY();
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    Log.d("DragGridLog", "点击");
                     downX = (int) ev.getX();
                     windowX = (int) ev.getX();
                     windowY = (int) ev.getY();
                     downY = (int) ev.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    Log.d("DragGridLog", "滑动");
                     //进行拖动时改变其位置
                     onDrag(x, y, (int) ev.getRawX(), (int) ev.getRawY());
                     if (!isMoving) {
@@ -243,6 +243,7 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    Log.d("DragGridLog", "松开");
                     stopDrag();
                     onDrop(x, y);
                     requestDisallowInterceptTouchEvent(false);
@@ -259,9 +260,9 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
     public void refresh() {
         stopDrag();
         isDrag = false;
-        GridDragAdapter mGridDragAdapter = (GridDragAdapter) getAdapter();
+        DragGridAdapters mDragGridAdapter = (DragGridAdapters) getAdapter();
 //        mDragAdapter.setisDelete(false);
-        mGridDragAdapter.notifyDataSetChanged();
+        mDragGridAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -274,11 +275,11 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
         //根据拖动item下方的坐标获取对应的item的position
         int tempPosition = pointToPosition(x, y);
         dropPosition = tempPosition;
-        GridDragAdapter mGridDragAdapter = (GridDragAdapter) getAdapter();
+        DragGridAdapters mDragGridAdapter = (DragGridAdapters) getAdapter();
         //显示刚拖动的item
 //        mGridDragAdapter.setShowDropItem(true);
         //刷新适配器
-        mGridDragAdapter.notifyDataSetChanged();
+        mDragGridAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -292,7 +293,7 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
     private void onDrag(int x, int y, int rawX, int rawY) {
         if (dragImageView != null) {
             //透明度
-            windowParams.alpha = 0.6f;
+//            windowParams.alpha = 0.6f;
             //显示坐标
             windowParams.x = rawX - win_view_x;
             windowParams.y = rawY - win_view_y;
@@ -306,21 +307,46 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
      *
      * @param ev
      */
-    private void setOnClickListener(final MotionEvent ev) {
-        setOnItemLongClickListener(new OnItemLongClickListener() {
+    public void setOnClickListener(final MotionEvent ev) {
+        setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("asdas","asdasd");
+            }
+        });
+         setOnItemLongClickListener(
+                new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                int x = (int) ev.getX();
-                int y = (int) ev.getY();
+                int x = (int) ev.getX();//长按事件x的位置
+                int y = (int) ev.getY();//长按事件y的位置
                 isDrag = true;
-                GridDragAdapter mGridDragAdapter = (GridDragAdapter) getAdapter();
-//                mGridDragAdapter.setisDelete(true);
-                mGridDragAdapter.notifyDataSetChanged();
+                Log.d("DragGridLog", "已点击");
+                DragGridAdapters mDragGridAdapter = (DragGridAdapters) getAdapter();
+//                mDragGridAdapter.setisDelete(true);
+                mDragGridAdapter.notifyDataSetChanged();
                 startPosition = position;//第一次点击的position
                 dragPosition = position;
                 //最后一个加号，另作处理
-                ViewGroup dropViewGroup = (ViewGroup) getChildAt(dragPosition - getFirstVisiblePosition());
+                ViewGroup dragViewGroup = (ViewGroup) getChildAt(dragPosition - getFirstVisiblePosition());
                 //......
+                if (dragPosition != AdapterView.INVALID_POSITION) {
+                    // 释放的资源使用的绘图缓存。如果你调用buildDrawingCache()手动没有调用setDrawingCacheEnabled(真正的),你应该清理缓存使用这种方法。
+                    win_view_x = windowX - dragViewGroup.getLeft();//VIEW相对自己的X，半斤
+                    win_view_y = windowY - dragViewGroup.getTop();//VIEW相对自己的y，半斤
+                    dragOffsetX = (int) (ev.getRawX() - x);//手指在屏幕的上X位置-手指在控件中的位置就是距离最左边的距离
+                    dragOffsetY = (int) (ev.getRawY() - y);//手指在屏幕的上y位置-手指在控件中的位置就是距离最上边的距离
+                    dragItemView = dragViewGroup;
+                    dragViewGroup.destroyDrawingCache();
+                    dragViewGroup.setDrawingCacheEnabled(true);
+                    Bitmap dragBitmap = Bitmap.createBitmap(dragViewGroup.getDrawingCache());
+                    startDrag(dragBitmap, (int) ev.getRawX(), (int) ev.getRawY());
+                    hideDropItem();
+                    dragViewGroup.setVisibility(View.INVISIBLE);
+                    isMoving = false;
+                    requestDisallowInterceptTouchEvent(true);
+                    return true;
+                }
                 return false;
             }
         });
@@ -429,12 +455,48 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
             }
 
             int moveCount_abs = Math.abs(moveCount);
-            if (dPosition != dragPosition){
+            if (dPosition != dragPosition) {
                 //dragGroup设置为不可见
                 ViewGroup dragGroup = (ViewGroup) getChildAt(dragPosition);
                 dragGroup.setVisibility(View.INVISIBLE);
                 float to_x = 1;//当前下方position
-                float to_y;
+                float to_y;//当前下方右边position
+                float x_value = ((float) mHorizontalSpacing / (float) itemWidth) + 1.0f;//移动的距离的百分比，相对于自身的百分比
+                float y_value = ((float) mVerticalSpacing / (float) itemHeight) + 1.0f;
+
+                for (int i = 0; i < moveCount_abs; i++) {
+                    to_x = x_value;
+                    to_y = y_value;
+                    //向左
+                    if (moveCount > 0) {
+                        //判断是不是同一行
+                        holdPosition = dragPosition + i + 1;
+                        if (dragPosition / nColumns == holdPosition / nColumns) {//同一行
+                            to_x = -x_value;
+                            to_y = 0;
+                        } else if (holdPosition % 3 == 0) {//?
+                            to_x = 2 * x_value;
+                            to_y = -y_value;
+                        } else {
+                            to_x = -x_value;
+                            to_y = 0;
+                        }
+                    } else {
+                        //向右，下->上，右->左
+                        holdPosition = dragPosition - i - 1;
+                        if (dragPosition / nColumns == holdPosition / nColumns) {
+                            to_x = x_value;
+                            to_y = 0;
+                        } else if (holdPosition % 3 == 0) {
+                            to_x = -2 * x_value;
+                            to_y = y_value;
+                        } else {
+                            to_x = x_value;
+                            to_y = 0;
+                        }
+                    }
+                    ViewGroup moveViewGroup = (ViewGroup) getChildAt(holdPosition);
+                }
             }
 
         }
@@ -461,15 +523,15 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
         /*setEnabled(true);
         setClickable(true);*/
         preImages = new ArrayList<>();
-        mGridDragAdapter = new GridDragAdapter(getContext(), this, this);
-        setAdapter(mGridDragAdapter);
+        mDragGridAdapter = new DragGridAdapters(getContext(), this, this);
+        setAdapter(mDragGridAdapter);
         updateImages();
+//        mDragGridAdapter.
     }
 
-
     private void updateImages() {
-        mGridDragAdapter.updateData(preImages, mShowAddButton && (getCanSelectMaxNum() != 0 || maxImageNum == MAX_VALUE));
-        mGridDragAdapter.updateParam(mAddButtonDrawable, mPlaceholderDrawable, mRoundAsCircle);
+        mDragGridAdapter.updateData(preImages, mShowAddButton && (getCanSelectMaxNum() != 0 || maxImageNum == MAX_VALUE));
+        mDragGridAdapter.updateParam(mAddButtonDrawable, mPlaceholderDrawable, mRoundAsCircle);
     }
 
     private void updateImagesPosition() {
@@ -488,8 +550,8 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
         }
     }
 
-    public void setGridDragAdapter(GridDragAdapter GridDragAdapter) {
-        mGridDragAdapter = GridDragAdapter;
+    public void setGridDragAdapter(DragGridAdapters dragGridAdapters) {
+        mDragGridAdapter = dragGridAdapters;
         updateImages();
     }
 
@@ -557,19 +619,28 @@ public class DragGridView extends GridView implements GridDragAdapter.OnSquareCl
             clickListener.onImageClick(v, squareImage);
         } else {
             updateImagesPosition();
-            NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
-                    mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
+//            NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
+//                    mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
         }
     }
 
+/*
     @Override
     public void photoLongClick(View v, SquareImage squareImage, int position) {
         //区分ImagePickerActivity和其他不需要长点击的页面
-        Log.d("ImageGridViewLog", "onLongClick" + position);
+//        v.setVisibility(INVISIBLE);
+        dragPosition = position;
+        dragImageView = v;
+        Log.d("DragGridViewLog", "onLongClick" + position);
 //        v.setTranslationY(300);
 
     }
+*/
 
+    @Override
+    public void photoLongClick(View v, SquareImage squareImage, int position) {
+
+    }
 
     private List<SquareImage> getSquarePhotos() {
         return preImages;

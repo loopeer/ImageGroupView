@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
@@ -371,13 +370,10 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         }
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
-                Log.d("ImageGridViewLog"," action_down");
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("ImageGridViewLog"," action_move");
                 break;
             case MotionEvent.ACTION_UP:
-                Log.d("ImageGridViewLog"," action_up");
                 break;
             default:
                 break;

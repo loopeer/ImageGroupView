@@ -13,23 +13,31 @@ import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridDragAdapter extends BaseAdapter {
+public class DragGridAdapters extends BaseAdapter {
+
+    private final static String TAG = "DragGridAdapter";
     private Context mContext;
+    private int holdPosition;//控制position
+    private boolean isChange = false;//是否改变
+    private boolean isVisible = true;//是否可见
+    public List<DragGridView> channelList;//可以拖动的列表
     private List<SquareImage> mData;
-    private GridDragAdapter.OnSquareClickListener mClickListener;
-    private GridDragAdapter.OnSquareLongClickListener mLongClickListener;
+    private DragGridAdapters.OnSquareClickListener mClickListener;
+    private DragGridAdapters.OnSquareLongClickListener mLongClickListener;
     private int mAddButtonDrawable;
     private int mPlaceholderDrawable;
     private boolean mRoundAsCircle;
+    private boolean isDelete;
+    public int remove_position = -1;//要删除的position
+    public int hide_position;//指定隐藏的position
 
-    public GridDragAdapter(Context c, GridDragAdapter.OnSquareClickListener listener) {
+    public DragGridAdapters(Context c, DragGridAdapters.OnSquareClickListener listener) {
         mContext = c;
         mData = new ArrayList<>();
         mClickListener = listener;
     }
 
-
-    public GridDragAdapter(Context c, OnSquareClickListener listener, OnSquareLongClickListener longListener) {
+    public DragGridAdapters(Context c, DragGridAdapters.OnSquareClickListener listener, DragGridAdapters.OnSquareLongClickListener longListener) {
         mContext = c;
         mData = new ArrayList<>();
         mClickListener = listener;
@@ -101,11 +109,11 @@ public class GridDragAdapter extends BaseAdapter {
                 mClickListener.photoClick(v, getItem(position), position);
             }
         });
-        squareView.setOnLongClickListener(new View.OnLongClickListener(){
+        squareView.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
-                mLongClickListener.photoLongClick(v,getItem(position),position);
+                mLongClickListener.photoLongClick(v, getItem(position), position);
                 return true;
             }
         });
@@ -116,6 +124,7 @@ public class GridDragAdapter extends BaseAdapter {
     }
 
     interface OnSquareLongClickListener {//长点击事件，用于长按滑动图片
+
         void photoLongClick(View v, SquareImage squareImage, int position);
     }
 }
