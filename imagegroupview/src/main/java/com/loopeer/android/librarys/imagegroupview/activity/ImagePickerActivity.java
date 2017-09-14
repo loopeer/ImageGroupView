@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
@@ -59,7 +61,7 @@ public class ImagePickerActivity extends AppCompatActivity {
 
     private void initView2() {
         dragRecycleView = (RecyclerView) findViewById(R.id.drag_view);
-        dragRecycleView.setLayoutManager(new GridLayoutManager(ImagePickerActivity.this,3));
+        dragRecycleView.setLayoutManager(new GridLayoutManager(ImagePickerActivity.this, 3));
         dragRecycleView.setHasFixedSize(true);
 
         for (Image image : images) {
@@ -68,6 +70,18 @@ public class ImagePickerActivity extends AppCompatActivity {
         }
         DragRecycleAdapter adapter = new DragRecycleAdapter(this, preImages);
         dragRecycleView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new DragRecycleAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int pos) {
+                Log.d("ImagePickerActivityLog", "click" + preImages.get(pos).localUrl);
+            }
+        });
+        adapter.setOnItemLongClickListener(new DragRecycleAdapter.OnRecyclerViewItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int pos) {
+                Log.d("ImagePickerActivityLog", "longClick" + preImages.get(pos).localUrl);
+            }
+        });
     }
 
     private void pareIntent() {

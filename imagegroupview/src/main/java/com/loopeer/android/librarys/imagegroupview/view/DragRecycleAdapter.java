@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
@@ -29,14 +30,16 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
     @Override
     public DragViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_view, parent, false);
-        view.setOnClickListener(this);
-
+        view.setOnClickListener(this);//将创建的View注册点击事件
+        view.setOnLongClickListener(this);
         return new DragViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DragViewHolder holder, int position) {
-        holder.squareView.setImageData(mData.get(position));
+//        holder.squareView.setImageData(mData.get(position));
+        holder.tv.setText(mData.get(position).localUrl);
+        holder.itemView.setTag(position);//将position保存在itemView的Tag中，以便点击时进行获取
     }
 
     @Override
@@ -51,26 +54,37 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
 
     @Override
     public void onClick(View v) {
-
+        if (onRecyclerViewItemClickListener != null) {
+            onRecyclerViewItemClickListener.onItemClick(v, (int) v.getTag());
+        }
     }
 
     @Override
     public boolean onLongClick(View v) {
-        return false;
+        if (onRecyclerViewItemLongClickListener != null){
+            onRecyclerViewItemLongClickListener.onItemLongClick(v, (int) v.getTag());
+        }
+        return true;
     }
 
     public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
         this.onRecyclerViewItemClickListener = listener;
     }
 
+    public void setOnItemLongClickListener(OnRecyclerViewItemLongClickListener listener) {
+        this.onRecyclerViewItemLongClickListener = listener;
+    }
+
     static class DragViewHolder extends RecyclerView.ViewHolder {
         SquareImageView squareView;
+        TextView tv;
         View mView;
 
         DragViewHolder(View itemView) {
             super(itemView);
             this.mView = itemView;
-            squareView = (SquareImageView) itemView.findViewById(R.id.sq);
+//            squareView = (SquareImageView) itemView.findViewById(R.id.sq);
+            tv = (TextView) itemView.findViewById(R.id.tv);
         }
 
     }
@@ -106,11 +120,11 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
         notifyDataSetChanged();
     }
 
-    interface OnRecyclerViewItemClickListener {
+    public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int pos);
     }
 
-    interface OnRecyclerViewItemLongClickListener {
+    public interface OnRecyclerViewItemLongClickListener {
         void onItemLongClick(View view, int pos);
     }
 

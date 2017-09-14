@@ -44,6 +44,8 @@
      <com.loopeer.android.librarys.imagegroupview.view.DragRecycleView
         android:gravity="center"
         android:id="@+id/drag_view"
+         android:clickable="true"
+         android:longClickable="true"
         android:horizontalSpacing="14dip"
         android:numColumns="3"
         android:stretchMode="columnWidth"
