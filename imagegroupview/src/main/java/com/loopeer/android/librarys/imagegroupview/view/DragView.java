@@ -19,6 +19,7 @@ public class DragView extends GridView {
     private static final int DRAG_IMG_NOT_SHOW = 0;//非滑动状态
     private static final String TAG = "DragView";
     private static final float AMP_FACTOR = 1.2f;
+    int clicks = 0;
 
     private ImageView dragImageView;//滑动的imageView
     private WindowManager.LayoutParams dragImageViewParams;
@@ -48,6 +49,7 @@ public class DragView extends GridView {
 
     private void init() {
         setOnItemLongClickListener(onLongClickListener);
+        setOnItemClickListener(onItemClickListener);
         //初始化显示被拖动item的imageView
         dragImageView = new ImageView(getContext());
         dragImageView.setTag(DRAG_IMG_NOT_SHOW);
@@ -57,11 +59,18 @@ public class DragView extends GridView {
         windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
     }
 
+    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d("", "");
+        }
+    };
+
     private OnItemLongClickListener onLongClickListener = new OnItemLongClickListener() {
         @Override
         //长按item开始拖动
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("DragViewLog"," long "+position);
+            Log.d("DragViewLog", " long " + position);
             //记录长按item位置
             preDraggedOverPosition = position;
             //获取被长按item的drawing cache
@@ -113,7 +122,12 @@ public class DragView extends GridView {
             downRawY = (int) ev.getRawY();
         }
         //dragImageView处于被拖动时，更新dragImageView位置
-        else if ((ev.getAction() == MotionEvent.ACTION_MOVE) && (isViewOnDrag == true)) {
+        else if ((ev.getAction() == MotionEvent.ACTION_MOVE) && (isViewOnDrag)) {
+            /*if (clicks == 0) {
+                downRawX = (int) ev.getRawX();
+                downRawY = (int) ev.getRawY();
+            }*/
+            ++clicks;
             Log.i(TAG, "" + ev.getRawX() + " " + ev.getRawY());
             //设置触摸点为dragImageView中心
             dragImageViewParams.x = (int) (ev.getRawX() - dragImageView.getWidth() / 2);
@@ -129,16 +143,19 @@ public class DragView extends GridView {
             }
         }
         //释放dragImageView
-        else if ((ev.getAction() == MotionEvent.ACTION_UP) && (isViewOnDrag == true)) {
+        else if ((ev.getAction() == MotionEvent.ACTION_UP) && (isViewOnDrag)) {
             ((DragAdapter) getAdapter()).showHideView();
             if ((int) dragImageView.getTag() == DRAG_IMG_SHOW) {
                 windowManager.removeView(dragImageView);
                 dragImageView.setTag(DRAG_IMG_NOT_SHOW);
             }
             isViewOnDrag = false;
+            clicks = 0;
         }
 
 
         return super.onTouchEvent(ev);
     }
+
+
 }

@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
-import com.loopeer.android.librarys.imagegroupview.view.DragAdapter;
+import com.loopeer.android.librarys.imagegroupview.view.DragRecycleAdapter;
 import com.loopeer.android.librarys.imagegroupview.view.DragView;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class ImagePickerActivity extends AppCompatActivity {
     List<Image> images;
     List<SquareImage> preImages;
     private DragView mDragView;
+    private RecyclerView dragRecycleView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,18 +37,15 @@ public class ImagePickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_picker);
         pareIntent();
         initData();
-        initView();
+//        initView();
+        initView2();
     }
 
     public void initData() {
         preImages = new ArrayList<>();
-    /*    strList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            strList.add("Channel " + i);
-        }*/
     }
 
-    private void initView() {
+    /*private void initView() {
         mDragView = (DragView) findViewById(R.id.drag_view);
 
         for (Image image : images) {
@@ -55,12 +55,26 @@ public class ImagePickerActivity extends AppCompatActivity {
         }
         DragAdapter adapter = new DragAdapter(this, preImages);
         mDragView.setAdapter(adapter);
+    }*/
+
+    private void initView2() {
+        dragRecycleView = (RecyclerView) findViewById(R.id.drag_view);
+        dragRecycleView.setLayoutManager(new GridLayoutManager(ImagePickerActivity.this,3));
+        dragRecycleView.setHasFixedSize(true);
+
+        for (Image image : images) {
+            SquareImage squareImage = new SquareImage(image.url, null, getPhotoKey(image.time), SquareImage.PhotoType.LOCAL);
+            preImages.add(squareImage);
+        }
+        DragRecycleAdapter adapter = new DragRecycleAdapter(this, preImages);
+        dragRecycleView.setAdapter(adapter);
     }
 
     private void pareIntent() {
         Intent intent = this.getIntent();
         images = (List<Image>) intent.getSerializableExtra(NavigatorImage.EXTRA_PHOTOS_URL);
     }
+
     @NonNull
     private String getPhotoKey(long time) {
         return "image_" + time;

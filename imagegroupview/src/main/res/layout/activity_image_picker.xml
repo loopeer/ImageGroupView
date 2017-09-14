@@ -21,7 +21,7 @@
             apps:showAddButton="true" />
     -->
 
-    <com.loopeer.android.librarys.imagegroupview.view.DragView
+    <!--<com.loopeer.android.librarys.imagegroupview.view.DragView
         android:id="@+id/drag_view"
         android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
@@ -30,7 +30,24 @@
         android:horizontalSpacing="14dip"
         android:numColumns="3"
         android:scrollbars="vertical"
-        android:clickable="true"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="14.0px" />
+        android:verticalSpacing="14.0px" />-->
+    <!--<android.support.v7.widget.RecyclerView
+        android:gravity="center"
+        android:id="@+id/drag_view"
+        android:horizontalSpacing="14dip"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="14.0px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>-->
+     <com.loopeer.android.librarys.imagegroupview.view.DragRecycleView
+        android:gravity="center"
+        android:id="@+id/drag_view"
+        android:horizontalSpacing="14dip"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="14.0px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
