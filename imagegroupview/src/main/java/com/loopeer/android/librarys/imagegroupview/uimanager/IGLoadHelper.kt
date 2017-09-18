@@ -12,6 +12,5 @@ interface IGLoadHelper {
 
     fun showEmpty()
 
-    fun showNetError()
 
 }

@@ -3,21 +3,25 @@ package com.loopeer.android.librarys.imagegroupview.uimanager.recycler
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.ViewAnimator
 import com.loopeer.android.librarys.imagegroupview.R
 import com.loopeer.android.librarys.imagegroupview.adapter.RecyclerViewAdapter
+import com.loopeer.android.librarys.imagegroupview.uimanager.IGLoadHelper
 import com.loopeer.android.librarys.imagegroupview.uimanager.IGRecycler
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView
 import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration
 
-abstract class ImageGroupUIManager<T>(var context: Context,var igRecycler: IGRecycler<T>): CustomPopupView.FolderItemSelectListener {
+abstract class ImageGroupUIManager<T>(context: Context,igRecycler: IGRecycler<T>): CustomPopupView.FolderItemSelectListener {
 
     private var mRecyclerView: RecyclerView? = null
     private var mCustomPopupWindowView: CustomPopupView? = null
     private var mViewAnimator: ViewAnimator? = null
-    private var mContext:Context?=null
+    var mContext: Context?
     private var madapter:RecyclerViewAdapter<T>?=null
     protected var mIGRcycler:IGRecycler<T>?=null
+    protected var mItems= mutableListOf<T>()
+    protected var mLoadHelper:IGLoadHelper?=null
 
 
     init {
@@ -25,7 +29,7 @@ abstract class ImageGroupUIManager<T>(var context: Context,var igRecycler: IGRec
         mIGRcycler=igRecycler
     }
 
-    private fun setUpView(){
+    protected fun setUpView(){
         setUpTextView()
         initView()
         setupRecyclerView()
@@ -41,7 +45,26 @@ abstract class ImageGroupUIManager<T>(var context: Context,var igRecycler: IGRec
         madapter=mIGRcycler?.createRecyclerViewAdapter()
     }
 
-    protected fun setupRecyclerView() {
+    protected abstract fun isFinishing(): Boolean
+
+    protected abstract fun setUpLoadHelper(view:View)
+
+    fun updateRecyclerView() {
+        if (isFinishing()) return
+
+//        madapter?.updateData(mItems)
+//        if (mItems?.isEmpty()!!) {
+//            if (!NetworkUtils.checkNetAvailable(mContext)) {
+//                mLoadHelper.showNetError()
+//            } else {
+//                mLoadHelper.showEmpty()
+//            }
+//        } else {
+//            mLoadHelper.showContent()
+//        }
+    }
+
+    private fun setupRecyclerView() {
         mRecyclerView?.layoutManager = GridLayoutManager(mContext, 3)
         mRecyclerView?.addItemDecoration(
             DividerItemImagesDecoration(
@@ -57,9 +80,18 @@ abstract class ImageGroupUIManager<T>(var context: Context,var igRecycler: IGRec
         mRecyclerView?.adapter = madapter
     }
 
-    protected fun initView() {
-
+    private fun initView() {
+        mRecyclerView= mLoadHelper?.getContentView() as RecyclerView?
     }
 
+    fun destroyAdapter() {
+        madapter = null
+    }
+
+    fun cleanRecyclerView() {
+        mRecyclerView?.adapter = null
+        mRecyclerView?.layoutManager = null
+        mRecyclerView=null
+    }
 
 }
