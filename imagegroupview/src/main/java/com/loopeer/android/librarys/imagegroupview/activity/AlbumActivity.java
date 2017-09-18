@@ -1,5 +1,6 @@
 package com.loopeer.android.librarys.imagegroupview.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -76,6 +77,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private CustomPopupView mCustomPopupWindowView;
     private ViewAnimator mViewAnimator;
     private ImageAdapter mImageAdapter;
+
     private List<Image> mSelectedImages;
     private int mMaxSelectedNum;
     private MenuItem mSubmitMenu;
@@ -234,6 +236,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         doParseData(data);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void doParseData(Cursor cursor) {
         new AsyncTask<Cursor, Void, List>() {
 

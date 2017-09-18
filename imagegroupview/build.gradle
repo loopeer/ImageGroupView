@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion Integer.parseInt(compile_sdk_version)
@@ -30,6 +31,10 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp:' + fresco_version
     compile 'com.android.support:support-core-utils:' + support_version
     compile 'com.yalantis:ucrop:2.2.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 apply from: 'bintray.gradle'
+repositories {
+    mavenCentral()
+}

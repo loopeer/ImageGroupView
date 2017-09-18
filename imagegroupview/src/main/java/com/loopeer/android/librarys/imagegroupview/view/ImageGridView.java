@@ -41,9 +41,9 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private ImageGroupSavedState imageGroupSavedState;
     private List<SquareImage> preImages;
     private OnImageClickListener clickListener;
+    private boolean mShowAddButton, mRoundAsCircle;
     private int mAddButtonDrawable;
     private int mPlaceholderDrawable;
-    private boolean mShowAddButton, mRoundAsCircle;
     private int maxImageNum;
     private boolean mDragDismiss;
     private boolean mDoUploadShowDialog;
