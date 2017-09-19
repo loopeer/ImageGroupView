@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
         super(context);
         mSelectImages = new ArrayList<>();
     }
+
+
 
     public void setOnImageClickListener(OnImageClickListener listener) {
         mOnImageClickListener = listener;
@@ -157,7 +160,7 @@ public class ImageAdapter extends RecyclerViewAdapter<Image> {
     public void updateFolderImageData(ImageFolder imageFolder) {
         List<Image> images = new ArrayList();
         images.addAll(imageFolder.images);
-        if (TextUtils.isEmpty(imageFolder.dir) && mAlbumType != AlbumActivity.ALBUM) {
+        if (TextUtils.isEmpty(imageFolder.dir) && mAlbumType != AlbumActivity.Companion.getALBUM()) {
             images.add(0, null);
         }
         updateData(images);

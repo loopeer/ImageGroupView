@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity;
 import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivity;
+import com.loopeer.android.librarys.imagegroupview.activity.UIPatternActivity;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.view.ImageGridView;
 import com.loopeer.android.librarys.imagegroupview.view.SingleImageView;
@@ -94,7 +95,7 @@ public class NavigatorImage {
     }
 
     public static void startCustomAlbumActivity(Context context, int canSelectMaxNum, int groupId) {
-        startCustomAlbumActivity(context, canSelectMaxNum, groupId, AlbumActivity.ALL);
+        startCustomAlbumActivity(context, canSelectMaxNum, groupId, UIPatternActivity.Companion.getALL());
     }
 
     private static void addAlbumDataWithType(int canSelectMaxNum, int groupId, int type, Intent intent, String extraImageSelectMaxNum, String extraImageGroupId, String extraAlbumType) {

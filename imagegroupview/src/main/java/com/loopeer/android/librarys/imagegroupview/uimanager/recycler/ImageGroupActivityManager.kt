@@ -7,38 +7,25 @@ import android.widget.ViewAnimator
 import com.loopeer.android.librarys.imagegroupview.R
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder
 import com.loopeer.android.librarys.imagegroupview.uimanager.IGActivityLifecycleCallbacks
+import com.loopeer.android.librarys.imagegroupview.uimanager.IGLoadHelper
 import com.loopeer.android.librarys.imagegroupview.uimanager.IGRecycler
 
 
-open class ImageGroupActivityManager<T>(context: Context, igRecycler: IGRecycler<T>): ImageGroupUIManager<T>(context,igRecycler),IGActivityLifecycleCallbacks{
-
-    protected var mLoad:IGLoad?=null
-
-    override fun setUpLoadHelper(view: View) {
-        mLoad=IGLoad(mContext!!,(mContext as Activity).findViewById(R.id.view_album_animator) as ViewAnimator)
-    }
+open class ImageGroupActivityManager<T>(context: Context, igRecycler: IGRecycler<T>) : ImageGroupUIManager<T>(context, igRecycler), IGActivityLifecycleCallbacks {
 
 
     override fun onCreated() {
-    }
-
-    override fun onPostCreated() {
-        setUpLoadHelper(null!!)
+        setUpLoadHelper()
         initAdapter()
         setUpView()
     }
 
-    override fun onStarted() {
+
+
+    override fun setUpLoadHelper() {
+        mLoadHelper = IGLoad(mContext!!, (mContext as Activity).findViewById(R.id.view_album_animator) as ViewAnimator)
     }
 
-    override fun onResumed() {
-    }
-
-    override fun onPaused() {
-    }
-
-    override fun onStopped() {
-    }
 
     override fun onDestroyed() {
         destroyAdapter()
@@ -51,5 +38,20 @@ open class ImageGroupActivityManager<T>(context: Context, igRecycler: IGRecycler
     }
 
     override fun onFolderItemSelected(imageFolder: ImageFolder?) {
+        updateContentView(imageFolder)
     }
+
+
+
+    private fun updateContentView(folder: ImageFolder?) {
+        if (folder?.images?.size == 0) {
+            mLoadHelper?.showEmpty()
+        } else {
+            mLoadHelper?.showContent()
+        }
+        mIGRcycler?.adapterUpdateContentView(madapter!!,folder)
+        mRecyclerView?.scrollToPosition(0)
+    }
+
+
 }

@@ -13,6 +13,7 @@ class IGLoad (context: Context,viewAnimator: ViewAnimator) :IGLoadHelper{
     private val mProgressIndex: Int
     private val mContentIndex: Int
 
+
     var mContext:Context
     var mViewAnimator:ViewAnimator
 
@@ -20,10 +21,12 @@ class IGLoad (context: Context,viewAnimator: ViewAnimator) :IGLoadHelper{
         mContext=context
         mViewAnimator=viewAnimator
 
+
         mEmptyIndex=mViewAnimator.indexOfChild(mViewAnimator.findViewById(R.id.text_album_empty))
         mProgressIndex=mViewAnimator.indexOfChild(mViewAnimator.findViewById(R.id.progress_album))
         mContentIndex=mViewAnimator.indexOfChild(mViewAnimator.findViewById(R.id.recycler_album))
     }
+
 
     override fun getContentView(): View {
         return mViewAnimator.getChildAt(mContentIndex)

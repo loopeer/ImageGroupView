@@ -50,6 +50,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         this.bindView(data, position, holder, payloads);
     }
 
+
     public abstract void bindView(T var1, int var2, RecyclerView.ViewHolder var3, List<Object> payloads);
 
     public T getItem(int position) {

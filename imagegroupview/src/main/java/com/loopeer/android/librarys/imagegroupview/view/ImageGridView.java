@@ -206,9 +206,9 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
-                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.TAKE_PHOTO);
+                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO());
                                     } else {
-                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.ALBUM);
+                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM());
                                     }
                                 }
                             })

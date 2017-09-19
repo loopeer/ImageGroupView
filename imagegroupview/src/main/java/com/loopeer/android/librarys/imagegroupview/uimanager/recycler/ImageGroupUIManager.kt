@@ -1,8 +1,11 @@
 package com.loopeer.android.librarys.imagegroupview.uimanager.recycler
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ViewAnimator
 import com.loopeer.android.librarys.imagegroupview.R
@@ -12,56 +15,52 @@ import com.loopeer.android.librarys.imagegroupview.uimanager.IGRecycler
 import com.loopeer.android.librarys.imagegroupview.view.CustomPopupView
 import com.loopeer.android.librarys.imagegroupview.view.DividerItemImagesDecoration
 
-abstract class ImageGroupUIManager<T>(context: Context,igRecycler: IGRecycler<T>): CustomPopupView.FolderItemSelectListener {
+abstract class ImageGroupUIManager<T>(context: Context, igRecycler: IGRecycler<T>) : CustomPopupView.FolderItemSelectListener {
 
-    private var mRecyclerView: RecyclerView? = null
-    private var mCustomPopupWindowView: CustomPopupView? = null
+    protected var mRecyclerView: RecyclerView? = null
+    protected var mCustomPopupWindowView: CustomPopupView? = null
     private var mViewAnimator: ViewAnimator? = null
     var mContext: Context?
-    private var madapter:RecyclerViewAdapter<T>?=null
-    protected var mIGRcycler:IGRecycler<T>?=null
-    protected var mItems= mutableListOf<T>()
-    protected var mLoadHelper:IGLoadHelper?=null
+    protected var madapter: RecyclerViewAdapter<T>? = null
+    protected var mIGRcycler: IGRecycler<T>? = null
+    protected var mItems = mutableListOf<T>()
+    protected var mLoadHelper: IGLoadHelper? = null
 
 
     init {
-        mContext=context
-        mIGRcycler=igRecycler
+        mContext = context
+        mIGRcycler = igRecycler
     }
 
-    protected fun setUpView(){
-        setUpTextView()
+    protected fun setUpView() {
         initView()
+        setUpTextView()
         setupRecyclerView()
     }
 
     private fun setUpTextView() {
         mCustomPopupWindowView?.setNumText(mContext?.getString(R.string.album_all))
-//        mCustomPopupWindowView.setFolderItemSelectListener(this)
-
+        mCustomPopupWindowView?.setFolderItemSelectListener(this)
     }
 
-    protected fun initAdapter(){
-        madapter=mIGRcycler?.createRecyclerViewAdapter()
+    fun getAdapter(): RecyclerViewAdapter<*>? {
+        return madapter
+    }
+
+    fun getCustomPopupView(): CustomPopupView? {
+        return mCustomPopupWindowView
+    }
+
+    protected fun initAdapter() {
+        madapter = mIGRcycler?.createRecyclerViewAdapter()
     }
 
     protected abstract fun isFinishing(): Boolean
 
-    protected abstract fun setUpLoadHelper(view:View)
+    protected abstract fun setUpLoadHelper()
 
     fun updateRecyclerView() {
         if (isFinishing()) return
-
-//        madapter?.updateData(mItems)
-//        if (mItems?.isEmpty()!!) {
-//            if (!NetworkUtils.checkNetAvailable(mContext)) {
-//                mLoadHelper.showNetError()
-//            } else {
-//                mLoadHelper.showEmpty()
-//            }
-//        } else {
-//            mLoadHelper.showContent()
-//        }
     }
 
     private fun setupRecyclerView() {
@@ -81,7 +80,9 @@ abstract class ImageGroupUIManager<T>(context: Context,igRecycler: IGRecycler<T>
     }
 
     private fun initView() {
-        mRecyclerView= mLoadHelper?.getContentView() as RecyclerView?
+        mRecyclerView = mLoadHelper?.getContentView() as RecyclerView?
+        val activity= mContext as Activity
+        mCustomPopupWindowView= activity.findViewById(R.id.view_popup_folder_window) as CustomPopupView?
     }
 
     fun destroyAdapter() {
@@ -91,7 +92,7 @@ abstract class ImageGroupUIManager<T>(context: Context,igRecycler: IGRecycler<T>
     fun cleanRecyclerView() {
         mRecyclerView?.adapter = null
         mRecyclerView?.layoutManager = null
-        mRecyclerView=null
+        mRecyclerView = null
     }
 
 }

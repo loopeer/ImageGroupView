@@ -55,7 +55,7 @@ import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.PERMISS
 import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_CAMERA_STARTREQUEST;
 import static com.loopeer.android.librarys.imagegroupview.NavigatorImage.REQUEST_WRITE_STARTREQUEST;
 
-public class AlbumActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
+public class AlbumActivity1 extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CustomPopupView.FolderItemSelectListener, ImageAdapter.OnImageClickListener, View.OnClickListener {
 
     private static final int LOADER_ID_FOLDER = 10001;
 
@@ -79,9 +79,10 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private ImageAdapter mImageAdapter;
 
     private List<Image> mSelectedImages;
-    private int mMaxSelectedNum;
     private MenuItem mSubmitMenu;
     private TextView mTextSubmit;
+
+    private int mMaxSelectedNum;
     private int mImageGroupId;
     private int mAlbumType;
     private boolean mIsAvatarType;
@@ -347,11 +348,11 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private void startCamera() {
         String SDState = Environment.getExternalStorageState();
         if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-            ActivityCompat.startActivityForResult(AlbumActivity.this,
-                    new Intent(AlbumActivity.this, UserCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
+            ActivityCompat.startActivityForResult(AlbumActivity1.this,
+                    new Intent(AlbumActivity1.this, UserCameraActivity.class), NavigatorImage.RESULT_TAKE_PHOTO,
                     null);
         } else {
-            Toast.makeText(AlbumActivity.this, "内存卡不存在", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AlbumActivity1.this, "内存卡不存在", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -428,6 +429,9 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    /*
+         todo override ok
+     */
     private void startAlbumOrCamera() {
         if (mAlbumType != TAKE_PHOTO) {
             setContentView(R.layout.activity_album);
