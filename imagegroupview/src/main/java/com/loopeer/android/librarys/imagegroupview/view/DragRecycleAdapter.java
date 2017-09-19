@@ -7,20 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 
+import java.util.Collections;
 import java.util.List;
 
-public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.DragViewHolder> implements View.OnClickListener, View.OnLongClickListener {
+public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.DragViewHolder> implements View.OnClickListener, ItemTouchHelperAdapter {
 
     private Context context;
     private List<SquareImage> mData;//九宫格图片
-    private int hidePosition = AdapterView.INVALID_POSITION;
-    OnRecyclerViewItemClickListener onRecyclerViewItemClickListener = null;
-    OnRecyclerViewItemLongClickListener onRecyclerViewItemLongClickListener = null;
+    private static int hidePosition = AdapterView.INVALID_POSITION;
 
     public DragRecycleAdapter(Context context, List<SquareImage> data) {
         this.context = context;
@@ -30,15 +28,12 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
     @Override
     public DragViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_view, parent, false);
-        view.setOnClickListener(this);//将创建的View注册点击事件
-        view.setOnLongClickListener(this);
         return new DragViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DragViewHolder holder, int position) {
-//        holder.squareView.setImageData(mData.get(position));
-        holder.tv.setText(mData.get(position).localUrl);
+        holder.squareView.setImageData(mData.get(position));
         holder.itemView.setTag(position);//将position保存在itemView的Tag中，以便点击时进行获取
     }
 
@@ -53,79 +48,61 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
     }
 
     @Override
-    public void onClick(View v) {
-        if (onRecyclerViewItemClickListener != null) {
-            onRecyclerViewItemClickListener.onItemClick(v, (int) v.getTag());
+    public void onItemMove(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+        int fromPosition = source.getAdapterPosition();
+        int toPosition = target.getAdapterPosition();
+        if (fromPosition < mData.size() && toPosition < mData.size()) {
+            //交换数据位置
+            Collections.swap(mData, fromPosition, toPosition);
+            //刷新位置交换
+            notifyItemMoved(fromPosition, toPosition);
         }
+        //移动过程中移除view的放大效果
+        onItemClear(source);
     }
 
     @Override
-    public boolean onLongClick(View v) {
-        if (onRecyclerViewItemLongClickListener != null){
-            onRecyclerViewItemLongClickListener.onItemLongClick(v, (int) v.getTag());
-        }
-        return true;
+    public void onItemDissmiss(RecyclerView.ViewHolder source) {
+        int position = source.getAdapterPosition();
+        mData.remove(position); //移除数据
+        notifyItemRemoved(position);//刷新数据移除
     }
 
-    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
-        this.onRecyclerViewItemClickListener = listener;
+    @Override
+    public void onItemSelect(RecyclerView.ViewHolder source) {
+        //当拖拽选中时放大选中的view
+        source.itemView.setScaleX(1.2f);
+        source.itemView.setScaleY(1.2f);
     }
 
-    public void setOnItemLongClickListener(OnRecyclerViewItemLongClickListener listener) {
-        this.onRecyclerViewItemLongClickListener = listener;
+    @Override
+    public void onItemClear(RecyclerView.ViewHolder source) {
+        //拖拽结束后恢复view的状态
+        source.itemView.setScaleX(1.0f);
+        source.itemView.setScaleY(1.0f);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     static class DragViewHolder extends RecyclerView.ViewHolder {
         SquareImageView squareView;
-        TextView tv;
         View mView;
 
         DragViewHolder(View itemView) {
             super(itemView);
             this.mView = itemView;
-//            squareView = (SquareImageView) itemView.findViewById(R.id.sq);
-            tv = (TextView) itemView.findViewById(R.id.tv);
+            squareView = (SquareImageView) itemView.findViewById(R.id.sq);
+            squareView.setClickAble(true);
         }
 
     }
 
-    void hideView(int position) {
-        hidePosition = position;
-        notifyDataSetChanged();
-    }
-
-    void showHideView() {
-        hidePosition = AdapterView.INVALID_POSITION;
-        notifyDataSetChanged();
-    }
 
     public void removeView(int position) {
         mData.remove(position);
         notifyDataSetChanged();
     }
-
-    //更新拖动时的gridView
-    void swapView(int draggedPos, int destPos) {
-        //从前向后拖动，其他item依次前移
-        if (draggedPos < destPos) {
-            mData.add(destPos + 1, mData.get(draggedPos));
-            mData.remove(draggedPos);
-        }
-        //从后向前拖动，其他item依次后移
-        else if (draggedPos > destPos) {
-            mData.add(destPos, mData.get(draggedPos));
-            mData.remove(draggedPos + 1);
-        }
-        hidePosition = destPos;
-        notifyDataSetChanged();
-    }
-
-    public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, int pos);
-    }
-
-    public interface OnRecyclerViewItemLongClickListener {
-        void onItemLongClick(View view, int pos);
-    }
-
 }

@@ -5,14 +5,9 @@
     android:clickable="true"
     android:orientation="vertical">
 
-    <TextView
-        android:text="dsa"
-        android:id="@+id/tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <!--<com.loopeer.android.librarys.imagegroupview.view.SquareImageView
+    <com.loopeer.android.librarys.imagegroupview.view.SquareImageView
         android:id="@+id/sq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true" />-->
+        android:clickable="true" />
 </LinearLayout>

@@ -8,15 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.R;
 import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.view.DragRecycleAdapter;
-import com.loopeer.android.librarys.imagegroupview.view.DragView;
+import com.loopeer.android.librarys.imagegroupview.view.SimpleItemTouchHelperCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,6 @@ public class ImagePickerActivity extends AppCompatActivity {
 
     List<Image> images;
     List<SquareImage> preImages;
-    private DragView mDragView;
     private RecyclerView dragRecycleView;
 
     @Override
@@ -70,18 +68,12 @@ public class ImagePickerActivity extends AppCompatActivity {
         }
         DragRecycleAdapter adapter = new DragRecycleAdapter(this, preImages);
         dragRecycleView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new DragRecycleAdapter.OnRecyclerViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int pos) {
-                Log.d("ImagePickerActivityLog", "click" + preImages.get(pos).localUrl);
-            }
-        });
-        adapter.setOnItemLongClickListener(new DragRecycleAdapter.OnRecyclerViewItemLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int pos) {
-                Log.d("ImagePickerActivityLog", "longClick" + preImages.get(pos).localUrl);
-            }
-        });
+        //创建SimpleItemTouchHelperCallback
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        //用Callback构造ItemtouchHelper
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        //调用ItemTouchHelper的attachToRecyclerView方法建立联系
+        touchHelper.attachToRecyclerView(dragRecycleView);
     }
 
     private void pareIntent() {
