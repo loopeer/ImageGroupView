@@ -20,16 +20,11 @@ import com.loopeer.android.librarys.imagegroupview.view.SimpleItemTouchHelperCal
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO step1. 长点击事件滑动图片；
-//TODO step2. 对应图片消失留白；
-//TODO step3. 图片划经位置其他图片滚动动画；
-//TODO 三个页面逻辑和启动模式
 public class ImagePickerActivity extends AppCompatActivity {
 
 
     List<Image> images;
     List<SquareImage> preImages;
-    private RecyclerView dragRecycleView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,28 +32,15 @@ public class ImagePickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_picker);
         pareIntent();
         initData();
-//        initView();
-        initView2();
+        initView();
     }
 
     public void initData() {
         preImages = new ArrayList<>();
     }
 
-    /*private void initView() {
-        mDragView = (DragView) findViewById(R.id.drag_view);
-
-        for (Image image : images) {
-            SquareImage squareImage = new SquareImage(image.url, null, getPhotoKey(image.time), SquareImage.PhotoType.LOCAL);
-            preImages.add(squareImage);
-//            Log.d("asda",""+image.url);
-        }
-        DragAdapter adapter = new DragAdapter(this, preImages);
-        mDragView.setAdapter(adapter);
-    }*/
-
-    private void initView2() {
-        dragRecycleView = (RecyclerView) findViewById(R.id.drag_view);
+    private void initView() {
+        RecyclerView dragRecycleView = (RecyclerView) findViewById(R.id.drag_view);
         dragRecycleView.setLayoutManager(new GridLayoutManager(ImagePickerActivity.this, 3));
         dragRecycleView.setHasFixedSize(true);
 

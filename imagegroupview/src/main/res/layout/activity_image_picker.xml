@@ -5,51 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--
-        <com.loopeer.android.librarys.imagegroupview.view.DragGridView
-            android:id="@+id/grid_test_group"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:columnWidth="80dp"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp"
-            apps:imagePlaceholderDrawable="@drawable/ic_image_default"
-            apps:maxImageNum="9"
-            apps:showAddButton="true" />
-    -->
-
-    <!--<com.loopeer.android.librarys.imagegroupview.view.DragView
+    <com.loopeer.android.librarys.imagegroupview.view.DragRecycleView
         android:id="@+id/drag_view"
-        android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:clickable="true"
         android:gravity="center"
         android:horizontalSpacing="14dip"
-        android:numColumns="3"
-        android:scrollbars="vertical"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="14.0px" />-->
-    <!--<android.support.v7.widget.RecyclerView
-        android:gravity="center"
-        android:id="@+id/drag_view"
-        android:horizontalSpacing="14dip"
+        android:longClickable="true"
         android:numColumns="3"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="14.0px"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>-->
-     <com.loopeer.android.librarys.imagegroupview.view.DragRecycleView
-        android:gravity="center"
-        android:id="@+id/drag_view"
-         android:clickable="true"
-         android:longClickable="true"
-        android:horizontalSpacing="14dip"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="14.0px"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:verticalSpacing="14.0px" />
 </LinearLayout>
