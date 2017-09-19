@@ -77,9 +77,7 @@ abstract class UIPatternActivity: AppCompatActivity(), LoaderManager.LoaderCallb
 
     private fun checkPermissionToStartAlbum() {
         var s=!PermissionUtils.hasSelfPermissions(this, *NavigatorImage.PERMISSION_WRITE_STARTREQUEST)
-        Log.i("mlx","Permissions:$s")
         if (!PermissionUtils.hasSelfPermissions(this, *NavigatorImage.PERMISSION_WRITE_STARTREQUEST)) {
-            Log.i("mlx","requestPermissions")
             ActivityCompat.requestPermissions(this, NavigatorImage.PERMISSION_WRITE_STARTREQUEST,NavigatorImage.REQUEST_WRITE_STARTREQUEST)
         } else {
             if (!PermissionUtils.hasSelfPermissions(this, *NavigatorImage.PERMISSION_CAMERA_STARTREQUEST)) {
@@ -137,8 +135,6 @@ abstract class UIPatternActivity: AppCompatActivity(), LoaderManager.LoaderCallb
         else
             resources.getString(R.string.action_submit_string, mSelectedImages.size, mMaxSelectedNum)
     }
-
-
 
     private fun parseIntent() {
         val intent = intent
