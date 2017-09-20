@@ -188,7 +188,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
             clickListener.onImageClick(v, squareImage);
         } else {
             updateImagesPosition();
-            NavigatorImage.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
+            NavigatorImage.INSTANCE.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
                     mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
         }
     }
@@ -206,15 +206,15 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
-                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO());
                                     } else {
-                                        NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM());
                                     }
                                 }
                             })
                     .show();
         } else {
-            NavigatorImage.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
+            NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
         }
     }
 

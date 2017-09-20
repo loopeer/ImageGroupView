@@ -74,11 +74,11 @@ public class SingleImageView extends SimpleDraweeView implements View.OnClickLis
     }
 
     public void doTakePhoto(int aspectRatioX, int aspectRatioY) {
-        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.Companion.getTAKE_PHOTO(), aspectRatioX, aspectRatioY);
+        NavigatorImage.INSTANCE.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.Companion.getTAKE_PHOTO(), aspectRatioX, aspectRatioY);
     }
 
     public void doAlbum(int aspectRatioX, int aspectRatioY) {
-        NavigatorImage.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.Companion.getALBUM(), aspectRatioX, aspectRatioY);
+        NavigatorImage.INSTANCE.startAvatarAlbumActivity(getContext(), getId(), AlbumActivity.Companion.getALBUM(), aspectRatioX, aspectRatioY);
     }
 
     @Override
