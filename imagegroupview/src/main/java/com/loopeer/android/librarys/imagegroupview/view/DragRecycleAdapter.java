@@ -3,6 +3,7 @@ package com.loopeer.android.librarys.imagegroupview.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.List;
 public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.DragViewHolder> implements View.OnClickListener, ItemTouchHelperAdapter {
 
     private Context context;
-    private List<SquareImage> mData;//九宫格图片
+    public List<SquareImage> mData;//九宫格图片
     private static int hidePosition = AdapterView.INVALID_POSITION;
 
     public DragRecycleAdapter(Context context, List<SquareImage> data) {
@@ -55,6 +56,13 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
             //交换数据位置
             Collections.swap(mData, fromPosition, toPosition);
             //刷新位置交换
+            int n = 0;
+            for (SquareImage s : mData
+                    ) {
+                Log.d("log ", "mdata  " + n + s.localUrl);
+                n++;
+            }
+            Log.d("log ", "=============================================================");
             notifyItemMoved(fromPosition, toPosition);
         }
         //移动过程中移除view的放大效果
@@ -100,9 +108,32 @@ public class DragRecycleAdapter extends RecyclerView.Adapter<DragRecycleAdapter.
 
     }
 
+    //更新拖动时的gridView
+    void swapView(int draggedPos, int destPos) {
+        //从前向后拖动，其他item依次前移
+        if (draggedPos < destPos) {
+            mData.add(destPos + 1, mData.get(draggedPos));
+            mData.remove(draggedPos);
+        }
+        //从后向前拖动，其他item依次后移
+        else if (draggedPos > destPos) {
+            mData.add(destPos, mData.get(draggedPos));
+            mData.remove(draggedPos + 1);
+        }
+    }
 
-    public void removeView(int position) {
+    void removeView(int position) {
         mData.remove(position);
+        int n = 0;
+        for (SquareImage s : mData
+                ) {
+            Log.d("log ", "mdata  " + n + s.localUrl);
+            n++;
+        }
+        Log.d("log ", "=============================================================");
+        notifyItemChanged(position);
         notifyDataSetChanged();
+//                    notifyItemChanged(position);
+//        Collections.
     }
 }

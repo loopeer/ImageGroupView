@@ -7,7 +7,7 @@
 
     <com.loopeer.android.librarys.imagegroupview.view.SquareImageView
         android:id="@+id/sq"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:clickable="true" />
 </LinearLayout>

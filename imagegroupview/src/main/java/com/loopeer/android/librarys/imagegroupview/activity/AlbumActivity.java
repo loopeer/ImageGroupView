@@ -61,6 +61,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     public static final int ALL = 0;
     public static final int TAKE_PHOTO = 1;
     public static final int ALBUM = 2;
+    public static final int DRAG_PHOTO = 3;
 
     @IntDef(flag = true,
             value = {
@@ -83,6 +84,7 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
     private int mImageGroupId;
     private int mAlbumType;
     private boolean mIsAvatarType;
+    ArrayList<String> pics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +153,15 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
         finish();
     }
 
-    private void pickSelectImages(){
-        Intent intent = new Intent(this,ImagePickerActivity.class);
+    private void pickSelectImages() {
+        Intent intent = new Intent(this, ImagePickerActivity.class);
         intent.putExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages));
         intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId);
-        startActivity(intent);
-        finish();
+//        startActivity(intent);
+        ActivityCompat.startActivityForResult(AlbumActivity.this,
+                intent, NavigatorImage.RESULT_SELECT_PHOTO,
+                null);
+//        finish();
     }
 
     private ArrayList<Image> createUrls(List<Image> selectedImages) {
@@ -383,6 +388,10 @@ public class AlbumActivity extends AppCompatActivity implements LoaderManager.Lo
                 } else {
                     finish();
                 }
+                break;
+            case DRAG_PHOTO:
+
+                finishWithResult();
                 break;
             default:
                 String photoTakeUrl = data.getStringExtra(NavigatorImage.EXTRA_PHOTO_URL);

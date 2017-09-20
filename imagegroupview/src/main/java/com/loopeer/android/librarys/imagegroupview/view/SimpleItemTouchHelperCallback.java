@@ -32,7 +32,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return false; //不启用拖拽删除
+        return true; //不启用拖拽删除
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         //移动删除回调,如果不用可以不用理
-        // mAdapter.onItemDissmiss(viewHolder);
+         mAdapter.onItemDissmiss(viewHolder);
     }
 
     @Override

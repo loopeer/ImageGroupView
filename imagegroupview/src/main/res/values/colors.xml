@@ -20,4 +20,6 @@
     <color name="color_white">@android:color/white</color>
     <color name="image_group_widget">#04b00f</color>
     <color name="image_group_widget_disable">#FF1D6C22</color>
+
+    <color name="delete_red">#aaDC143C</color>
 </resources>
