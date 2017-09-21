@@ -160,10 +160,13 @@ public class DragRecycleView extends RecyclerView {
 
         } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
             tv.setVisibility(VISIBLE);
+            if (sHeight - e.getY() < 400) {
+                tv.setText("松手即可删除");
+            }else{tv.setText("拖动到此处删除");}
         } else if (e.getAction() == MotionEvent.ACTION_UP) {
             View targetView = this.findChildViewUnder((int) e.getX(), (int) e.getY());
             int currDraggedPosition = getChildAdapterPosition(targetView);//http://dalufan.com/2016/12/02/android-recycleview-useage-issues/在AbsListView（listview、gridview）中，有个根据屏幕位置获取pos的方法：pointToPosition，但在recycleview中没有这个方法，可以通过下面方法来达到相同的效果
-            if (sHeight - e.getY() < 300) {
+            if (sHeight - e.getY() < 400) {
                 adapter.removeView(currDraggedPosition);
             }
             tv.setVisibility(GONE);

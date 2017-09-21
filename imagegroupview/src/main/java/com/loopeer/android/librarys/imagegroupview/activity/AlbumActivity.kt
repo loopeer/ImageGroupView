@@ -22,7 +22,7 @@ import java.util.*
 
 
 class AlbumActivity : UIPatternActivity(), IGRecycler<Image> {
-    val DRAG_PHOTO = 3
+    private val DRAG_PHOTO = 3
 
     override fun adapterUpdateContentView(recyclerViewAdapter: RecyclerViewAdapter<*>, folder: ImageFolder?) {
         var mImageAdapter = (recyclerViewAdapter as ImageAdapter)
