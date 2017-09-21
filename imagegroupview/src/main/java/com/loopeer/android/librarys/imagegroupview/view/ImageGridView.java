@@ -32,6 +32,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private static final String TAG = "ImageGridView";
 
     private final static int MAX_VALUE = -1;
+    private int GRID_TYPE = 2;
 
     private ImageGroupSavedState imageGroupSavedState;
     private List<SquareImage> preImages;
@@ -202,15 +203,16 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
-                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO(),getGRID_TYPE());
                                     } else {
-                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM(),getGRID_TYPE());
                                     }
                                 }
                             })
                     .show();
         } else {
-            NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId());
+
+            NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(),GRID_TYPE);
         }
     }
 
@@ -368,7 +370,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         if (pointToPosition((int) ev.getX(), (int) ev.getY()) == -1 && ev.getAction() == MotionEvent.ACTION_DOWN) {
             return false;
         }
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -379,6 +381,14 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public void setGRID_TYPE(int n) {
+        this.GRID_TYPE = n;
+    }
+
+    public int getGRID_TYPE() {
+        return GRID_TYPE;
     }
 
 }

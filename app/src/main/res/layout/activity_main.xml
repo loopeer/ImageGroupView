@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:apps="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:apps="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,8 +19,7 @@
             android:paddingLeft="12dp"
             android:text="This can show and add images"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -47,7 +46,7 @@
             android:paddingLeft="12dp"
             android:text="Test one Image show with image self size"
             android:textColor="@android:color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
             android:id="@+id/grid_test_group"
@@ -73,8 +72,7 @@
             android:paddingLeft="12dp"
             android:text="Grid2"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
 
         <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
             android:id="@+id/grid_test_group2"
@@ -88,7 +86,32 @@
             android:verticalSpacing="10dp"
             apps:imagePlaceholderDrawable="@drawable/ic_image_default"
             apps:maxImageNum="9"
-            apps:showAddButton="true"/>
+            apps:showAddButton="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?android:listPreferredItemHeightSmall"
+            android:background="#777777"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:text="Grid3"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <com.loopeer.android.librarys.imagegroupview.view.ImageGridView
+            android:id="@+id/grid_test_group3"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:columnWidth="80dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp"
+            apps:imagePlaceholderDrawable="@drawable/ic_image_default"
+            apps:maxImageNum="9"
+            apps:showAddButton="true" />
     </LinearLayout>
+
 
 </ScrollView>

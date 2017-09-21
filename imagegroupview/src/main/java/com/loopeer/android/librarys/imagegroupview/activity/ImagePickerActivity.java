@@ -113,7 +113,6 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
 
     private void finishWithResult() {
         ArrayList<String> pics = new ArrayList<>();
-// = adapter.mData.;
         for (SquareImage s : adapter.mData
                 ) {
             Log.d("log ", "mdata  " + s.localUrl);

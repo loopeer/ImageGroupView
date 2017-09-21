@@ -23,6 +23,13 @@ import java.util.*
 
 class AlbumActivity : UIPatternActivity(), IGRecycler<Image> {
     private val DRAG_PHOTO = 3
+    private var gtype: Int = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        var intent = getIntent();
+        gtype = intent.getIntExtra("gtype", 0)
+    }
 
     override fun adapterUpdateContentView(recyclerViewAdapter: RecyclerViewAdapter<*>, folder: ImageFolder?) {
         var mImageAdapter = (recyclerViewAdapter as ImageAdapter)
@@ -97,13 +104,19 @@ class AlbumActivity : UIPatternActivity(), IGRecycler<Image> {
         val intent = intent
         intent.putExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages))
         intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId)
-        setResult(Activity.RESULT_OK, intent)
+        if (gtype == 3) setResult(3, intent)
+        else setResult(Activity.RESULT_OK, intent)
         finish()
     }
 
     override fun onClick(v: View?) {
-        pickSelectImages()
+        if (gtype == 3)
+            pickSelectImages()
+        else {
+            super.onClick(v)
+        }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

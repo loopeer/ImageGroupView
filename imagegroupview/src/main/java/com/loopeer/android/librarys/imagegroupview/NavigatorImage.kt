@@ -9,15 +9,13 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
-
 import com.loopeer.android.librarys.imagegroupview.activity.AlbumActivity
 import com.loopeer.android.librarys.imagegroupview.activity.ImageSwitcherActivity
 import com.loopeer.android.librarys.imagegroupview.activity.UIPatternActivity
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage
 import com.yalantis.ucrop.UCrop
-
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 object NavigatorImage {
 
@@ -76,21 +74,22 @@ object NavigatorImage {
         intent.putExtra(EXTRA_DRAG_DISMISS, dragDismiss)
     }
 
-    @JvmOverloads fun startCustomAlbumActivity(context: Context, canSelectMaxNum: Int, groupId: Int, type: Int = UIPatternActivity.ALL) {
+    @JvmOverloads fun startCustomAlbumActivity(context: Context, canSelectMaxNum: Int, groupId: Int, type: Int = UIPatternActivity.ALL,gtype:Int) {
         var intent: Intent?
         intent = Intent(getImageGroupIntentAction(context))
         intent.data = Uri.parse(getImageGroupIntentAlbumUri(context))
         if (intent == null || intent.resolveActivity(context.packageManager) == null) {
             intent = Intent(context, AlbumActivity::class.java)
         }
-        addAlbumDataWithType(canSelectMaxNum, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE)
+        addAlbumDataWithType(canSelectMaxNum, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE,gtype)
         (context as Activity).startActivityForResult(intent, RESULT_SELECT_PHOTOS)
     }
 
-    private fun addAlbumDataWithType(canSelectMaxNum: Int, groupId: Int, type: Int, intent: Intent, extraImageSelectMaxNum: String, extraImageGroupId: String, extraAlbumType: String) {
+    private fun addAlbumDataWithType(canSelectMaxNum: Int, groupId: Int, type: Int, intent: Intent, extraImageSelectMaxNum: String, extraImageGroupId: String, extraAlbumType: String,gtype:Int) {
         intent.putExtra(extraImageSelectMaxNum, canSelectMaxNum)
         intent.putExtra(extraImageGroupId, groupId)
         intent.putExtra(extraAlbumType, type)
+        intent.putExtra("gtype",gtype)
     }
 
     @JvmOverloads fun startAvatarAlbumActivity(context: Context, groupId: Int, type: Int, aspectRatioX: Int = 1, aspectRatioY: Int = 1) {
@@ -103,7 +102,7 @@ object NavigatorImage {
             intent = Intent(context, AlbumActivity::class.java)
         }
         intent.putExtra(EXTRA_IS_AVATAR_CROP, true)
-        addAlbumDataWithType(1, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE)
+        addAlbumDataWithType(1, groupId, type, intent, EXTRA_IMAGE_SELECT_MAX_NUM, EXTRA_IMAGE_GROUP_ID, EXTRA_ALBUM_TYPE,0)
         (context as Activity).startActivityForResult(intent, RESULT_SELECT_PHOTOS)
     }
 

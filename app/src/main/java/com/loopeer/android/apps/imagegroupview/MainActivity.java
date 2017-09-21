@@ -17,7 +17,9 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
     private ImageGridView mGridView;
     private ImageGridView mGridView2;
+    private ImageGridView mGridView3;
     private SingleImageView mSingleImageView;
+    private int gtype = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
     private void initGridView() {
         mGridView = (ImageGridView) findViewById(R.id.grid_test_group);
         mGridView2 = (ImageGridView) findViewById(R.id.grid_test_group2);
+        mGridView2.setGRID_TYPE(2);
+        mGridView3 = (ImageGridView) findViewById(R.id.grid_test_group3);
+        mGridView3.setGRID_TYPE(3);
         mSingleImageView = (SingleImageView) findViewById(R.id.avatar);
         mGridView.updateNetPhotos(createTestData());
     }
@@ -54,13 +59,16 @@ public class MainActivity extends AppCompatActivity implements OnImageClickListe
 
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             mGridView.onParentResult(requestCode, data);
             mGridView2.onParentResult(requestCode, data);
+            mSingleImageView.onParentResult(requestCode, data);
+        }else if (resultCode==3){
+            mGridView.onParentResult(requestCode, data);
+            mGridView3.onParentResult(requestCode, data);
             mSingleImageView.onParentResult(requestCode, data);
         }
     }
