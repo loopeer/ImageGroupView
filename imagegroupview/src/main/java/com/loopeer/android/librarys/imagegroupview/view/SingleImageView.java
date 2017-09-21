@@ -17,10 +17,7 @@ import com.loopeer.android.librarys.imagegroupview.model.Image;
 import com.loopeer.android.librarys.imagegroupview.model.SquareImage;
 import com.loopeer.android.librarys.imagegroupview.utils.ImageGroupDisplayHelper;
 
-import java.lang.reflect.Method;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 public class SingleImageView extends SimpleDraweeView implements View.OnClickListener {
 

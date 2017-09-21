@@ -2,15 +2,15 @@ package com.loopeer.android.librarys.imagegroupview.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.database.Cursor
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.view.View
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage
 import com.loopeer.android.librarys.imagegroupview.adapter.ImageAdapter
 import com.loopeer.android.librarys.imagegroupview.adapter.RecyclerViewAdapter
@@ -18,11 +18,11 @@ import com.loopeer.android.librarys.imagegroupview.model.Image
 import com.loopeer.android.librarys.imagegroupview.model.ImageFolder
 import com.loopeer.android.librarys.imagegroupview.uimanager.IGRecycler
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 
-class AlbumActivity : UIPatternActivity(),IGRecycler<Image> {
-
+class AlbumActivity : UIPatternActivity(), IGRecycler<Image> {
+    val DRAG_PHOTO = 3
 
     override fun adapterUpdateContentView(recyclerViewAdapter: RecyclerViewAdapter<*>, folder: ImageFolder?) {
         var mImageAdapter = (recyclerViewAdapter as ImageAdapter)
@@ -37,7 +37,7 @@ class AlbumActivity : UIPatternActivity(),IGRecycler<Image> {
 
 
     override fun createRecyclerViewAdapter(): RecyclerViewAdapter<Image> {
-        val madapter=ImageAdapter(this)
+        val madapter = ImageAdapter(this)
         madapter.setOnImageClickListener(this)
         return madapter
     }
@@ -101,9 +101,35 @@ class AlbumActivity : UIPatternActivity(),IGRecycler<Image> {
         finish()
     }
 
+    override fun onClick(v: View?) {
+        pickSelectImages()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data == null || resultCode != Activity.RESULT_OK && mAlbumType == TAKE_PHOTO) {
+            this.finish()
+        }
+        if (data == null || resultCode != Activity.RESULT_OK) return
+
+        when (requestCode) {
+            DRAG_PHOTO ->
+                finishWithResult()
+        }
+    }
+
+    private fun pickSelectImages() {
+        val intent = Intent(this, ImagePickerActivity::class.java)
+        intent.putExtra(NavigatorImage.EXTRA_PHOTOS_URL, createUrls(mSelectedImages))
+        intent.putExtra(NavigatorImage.EXTRA_IMAGE_GROUP_ID, mImageGroupId)
+        ActivityCompat.startActivityForResult(this@AlbumActivity,
+                intent, NavigatorImage.RESULT_SELECT_PHOTO,
+                null)
+    }
+
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val cursorLoader = CursorLoader(this,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, NavigatorImage.IMAGE_PROJECTION, null, null, NavigatorImage.IMAGE_PROJECTION[2] + " DESC")
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, NavigatorImage.IMAGE_PROJECTION, null, null, NavigatorImage.IMAGE_PROJECTION[2] + " DESC")
         return cursorLoader
     }
 
