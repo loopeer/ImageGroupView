@@ -1,7 +1,7 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = '1.0.38'
+version = '1.0.40'
 
 uploadArchives {
     repositories {

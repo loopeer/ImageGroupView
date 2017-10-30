@@ -6,11 +6,14 @@
         <attr name="maxImageNum" format="integer"/>
         <attr name="childMargin" format="dimension"/>
         <attr name="column" format="integer"/>
+        <attr name="showDeleteText" format="boolean"/>
         <attr name="addButtonDrawable" format="reference|color"/>
         <attr name="imagePlaceholderDrawable" format="reference|color"/>
         <attr name="deleteDrawable" format="reference|color"/>
         <attr name="dragDismiss" format="boolean"/>
         <attr name="showDialog" format="boolean"/>
+        <attr name="showDeleteButton" format="boolean"></attr>
+        <attr name="showDeleteDialog" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ElasticDragDismissFrameLayout">

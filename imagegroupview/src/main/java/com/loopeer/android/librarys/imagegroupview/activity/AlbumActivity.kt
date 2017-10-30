@@ -27,7 +27,7 @@ class AlbumActivity : UIPatternActivity(), IGRecycler<Image> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var intent = getIntent();
+        var intent = intent
         gtype = intent.getIntExtra("gtype", 0)
     }
 

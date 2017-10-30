@@ -81,11 +81,15 @@
             android:layout_margin="16dp"
             android:columnWidth="80dp"
             android:horizontalSpacing="10dp"
+            apps:showDeleteDialog="true"
             android:numColumns="3"
             android:stretchMode="columnWidth"
+            apps:deleteDrawable="@drawable/ic_image_delete_icon"
             android:verticalSpacing="10dp"
             apps:imagePlaceholderDrawable="@drawable/ic_image_default"
             apps:maxImageNum="9"
+            apps:showDeleteButton="false"
+            apps:showDeleteText="true"
             apps:showAddButton="true" />
 
         <TextView
