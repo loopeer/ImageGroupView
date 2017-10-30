@@ -6,5 +6,8 @@
     <string name="action_submit">Submit</string>
     <string name="action_submit_string">Submit(%1$d/%2$d)</string>
     <string name="action_submit_string_no_max">Submit(%1$d)</string>
-
+    <string name="action_delete_delete_dialog">Delete this Photo?</string>
+    <string name="action_button_delete">Delete</string>
+    <string name="select_max_photos">Only four photos can add</string>
+    <string name="cancel">Cancel</string>
 </resources>

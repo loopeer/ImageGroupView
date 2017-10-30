@@ -29,13 +29,16 @@ object NavigatorImage {
     const val EXTRA_IMAGE_URL = "image_url"
     const val EXTRA_IMAGE_SELECT_MAX_NUM = "extra_image_select_max_num"
     const val EXTRA_IMAGE_GROUP_ID = "extra_image_group_id"
+    const val EXTRA_IMAGE_TEXT_DELETE="extra_image_text_delete"
     const val EXTRA_IMAGE_URL_POSITION = "image_position"
     const val EXTRA_IMAGE_DELETE = "extra_image_delete"
+    const val EXTRA_IMAGE_DELETE_DIALOG = "extra_image_delete_dialog"
     const val EXTRA_IMAGE_PLACE_DRAWABLE_ID = "extra_image_place_drawable_id"
     const val EXTRA_IMAGE_FOLDER = "extra_image_folder"
     const val EXTRA_ALBUM_TYPE = "extra_album_type"
     const val EXTRA_DRAG_DISMISS = "extra_drag_dismiss"
     const val EXTRA_IS_AVATAR_CROP = "extra_is_avatar_crop"
+    const val EXTRA_SHOW_DELETE_BUTTON="extra_show_delete_button"
 
 
     const val RESULT_SELECT_PHOTO = 2001
@@ -52,26 +55,29 @@ object NavigatorImage {
     fun startImageSwitcherActivity(context: Context, images: List<SquareImage>,
                                    position: Int, showAddButton: Boolean,
                                    placeholderDrawable: Int, groupId: Int,
-                                   dragDismiss: Boolean) {
+                                   dragDismiss: Boolean,showTextDelete:Boolean,showDeleteDialog:Boolean,showDeleteButton:Boolean) {
         var intent: Intent?
         intent = Intent(getImageGroupIntentAction(context))
         intent.data = Uri.parse(getImageGroupIntentSwitcherUri(context))
         if (intent == null || intent.resolveActivity(context.packageManager) == null) {
             intent = Intent(context, ImageSwitcherActivity::class.java)
         }
-        addImageSwitcherData(images, position, showAddButton, placeholderDrawable, groupId, intent, dragDismiss)
+        addImageSwitcherData(images, position, showAddButton, placeholderDrawable, groupId, intent, dragDismiss,showTextDelete,showDeleteDialog,showDeleteButton)
         (context as Activity).startActivityForResult(intent, RESULT_IMAGE_SWITCHER)
     }
 
     private fun addImageSwitcherData(images: List<SquareImage>, position: Int,
                                      showAddButton: Boolean, placeholderDrawable: Int,
-                                     groupId: Int, intent: Intent, dragDismiss: Boolean) {
+                                     groupId: Int, intent: Intent, dragDismiss: Boolean,showTextDelete:Boolean,showDeleteDialog:Boolean,showDeleteButton:Boolean) {
         intent.putParcelableArrayListExtra(NavigatorImage.EXTRA_IMAGE_URL, ArrayList<Parcelable>(images))
         intent.putExtra(EXTRA_IMAGE_DELETE, showAddButton)
         intent.putExtra(EXTRA_IMAGE_URL_POSITION, position)
         intent.putExtra(EXTRA_IMAGE_PLACE_DRAWABLE_ID, placeholderDrawable)
         intent.putExtra(EXTRA_IMAGE_GROUP_ID, groupId)
         intent.putExtra(EXTRA_DRAG_DISMISS, dragDismiss)
+        intent.putExtra(EXTRA_IMAGE_TEXT_DELETE,showTextDelete)
+        intent.putExtra(EXTRA_IMAGE_DELETE_DIALOG,showDeleteDialog)
+        intent.putExtra(EXTRA_SHOW_DELETE_BUTTON,showDeleteButton)
     }
 
     @JvmOverloads fun startCustomAlbumActivity(context: Context, canSelectMaxNum: Int, groupId: Int, type: Int = UIPatternActivity.ALL,gtype:Int) {
