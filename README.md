@@ -42,6 +42,9 @@ First, add the layout
 * **showAddButton** When set true, you can add image by album or camera
 * **addButtonDrawable**
 * **imagePlaceholderDrawable**
+* **showDeleteText**
+* **showDeleteDialog** When set true,there will be a hint when deleting a photo
+* **showDeleteButton** 
 * **deleteDrawable**
 
 Then, you can add data.
