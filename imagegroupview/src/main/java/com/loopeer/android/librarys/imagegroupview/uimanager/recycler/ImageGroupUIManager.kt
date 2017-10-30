@@ -82,7 +82,7 @@ abstract class ImageGroupUIManager<T>(context: Context, igRecycler: IGRecycler<T
     private fun initView() {
         mRecyclerView = mLoadHelper?.getContentView() as RecyclerView?
         val activity= mContext as Activity
-        mCustomPopupWindowView= activity.findViewById(R.id.view_popup_folder_window) as CustomPopupView?
+        mCustomPopupWindowView= activity.findViewById(R.id.view_popup_folder_window)
     }
 
     fun destroyAdapter() {

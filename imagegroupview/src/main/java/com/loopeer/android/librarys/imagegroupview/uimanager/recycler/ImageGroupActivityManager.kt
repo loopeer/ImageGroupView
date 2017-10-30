@@ -23,7 +23,7 @@ open class ImageGroupActivityManager<T>(context: Context, igRecycler: IGRecycler
 
 
     override fun setUpLoadHelper() {
-        mLoadHelper = IGLoad(mContext!!, (mContext as Activity).findViewById(R.id.view_album_animator) as ViewAnimator)
+        mLoadHelper = IGLoad(mContext!!, (mContext as Activity).findViewById(R.id.view_album_animator))
     }
 
 

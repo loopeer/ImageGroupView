@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.loopeer.android.librarys.imagegroupview.NavigatorImage;
 import com.loopeer.android.librarys.imagegroupview.OnImageClickListener;
@@ -37,13 +38,14 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
     private ImageGroupSavedState imageGroupSavedState;
     private List<SquareImage> preImages;
     private OnImageClickListener clickListener;
-    private boolean mShowAddButton, mRoundAsCircle;
+    private boolean mShowAddButton, mRoundAsCircle, mShowTextDelete, mShowDeleteDialog, mShowDeleteButton;
     private int mAddButtonDrawable;
     private int mPlaceholderDrawable;
     private int maxImageNum;
     private boolean mDragDismiss;
     private boolean mDoUploadShowDialog;
     private GridImageAdapter mGridImageAdapter;
+    private Context mContext;
 
     public ImageGridView(Context context) {
         this(context, null);
@@ -55,7 +57,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
 
     public ImageGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        mContext = context;
         getAttrs(context, attrs, defStyle);
 
         init();
@@ -77,10 +79,12 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         mRoundAsCircle = false;
         maxImageNum = a.getInteger(R.styleable.ImageGroupView_maxImageNum, MAX_VALUE);
         mAddButtonDrawable = a.getResourceId(R.styleable.ImageGroupView_addButtonDrawable, R.drawable.ic_photo_default);
+        mShowTextDelete = a.getBoolean(R.styleable.ImageGroupView_showDeleteText, false);
         mPlaceholderDrawable = a.getResourceId(R.styleable.ImageGroupView_imagePlaceholderDrawable, R.drawable.ic_image_default);
         mDragDismiss = a.getBoolean(R.styleable.ImageGroupView_dragDismiss, true);
         mDoUploadShowDialog = a.getBoolean(R.styleable.ImageGroupView_showDialog, false);
-
+        mShowDeleteDialog = a.getBoolean(R.styleable.ImageGroupView_showDeleteDialog, false);
+        mShowDeleteButton = a.getBoolean(R.styleable.ImageGroupView_showDeleteButton, true);
         a.recycle();
     }
 
@@ -185,7 +189,7 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
         } else {
             updateImagesPosition();
             NavigatorImage.INSTANCE.startImageSwitcherActivity(getContext(), getSquarePhotos(), position,
-                    mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss);
+                    mShowAddButton, mPlaceholderDrawable, getId(), mDragDismiss, mShowTextDelete, mShowDeleteDialog, mShowDeleteButton);
         }
     }
 
@@ -203,16 +207,16 @@ public class ImageGridView extends GridView implements GridImageAdapter.OnSquare
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
-                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO(),getGRID_TYPE());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getTAKE_PHOTO(), getGRID_TYPE());
                                     } else {
-                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM(),getGRID_TYPE());
+                                        NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), AlbumActivity.Companion.getALBUM(), getGRID_TYPE());
                                     }
                                 }
                             })
                     .show();
         } else {
 
-            NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(),GRID_TYPE);
+            NavigatorImage.INSTANCE.startCustomAlbumActivity(getContext(), getCanSelectMaxNum(), getId(), GRID_TYPE);
         }
     }
 
