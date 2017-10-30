@@ -6,4 +6,13 @@
         <item name="android:windowExitAnimation">@anim/pophidden_anim</item>
     </style>
 
+    <style name="text_delete">
+        <item name="android:shadowColor">#7F7F7F</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:text">删除</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

@@ -114,7 +114,7 @@ abstract class UIPatternActivity: AppCompatActivity(), LoaderManager.LoaderCallb
     private fun updateSubmitMenu(menuItem: Menu) {
         mSubmitMenu = menuItem.findItem(R.id.action_submit)
         val view = mSubmitMenu?.actionView
-        mTextSubmit = view?.findViewById(R.id.text_image_submit) as TextView
+        mTextSubmit = view?.findViewById(R.id.text_image_submit)
         if (mIsAvatarType) {
             mTextSubmit?.visibility = View.INVISIBLE
         }
@@ -186,6 +186,7 @@ abstract class UIPatternActivity: AppCompatActivity(), LoaderManager.LoaderCallb
             mSelectedImages.remove(image)
             index = 2
         } else if (mSelectedImages.size == mMaxSelectedNum && mMaxSelectedNum != 0) {
+            Toast.makeText(this,getString(R.string.select_max_photos,mMaxSelectedNum),Toast.LENGTH_SHORT).show()
             return 0
         } else {
             if (mIsAvatarType) {

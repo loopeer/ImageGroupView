@@ -6,5 +6,9 @@
     <string name="action_submit">提交</string>
     <string name="action_submit_string">提交(%1$d/%2$d)</string>
     <string name="action_submit_string_no_max">提交(%1$d)</string>
+    <string name="action_delete_delete_dialog">确认删除这张照片?</string>
+    <string name="action_button_delete">删除</string>
+    <string name="select_max_photos">最多只能添加%d张图片哦</string>
+    <string name="cancel">取消</string>
 
 </resources>
