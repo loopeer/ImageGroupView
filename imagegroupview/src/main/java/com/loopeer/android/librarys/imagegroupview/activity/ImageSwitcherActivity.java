@@ -7,12 +7,14 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -42,15 +44,17 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
     private MutipleTouchViewPager mViewPager;
     private ArrayList<ImageSwitcherWrapper> mImageSwitcherWrappers;
     private ImagesSwitcherAdapter mAdapter;
-    private boolean canImageDelete;
+    private boolean canImageDelete,canImageTextDelete,canImageDeleteDialog,canDeleteButton;
     private int mCurrentPagerPosition;
     private int placeholderDrawable;
     private ArrayList<Integer> mDeletePositions;
     private ImageView mBtnDelete;
+    private TextView mDeleteText;
     private int mImageGroupId;
     private FrameLayout mDragDismissFrameLayout;
     private boolean mDragDismiss;
     private FrameLayout mDragLayout;
+    private AlertDialog dialog;
 
 
     //第一次点击时首次出现的图片还是有问题
@@ -222,6 +226,8 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         canImageDelete = intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_DELETE, false);
         placeholderDrawable = intent.getIntExtra(NavigatorImage.EXTRA_IMAGE_PLACE_DRAWABLE_ID, R.drawable.ic_image_default);
         mDragDismiss = intent.getBooleanExtra(NavigatorImage.EXTRA_DRAG_DISMISS, true);
+        canImageTextDelete=intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_TEXT_DELETE,false);
+        canImageDeleteDialog=intent.getBooleanExtra(NavigatorImage.EXTRA_IMAGE_DELETE_DIALOG,false);
     }
 
     private void setUpImageWrappers(ArrayList<SquareImage> images) {
@@ -235,11 +241,19 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
         mViewPager = (MutipleTouchViewPager) findViewById(R.id.view_pager);
         mBtnDelete = (ImageView) findViewById(R.id.btn_delete);
         mDragLayout = (FrameLayout) findViewById(R.id.drag_frame);
-        mBtnDelete.setVisibility(canImageDelete ? View.VISIBLE : View.GONE);
+        mDeleteText=findViewById(R.id.text_delete);
+        mDeleteText.setVisibility(canImageTextDelete ? View.VISIBLE : View.GONE);
+        mDeleteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowDeleteDialog();
+            }
+        });
+        mBtnDelete.setVisibility(canDeleteButton ? View.VISIBLE : View.GONE);
         mBtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteImage();
+                ShowDeleteDialog();
             }
         });
         setUpView();
@@ -293,6 +307,21 @@ public class ImageSwitcherActivity extends AppCompatActivity implements OnTabOne
 
     private void setCurrentPosition() {
         mViewPager.setCurrentItem(mCurrentPagerPosition);
+    }
+
+    private void ShowDeleteDialog(){
+        if(canImageDeleteDialog){
+            dialog=new AlertDialog.Builder(this).setMessage(R.string.action_delete_delete_dialog)
+                    .setPositiveButton(R.string.action_button_delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                                deleteImage();
+                        }
+                    }).setNegativeButton(R.string.cancel,null).create();
+            dialog.show();
+        }else{
+            deleteImage();
+        }
     }
 
     private void deleteImage() {
