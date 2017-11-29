@@ -31,7 +31,7 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp:' + fresco_version
     compile 'com.android.support:support-core-utils:' + support_version
     compile 'com.yalantis:ucrop:2.2.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply from: 'bintray.gradle'
